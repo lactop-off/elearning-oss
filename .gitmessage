@@ -1,0 +1,28 @@
+# <type>(<scope>): <subject>     # 50 文字目安、最大 72 文字、命令形・現在形・小文字始まり
+#
+# <body>                          # なぜこの変更が必要か。72 文字で折り返す
+#
+# <footer>                        # Closes #42 / BREAKING CHANGE: ... / Co-Authored-By: ...
+#
+# ────────────────────────────────────────────────────────────────────────────
+# type 一覧:
+#   feat       — ユーザー視点の新機能
+#   fix        — バグ修正
+#   docs       — ドキュメントのみ
+#   style      — フォーマットのみ (機能変更なし)
+#   refactor   — リファクタリング (機能変更なし)
+#   perf       — パフォーマンス改善
+#   test       — テスト追加・修正
+#   build      — ビルドシステム・依存関係
+#   ci         — CI 設定
+#   chore      — その他雑務
+#   revert     — コミットの取り消し
+#
+# scope の例: courses / lessons / quiz / progress / enrollment / auth / users
+#             admin / ui / db / i18n / a11y / infra / harness
+#
+# 破壊的変更: type/scope の後に "!" を付ける + footer に BREAKING CHANGE:
+#   例: feat(api)!: change quiz attempt response shape
+#
+# 詳細: docs/commit-convention.md を参照
+# ────────────────────────────────────────────────────────────────────────────
