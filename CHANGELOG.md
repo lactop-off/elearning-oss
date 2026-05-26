@@ -8,6 +8,16 @@
 ## [Unreleased]
 
 ### Added
+- テスト環境を整備 (Vitest 4 + Playwright 1.60)
+  - **Vitest**: `vitest.config.ts` (jsdom 環境、`tests/setup.ts` で
+    Testing Library の cleanup)、サンプル `lib/utils.test.ts`
+  - **Playwright**: `playwright.config.ts` (chromium、`webServer`
+    で `npm run dev` 自動起動)、サンプル `tests/e2e/home.spec.ts`
+  - npm scripts: `test`, `test:watch`, `test:coverage`,
+    `test:e2e`, `test:e2e:ui`
+  - tsconfig.json に `vitest/globals` と `@testing-library/jest-dom`
+    の型を追加
+  - .gitignore: `playwright-report/`, `test-results/`, `.playwright/`
 - shadcn/ui (radix-nova スタイル、neutral ベースカラー) を導入
   - `components.json`: shadcn 設定 (alias: `@/components`, `@/lib/utils` 等)
   - `lib/utils.ts`: `cn()` ヘルパー

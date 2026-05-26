@@ -64,3 +64,10 @@ Thumbs.db
 
 # Prisma — generated client output
 lib/generated/
+
+# Playwright
+/playwright/.cache/
+/playwright-report/
+/blob-report/
+/test-results/
+/.playwright
