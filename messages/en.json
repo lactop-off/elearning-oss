@@ -1,0 +1,64 @@
+{
+  "common": {
+    "appName": "E-learning OSS",
+    "appDescription": "An open-source platform for online courses, quizzes, and learner progress tracking."
+  },
+  "roles": {
+    "LEARNER": "learner",
+    "INSTRUCTOR": "instructor",
+    "ADMIN": "admin"
+  },
+  "home": {
+    "signedInAs": "Signed in as {name}",
+    "roleLabel": "({role})"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Sign in",
+      "description": "Welcome back. Enter your credentials to continue.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "noAccount": "No account yet?",
+      "createOne": "Create one"
+    },
+    "signUp": {
+      "title": "Create your account",
+      "description": "Start learning in less than a minute.",
+      "nameLabel": "Name",
+      "namePlaceholder": "Ada Lovelace",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "At least 8 characters",
+      "submit": "Create account",
+      "submitting": "Creating account...",
+      "hasAccount": "Already have an account?",
+      "signInLink": "Sign in"
+    },
+    "signOut": {
+      "submit": "Sign out",
+      "submitting": "Signing out..."
+    },
+    "cta": {
+      "signIn": "Sign in",
+      "createAccount": "Create account"
+    },
+    "toast": {
+      "signedIn": "Signed in",
+      "signedOut": "Signed out",
+      "welcome": "Welcome aboard"
+    },
+    "errors": {
+      "INVALID_INPUT": "Please check your input.",
+      "INVALID_CREDENTIALS": "Email or password is incorrect.",
+      "EMAIL_TAKEN": "An account with this email already exists.",
+      "INTERNAL_ERROR": "Something went wrong. Please try again.",
+      "AUTO_SIGN_IN_FAILED": "Account created but auto sign-in failed. Please sign in manually.",
+      "GENERIC_SIGN_IN_FAILED": "Sign-in failed",
+      "GENERIC_SIGN_UP_FAILED": "Sign-up failed"
+    }
+  }
+}

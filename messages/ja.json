@@ -1,0 +1,64 @@
+{
+  "common": {
+    "appName": "E-learning OSS",
+    "appDescription": "コース、クイズ、学習進捗トラッキングのためのオープンソースプラットフォームです。"
+  },
+  "roles": {
+    "LEARNER": "学習者",
+    "INSTRUCTOR": "講師",
+    "ADMIN": "管理者"
+  },
+  "home": {
+    "signedInAs": "{name} さんでログイン中",
+    "roleLabel": "({role})"
+  },
+  "auth": {
+    "signIn": {
+      "title": "サインイン",
+      "description": "おかえりなさい。認証情報を入力してください。",
+      "emailLabel": "メールアドレス",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "パスワード",
+      "submit": "サインイン",
+      "submitting": "サインインしています...",
+      "noAccount": "アカウントをお持ちでない方は",
+      "createOne": "新規登録"
+    },
+    "signUp": {
+      "title": "アカウントを作成",
+      "description": "1 分以内で学習を始められます。",
+      "nameLabel": "お名前",
+      "namePlaceholder": "山田 太郎",
+      "emailLabel": "メールアドレス",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "パスワード",
+      "passwordPlaceholder": "8 文字以上",
+      "submit": "アカウントを作成",
+      "submitting": "作成しています...",
+      "hasAccount": "すでにアカウントをお持ちの方は",
+      "signInLink": "サインイン"
+    },
+    "signOut": {
+      "submit": "サインアウト",
+      "submitting": "サインアウトしています..."
+    },
+    "cta": {
+      "signIn": "サインイン",
+      "createAccount": "アカウントを作成"
+    },
+    "toast": {
+      "signedIn": "サインインしました",
+      "signedOut": "サインアウトしました",
+      "welcome": "ようこそ"
+    },
+    "errors": {
+      "INVALID_INPUT": "入力内容をご確認ください。",
+      "INVALID_CREDENTIALS": "メールアドレスまたはパスワードが正しくありません。",
+      "EMAIL_TAKEN": "このメールアドレスは既に登録されています。",
+      "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。",
+      "AUTO_SIGN_IN_FAILED": "アカウントは作成されましたが、自動サインインに失敗しました。手動でサインインしてください。",
+      "GENERIC_SIGN_IN_FAILED": "サインインに失敗しました",
+      "GENERIC_SIGN_UP_FAILED": "登録に失敗しました"
+    }
+  }
+}

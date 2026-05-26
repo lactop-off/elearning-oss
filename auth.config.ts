@@ -14,7 +14,8 @@ export const authConfig = {
   callbacks: {
     authorized({ auth, request }) {
       const isLoggedIn = !!auth?.user;
-      const pathname = request.nextUrl.pathname;
+      // Strip the locale prefix (/ja, /en) before matching public paths.
+      const pathname = request.nextUrl.pathname.replace(/^\/(ja|en)(?=\/|$)/, '') || '/';
 
       const isPublic =
         pathname === '/' ||

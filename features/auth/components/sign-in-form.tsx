@@ -1,9 +1,9 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -18,16 +18,21 @@ import {
 import { Input } from '@/components/ui/input';
 import { signInWithCredentials } from '@/features/auth/actions/signin';
 import { SignInSchema, type SignInInput } from '@/features/auth/schemas/credentials';
+import { useRouter } from '@/i18n/navigation';
 
-const ERROR_MESSAGES: Record<string, string> = {
-  INVALID_INPUT: 'Please check your email and password.',
-  INVALID_CREDENTIALS: 'Email or password is incorrect.',
-  INTERNAL_ERROR: 'Something went wrong. Please try again.',
-};
+const KNOWN_ERROR_CODES = ['INVALID_INPUT', 'INVALID_CREDENTIALS', 'INTERNAL_ERROR'] as const;
+type KnownErrorCode = (typeof KNOWN_ERROR_CODES)[number];
+
+function isKnownErrorCode(code: string): code is KnownErrorCode {
+  return (KNOWN_ERROR_CODES as readonly string[]).includes(code);
+}
 
 export function SignInForm() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const t = useTranslations('auth.signIn');
+  const tToast = useTranslations('auth.toast');
+  const tError = useTranslations('auth.errors');
 
   const form = useForm<SignInInput>({
     resolver: zodResolver(SignInSchema),
@@ -38,12 +43,15 @@ export function SignInForm() {
     startTransition(async () => {
       const result = await signInWithCredentials(values);
       if (result.ok) {
-        toast.success('Signed in');
+        toast.success(tToast('signedIn'));
         router.push('/');
         router.refresh();
         return;
       }
-      toast.error(ERROR_MESSAGES[result.error] ?? 'Sign-in failed');
+      const message = isKnownErrorCode(result.error)
+        ? tError(result.error)
+        : tError('GENERIC_SIGN_IN_FAILED');
+      toast.error(message);
     });
   }
 
@@ -55,12 +63,12 @@ export function SignInForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t('emailLabel')}</FormLabel>
               <FormControl>
                 <Input
                   type="email"
                   autoComplete="email"
-                  placeholder="you@example.com"
+                  placeholder={t('emailPlaceholder')}
                   {...field}
                 />
               </FormControl>
@@ -73,7 +81,7 @@ export function SignInForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>{t('passwordLabel')}</FormLabel>
               <FormControl>
                 <Input
                   type="password"
@@ -86,7 +94,7 @@ export function SignInForm() {
           )}
         />
         <Button type="submit" disabled={isPending}>
-          {isPending ? 'Signing in...' : 'Sign in'}
+          {isPending ? t('submitting') : t('submit')}
         </Button>
       </form>
     </Form>

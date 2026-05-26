@@ -1,9 +1,9 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -19,17 +19,21 @@ import { Input } from '@/components/ui/input';
 import { signInWithCredentials } from '@/features/auth/actions/signin';
 import { signUp } from '@/features/auth/actions/signup';
 import { SignUpSchema, type SignUpInput } from '@/features/auth/schemas/credentials';
+import { useRouter } from '@/i18n/navigation';
 
-const ERROR_MESSAGES: Record<string, string> = {
-  INVALID_INPUT: 'Please review the highlighted fields.',
-  EMAIL_TAKEN: 'An account with this email already exists.',
-  INTERNAL_ERROR: 'Something went wrong. Please try again.',
-  INVALID_CREDENTIALS: 'Account created but auto sign-in failed. Please sign in manually.',
-};
+const KNOWN_SIGN_UP_CODES = ['INVALID_INPUT', 'EMAIL_TAKEN', 'INTERNAL_ERROR'] as const;
+type KnownSignUpCode = (typeof KNOWN_SIGN_UP_CODES)[number];
+
+function isKnownSignUpCode(code: string): code is KnownSignUpCode {
+  return (KNOWN_SIGN_UP_CODES as readonly string[]).includes(code);
+}
 
 export function SignUpForm() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const t = useTranslations('auth.signUp');
+  const tToast = useTranslations('auth.toast');
+  const tError = useTranslations('auth.errors');
 
   const form = useForm<SignUpInput>({
     resolver: zodResolver(SignUpSchema),
@@ -40,7 +44,10 @@ export function SignUpForm() {
     startTransition(async () => {
       const signUpResult = await signUp(values);
       if (!signUpResult.ok) {
-        toast.error(ERROR_MESSAGES[signUpResult.error] ?? 'Sign-up failed');
+        const message = isKnownSignUpCode(signUpResult.error)
+          ? tError(signUpResult.error)
+          : tError('GENERIC_SIGN_UP_FAILED');
+        toast.error(message);
         return;
       }
 
@@ -49,12 +56,12 @@ export function SignUpForm() {
         password: values.password,
       });
       if (!signInResult.ok) {
-        toast.error(ERROR_MESSAGES[signInResult.error] ?? 'Auto sign-in failed');
+        toast.error(tError('AUTO_SIGN_IN_FAILED'));
         router.push('/sign-in');
         return;
       }
 
-      toast.success('Welcome aboard');
+      toast.success(tToast('welcome'));
       router.push('/');
       router.refresh();
     });
@@ -68,9 +75,13 @@ export function SignUpForm() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>{t('nameLabel')}</FormLabel>
               <FormControl>
-                <Input autoComplete="name" placeholder="Ada Lovelace" {...field} />
+                <Input
+                  autoComplete="name"
+                  placeholder={t('namePlaceholder')}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -81,12 +92,12 @@ export function SignUpForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t('emailLabel')}</FormLabel>
               <FormControl>
                 <Input
                   type="email"
                   autoComplete="email"
-                  placeholder="you@example.com"
+                  placeholder={t('emailPlaceholder')}
                   {...field}
                 />
               </FormControl>
@@ -99,12 +110,12 @@ export function SignUpForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>{t('passwordLabel')}</FormLabel>
               <FormControl>
                 <Input
                   type="password"
                   autoComplete="new-password"
-                  placeholder="At least 8 characters"
+                  placeholder={t('passwordPlaceholder')}
                   {...field}
                 />
               </FormControl>
@@ -113,7 +124,7 @@ export function SignUpForm() {
           )}
         />
         <Button type="submit" disabled={isPending}>
-          {isPending ? 'Creating account...' : 'Create account'}
+          {isPending ? t('submitting') : t('submit')}
         </Button>
       </form>
     </Form>

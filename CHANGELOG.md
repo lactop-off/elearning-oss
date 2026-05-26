@@ -8,6 +8,26 @@
 ## [Unreleased]
 
 ### Added
+- 国際化対応 (i18n) を next-intl 4 で導入
+  - 対応ロケール: `ja` (デフォルト) / `en`
+  - URL は `localePrefix: 'always'` (/ja/*, /en/*)、`/` は
+    Accept-Language ベースで自動リダイレクト
+  - `i18n/routing.ts`: defineRouting 設定
+  - `i18n/request.ts`: getRequestConfig + 動的 messages import
+  - `i18n/navigation.ts`: Link / redirect / useRouter / usePathname の locale-aware ラッパー
+  - `messages/ja.json` と `en.json`: UI 文字列を 30+ キーで網羅
+- アプリ構造を `app/[locale]/*` に再編成
+  - 旧 `app/(auth)/` を `app/[locale]/(auth)/` に git mv
+  - `app/layout.tsx` はパススルー、`app/[locale]/layout.tsx` で
+    `<html lang>` / フォント / NextIntlClientProvider / Toaster を管理
+  - generateStaticParams + generateMetadata で静的ルート最適化
+- `proxy.ts` を next-intl + Auth.js の二段構成に
+  - `/api/auth/*` は素通り、それ以外は intlMiddleware → auth() の順
+  - `auth.config.ts` の `authorized` はロケールプレフィックスを
+    剥がしてからパブリック判定
+- 各ページ/コンポーネントを useTranslations / getTranslations で翻訳化
+- E2E テストを 7 件に拡張、ja/en 両方のロケールで表示・認証フローを検証
+### Changed
 - 開発用 DB 環境の確立
   - `docker-compose.yml`: PostgreSQL 16-alpine、port 5432、永続ボリューム、ヘルスチェック付き
   - 初回マイグレーション `prisma/migrations/20260526015612_init/`
