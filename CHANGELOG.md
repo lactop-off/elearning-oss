@@ -8,6 +8,25 @@
 ## [Unreleased]
 
 ### Added
+- 認証コアを Auth.js v5 (next-auth@beta) で実装
+  - Email/Password (Credentials provider) のみ、JWT セッション
+  - `auth.config.ts` (Edge-safe) と `auth.ts` (Node-side) の分割構成
+  - `proxy.ts`: 認可済みでない場合 `/sign-in` にリダイレクト
+    (Next.js 16 で `middleware` → `proxy` に改称された新規約に準拠)
+  - `lib/auth.ts`: `getSession` / `getCurrentUser` / `requireUser` /
+    `requireRole(...UserRole)` / `AuthError`
+  - `lib/password.ts`: bcryptjs (cost 12) でハッシュ・検証
+  - `features/auth/`:
+    - `schemas/credentials.ts`: SignIn / SignUp の Zod スキーマ
+    - `data/users.ts`: User データアクセス
+    - `actions/signup.ts`: 登録 Server Action (`{ ok, ... }` 形式)
+    - `actions/signin.ts`: ログイン Server Action (`signIn('credentials')` ラップ)
+    - `actions/signout.ts`: ログアウト
+  - `types/next-auth.d.ts`: Session / User / JWT に role を型拡張
+  - `app/api/auth/[...nextauth]/route.ts`: Auth.js ハンドラ
+  - `prisma/seed.ts`: デモユーザーに passwordHash を付与
+    (共通パスワード `demo1234`)
+  - `.env.example`: `AUTH_SECRET` のテンプレ
 - テスト環境を整備 (Vitest 4 + Playwright 1.60)
   - **Vitest**: `vitest.config.ts` (jsdom 環境、`tests/setup.ts` で
     Testing Library の cleanup)、サンプル `lib/utils.test.ts`

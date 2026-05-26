@@ -27,7 +27,9 @@
 - **DB**: PostgreSQL 16 / Prisma 7 (ORM, driver adapter `@prisma/adapter-pg` 必須)
   - クライアントは `lib/db.ts` のシングルトン (`import { prisma } from '@/lib/db'`)
   - 生成物は `lib/generated/prisma/` (gitignore 済)
-- **Auth**: NextAuth.js (or Lucia — 後で決定)
+- **Auth**: Auth.js v5 (next-auth@beta) / Credentials provider + JWT セッション
+  - `lib/auth.ts` の `requireUser` / `requireRole(...)` を Server Action / Component の冒頭で呼ぶ
+  - パスワードは `lib/password.ts` 経由で bcryptjs (cost 12) ハッシュ
 - **Test**: Vitest (ユニット) / Playwright (E2E) / Testing Library
 - **i18n**: next-intl
 - **Lint/Format**: ESLint / Prettier / TypeScript strict
