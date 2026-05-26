@@ -7,6 +7,20 @@
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-05-26
+
+### 概要
+
+v0.1.0 リリース直後の minor バージョンアップ。クイズ機能を **MULTI_CHOICE** 対応に拡張し、SINGLE/MULTI を統一の採点フローで扱えるようにした。
+
+### ハイライト
+
+- 質問タイプを **discriminated union** で SINGLE_CHOICE / MULTI_CHOICE 両対応
+- 採点ロジックを **集合等価 (all-or-nothing)** に統一 — 部分正解は意図的に 0 点
+- 学習者バンドルへの answer key 漏洩は変わらずゼロ (`Choice.isCorrect` 非露出)
+- 既存 SINGLE_CHOICE クイズへの後方互換あり (E2E suite 全 33 PASS)
+- ハーネス試験 10 回目、**1 イテレーションで全 4 Gate PASS** (security / domain-logic / i18n + a11y / architecture)
+
 ### Added
 - **クイズの MULTI_CHOICE 対応** (ハーネス試験 10 回目、1 イテレーションで全 Gate PASS)
   - `AddQuestionSchema` を `SINGLE_CHOICE` / `MULTI_CHOICE` の discriminated union に変更
