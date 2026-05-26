@@ -128,7 +128,8 @@
       "required": "必修",
       "optional": "任意",
       "contentTypeLabel": "形式: {type}",
-      "edit": "編集"
+      "edit": "編集",
+      "dragHandleAria": "レッスン {order}「{title}」をドラッグして並び替え"
     },
     "new": {
       "title": "レッスンを追加",
@@ -167,7 +168,8 @@
     "toast": {
       "created": "レッスンを追加しました",
       "updated": "レッスンを更新しました",
-      "deleted": "レッスンを削除しました"
+      "deleted": "レッスンを削除しました",
+      "reordered": "並び順を更新しました"
     },
     "errors": {
       "INVALID_INPUT": "入力内容を確認してください。",
@@ -175,6 +177,7 @@
       "FORBIDDEN": "コースの所有者のみがレッスンを操作できます。",
       "COURSE_NOT_FOUND": "コースが見つかりません。または所有していません。",
       "LESSON_NOT_FOUND": "レッスンが見つかりません。または所有していません。",
+      "SET_MISMATCH": "並び順の更新に失敗しました。ページを再読み込みしてください。",
       "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
     }
   },

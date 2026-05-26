@@ -17,3 +17,18 @@ export const UpdateLessonSchema = z.object({
 });
 
 export type UpdateLessonInput = z.infer<typeof UpdateLessonSchema>;
+
+export const ReorderLessonsSchema = z
+  .object({
+    courseId: z.string().min(1),
+    orderedLessonIds: z
+      .array(z.string().min(1))
+      .min(1, 'Cannot reorder an empty list')
+      .max(500, 'Too many lessons'),
+  })
+  .refine(
+    (data) => new Set(data.orderedLessonIds).size === data.orderedLessonIds.length,
+    { message: 'Duplicate lessonId in reorder request', path: ['orderedLessonIds'] },
+  );
+
+export type ReorderLessonsInput = z.infer<typeof ReorderLessonsSchema>;

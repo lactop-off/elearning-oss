@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { Button } from '@/components/ui/button';
 import { findCourseBySlugOwnedBy } from '@/features/courses/data/courses';
-import { LessonList } from '@/features/lessons/components/lesson-list';
+import { SortableLessonList } from '@/features/lessons/components/sortable-lesson-list';
 import { listLessonsByCourse } from '@/features/lessons/data/lessons';
 import { LessonQuizzesOverview } from '@/features/quizzes/components/lesson-quizzes-overview';
 import { listLessonQuizzesByCourseOwned } from '@/features/quizzes/data/quizzes';
@@ -63,7 +63,11 @@ export default async function CourseDetailPage({
             </Link>
           </Button>
         </div>
-        <LessonList lessons={lessons} manage={{ courseSlug: course.slug }} />
+        <SortableLessonList
+          lessons={lessons}
+          courseId={course.id}
+          courseSlug={course.slug}
+        />
       </section>
 
       <section aria-labelledby="quizzes-heading" className="grid gap-3">

@@ -1,18 +1,9 @@
 import { getTranslations } from 'next-intl/server';
 
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { LessonDeleteButton } from '@/features/lessons/components/lesson-delete-button';
 import type { LessonListItem } from '@/features/lessons/data/lessons';
-import { Link } from '@/i18n/navigation';
 
-export async function LessonList({
-  lessons,
-  manage,
-}: {
-  lessons: LessonListItem[];
-  manage?: { courseSlug: string };
-}) {
+export async function LessonList({ lessons }: { lessons: LessonListItem[] }) {
   const t = await getTranslations('lessons.list');
 
   if (lessons.length === 0) {
@@ -44,22 +35,6 @@ export async function LessonList({
                     {lesson.isRequired ? t('required') : t('optional')}
                   </CardDescription>
                 </div>
-                {manage ? (
-                  <div className="flex shrink-0 gap-2">
-                    <Button asChild variant="outline" size="sm">
-                      <Link
-                        href={`/instructor/courses/${manage.courseSlug}/lessons/${lesson.order}/edit`}
-                      >
-                        {t('edit')}
-                      </Link>
-                    </Button>
-                    <LessonDeleteButton
-                      lessonId={lesson.id}
-                      lessonTitle={lesson.title}
-                      courseSlug={manage.courseSlug}
-                    />
-                  </div>
-                ) : null}
               </div>
             </CardHeader>
             <CardContent className="text-xs text-muted-foreground">

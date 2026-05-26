@@ -144,6 +144,53 @@ export async function deleteLesson(lessonId: string): Promise<void> {
   await prisma.lesson.delete({ where: { id: lessonId } });
 }
 
+export type ReorderLessonsOutcome = { ok: true } | { ok: false; reason: 'SET_MISMATCH' };
+
+/**
+ * Reorder all lessons of a course in one transaction. The caller must already
+ * have verified that `courseId` belongs to the acting instructor.
+ *
+ * Why two passes: Lesson has `@@unique([courseId, order])`, so we can't simply
+ * write the new orders straight in — two rows would briefly share an order
+ * mid-update. First pass moves every affected row into a temporary high range
+ * (`order + 100000`) to clear the conflict space; second pass writes the
+ * canonical 1..N order. We reject the request if the submitted set does not
+ * exactly match this course's lesson set so a partial reorder cannot leave
+ * orphaned rows behind.
+ */
+export async function reorderLessons(
+  courseId: string,
+  orderedLessonIds: string[],
+): Promise<ReorderLessonsOutcome> {
+  return prisma.$transaction(async (tx) => {
+    const existing = await tx.lesson.findMany({
+      where: { courseId },
+      select: { id: true },
+    });
+    const existingIds = new Set(existing.map((row) => row.id));
+    if (existingIds.size !== orderedLessonIds.length) {
+      return { ok: false, reason: 'SET_MISMATCH' };
+    }
+    for (const id of orderedLessonIds) {
+      if (!existingIds.has(id)) return { ok: false, reason: 'SET_MISMATCH' };
+    }
+
+    for (const id of orderedLessonIds) {
+      await tx.lesson.update({
+        where: { id },
+        data: { order: { increment: 100000 } },
+      });
+    }
+    for (let i = 0; i < orderedLessonIds.length; i++) {
+      await tx.lesson.update({
+        where: { id: orderedLessonIds[i] },
+        data: { order: i + 1 },
+      });
+    }
+    return { ok: true };
+  });
+}
+
 export async function createLesson(input: {
   courseId: string;
   title: string;
