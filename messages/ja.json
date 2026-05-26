@@ -127,7 +127,8 @@
       "empty": "まだレッスンがありません。最初の 1 つを追加してください。",
       "required": "必修",
       "optional": "任意",
-      "contentTypeLabel": "形式: {type}"
+      "contentTypeLabel": "形式: {type}",
+      "edit": "編集"
     },
     "new": {
       "title": "レッスンを追加",
@@ -142,14 +143,38 @@
       "submit": "保存",
       "submitting": "保存中..."
     },
+    "edit": {
+      "title": "レッスン {order} を編集",
+      "description": "レッスンの内容を更新します。",
+      "backLink": "← コース詳細に戻る",
+      "titleLabel": "レッスン名",
+      "titlePlaceholder": "例: 変数と定数",
+      "contentLabel": "本文",
+      "contentPlaceholder": "レッスンの本文を入力してください。",
+      "contentHelper": "今のところプレーンテキストのみ。最大 20,000 文字。",
+      "requiredLabel": "コース修了に必須",
+      "submit": "保存",
+      "submitting": "保存中..."
+    },
+    "delete": {
+      "trigger": "削除",
+      "title": "レッスンを削除しますか?",
+      "description": "「{title}」を削除します。学習者の進捗・このレッスンに紐づくクイズと回答も削除されます。この操作は元に戻せません。",
+      "cancel": "キャンセル",
+      "confirm": "削除する",
+      "confirming": "削除中..."
+    },
     "toast": {
-      "created": "レッスンを追加しました"
+      "created": "レッスンを追加しました",
+      "updated": "レッスンを更新しました",
+      "deleted": "レッスンを削除しました"
     },
     "errors": {
       "INVALID_INPUT": "入力内容を確認してください。",
       "UNAUTHORIZED": "サインインしてください。",
-      "FORBIDDEN": "コースの所有者のみがレッスンを追加できます。",
+      "FORBIDDEN": "コースの所有者のみがレッスンを操作できます。",
       "COURSE_NOT_FOUND": "コースが見つかりません。または所有していません。",
+      "LESSON_NOT_FOUND": "レッスンが見つかりません。または所有していません。",
       "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
     }
   },

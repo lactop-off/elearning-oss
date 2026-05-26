@@ -63,7 +63,7 @@ export default async function CourseDetailPage({
             </Link>
           </Button>
         </div>
-        <LessonList lessons={lessons} />
+        <LessonList lessons={lessons} manage={{ courseSlug: course.slug }} />
       </section>
 
       <section aria-labelledby="quizzes-heading" className="grid gap-3">

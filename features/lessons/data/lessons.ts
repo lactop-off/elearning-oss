@@ -76,6 +76,74 @@ export async function listLessonsByCourse(courseId: string): Promise<LessonListI
   });
 }
 
+export type LessonForInstructorEdit = Pick<
+  Lesson,
+  'id' | 'title' | 'order' | 'content' | 'contentType' | 'isRequired' | 'courseId'
+> & {
+  course: { id: string; slug: string };
+};
+
+export async function findLessonOwnedByInstructorBySlugAndOrder(
+  courseSlug: string,
+  order: number,
+  instructorId: string,
+): Promise<LessonForInstructorEdit | null> {
+  return prisma.lesson.findFirst({
+    where: { order, course: { slug: courseSlug, instructorId } },
+    select: {
+      id: true,
+      title: true,
+      order: true,
+      content: true,
+      contentType: true,
+      isRequired: true,
+      courseId: true,
+      course: { select: { id: true, slug: true } },
+    },
+  });
+}
+
+export async function findLessonOwnedByInstructorById(
+  lessonId: string,
+  instructorId: string,
+): Promise<{ id: string; order: number; course: { id: string; slug: string } } | null> {
+  return prisma.lesson.findFirst({
+    where: { id: lessonId, course: { instructorId } },
+    select: {
+      id: true,
+      order: true,
+      course: { select: { id: true, slug: true } },
+    },
+  });
+}
+
+export async function updateLesson(input: {
+  lessonId: string;
+  title: string;
+  content: string;
+  isRequired: boolean;
+}): Promise<Lesson> {
+  return prisma.lesson.update({
+    where: { id: input.lessonId },
+    data: {
+      title: input.title,
+      content: input.content,
+      isRequired: input.isRequired,
+    },
+  });
+}
+
+/**
+ * Delete a lesson. Cascades via Prisma to its Progress rows (per schema:
+ * Lesson → Progress with onDelete: Cascade). Quizzes attached to this lesson
+ * also cascade, taking their Questions/Choices and Attempts/Answers with
+ * them. Issued Certificates and the Enrollment.completedAt status persist —
+ * deleting curriculum content does not retroactively un-issue a credential.
+ */
+export async function deleteLesson(lessonId: string): Promise<void> {
+  await prisma.lesson.delete({ where: { id: lessonId } });
+}
+
 export async function createLesson(input: {
   courseId: string;
   title: string;

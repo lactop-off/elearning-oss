@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CreateLessonSchema } from './lesson';
+import { CreateLessonSchema, UpdateLessonSchema } from './lesson';
 
 describe('CreateLessonSchema', () => {
   it('accepts a complete payload', () => {
@@ -40,6 +40,30 @@ describe('CreateLessonSchema', () => {
         title: 'Intro',
         content: 'x'.repeat(20001),
       }).success,
+    ).toBe(false);
+  });
+});
+
+describe('UpdateLessonSchema', () => {
+  it('accepts a complete update payload', () => {
+    const result = UpdateLessonSchema.safeParse({
+      lessonId: 'l1',
+      title: 'New title',
+      content: 'New body',
+      isRequired: false,
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects an empty lessonId', () => {
+    expect(
+      UpdateLessonSchema.safeParse({ lessonId: '', title: 'x' }).success,
+    ).toBe(false);
+  });
+
+  it('rejects an empty title', () => {
+    expect(
+      UpdateLessonSchema.safeParse({ lessonId: 'l1', title: '' }).success,
     ).toBe(false);
   });
 });

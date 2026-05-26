@@ -127,7 +127,8 @@
       "empty": "No lessons yet. Add the first one to get started.",
       "required": "Required",
       "optional": "Optional",
-      "contentTypeLabel": "Content: {type}"
+      "contentTypeLabel": "Content: {type}",
+      "edit": "Edit"
     },
     "new": {
       "title": "Add a lesson",
@@ -142,14 +143,38 @@
       "submit": "Save lesson",
       "submitting": "Saving..."
     },
+    "edit": {
+      "title": "Edit lesson {order}",
+      "description": "Update the lesson's content.",
+      "backLink": "← Back to course",
+      "titleLabel": "Lesson title",
+      "titlePlaceholder": "Variables and constants",
+      "contentLabel": "Content",
+      "contentPlaceholder": "Write the lesson body here.",
+      "contentHelper": "Plain text for now. Up to 20,000 characters.",
+      "requiredLabel": "Required for course completion",
+      "submit": "Save changes",
+      "submitting": "Saving..."
+    },
+    "delete": {
+      "trigger": "Delete",
+      "title": "Delete this lesson?",
+      "description": "\"{title}\" will be deleted. Learner progress, attached quizzes, and any quiz attempts on this lesson will also be removed. This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Delete lesson",
+      "confirming": "Deleting..."
+    },
     "toast": {
-      "created": "Lesson added"
+      "created": "Lesson added",
+      "updated": "Lesson updated",
+      "deleted": "Lesson deleted"
     },
     "errors": {
       "INVALID_INPUT": "Please check the highlighted fields.",
       "UNAUTHORIZED": "Please sign in to continue.",
-      "FORBIDDEN": "Only the course owner can add lessons.",
+      "FORBIDDEN": "Only the course owner can manage lessons.",
       "COURSE_NOT_FOUND": "Course not found, or you do not own it.",
+      "LESSON_NOT_FOUND": "Lesson not found, or you do not own it.",
       "INTERNAL_ERROR": "Something went wrong. Please try again."
     }
   },
