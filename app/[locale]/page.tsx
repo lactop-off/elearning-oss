@@ -1,7 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { Button } from '@/components/ui/button';
-import { SignOutButton } from '@/features/auth/components/sign-out-button';
 import { Link } from '@/i18n/navigation';
 import { getCurrentUser } from '@/lib/auth';
 
@@ -14,7 +13,8 @@ export default async function Home({
   setRequestLocale(locale);
 
   const user = await getCurrentUser();
-  const t = await getTranslations({ locale });
+  const t = await getTranslations();
+  const canManageCourses = user?.role === 'INSTRUCTOR' || user?.role === 'ADMIN';
 
   return (
     <main className="flex flex-1 items-center justify-center px-4 py-12">
@@ -24,25 +24,22 @@ export default async function Home({
 
         {user ? (
           <div className="flex flex-col items-center gap-3">
-            <p>
-              <span className="font-medium">
-                {t('home.signedInAs', { name: user.name ?? '' })}
-              </span>{' '}
+            <p className="text-sm">
+              {t('home.signedInAs', { name: user.name ?? '' })}{' '}
               <span className="text-muted-foreground">
                 {t('home.roleLabel', { role: t(`roles.${user.role}`) })}
               </span>
             </p>
-            <SignOutButton />
+            {canManageCourses && (
+              <Button asChild>
+                <Link href="/instructor/courses">{t('nav.myCourses')}</Link>
+              </Button>
+            )}
           </div>
         ) : (
-          <div className="flex gap-2">
-            <Button asChild>
-              <Link href="/sign-in">{t('auth.cta.signIn')}</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/sign-up">{t('auth.cta.createAccount')}</Link>
-            </Button>
-          </div>
+          <Button asChild size="lg">
+            <Link href="/sign-up">{t('auth.cta.createAccount')}</Link>
+          </Button>
         )}
       </div>
     </main>

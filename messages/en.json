@@ -3,6 +3,11 @@
     "appName": "E-learning OSS",
     "appDescription": "An open-source platform for online courses, quizzes, and learner progress tracking."
   },
+  "nav": {
+    "primary": "Primary",
+    "myCourses": "My courses",
+    "signedInAria": "Signed in as {name}"
+  },
   "roles": {
     "LEARNER": "learner",
     "INSTRUCTOR": "instructor",
@@ -76,14 +81,34 @@
       "submitting": "Creating..."
     },
     "toast": {
-      "created": "Course created"
+      "created": "Course created",
+      "published": "Course published",
+      "unpublished": "Course moved to draft"
     },
     "errors": {
       "INVALID_INPUT": "Please check the highlighted fields.",
       "UNAUTHORIZED": "Please sign in to continue.",
       "FORBIDDEN": "Only instructors can create courses.",
       "SLUG_TAKEN": "That slug is already in use. Try a different one.",
+      "NOT_FOUND": "Course not found, or you do not own it.",
       "INTERNAL_ERROR": "Something went wrong. Please try again."
+    },
+    "list": {
+      "heading": "Your courses",
+      "newCta": "New course",
+      "listAria": "Your courses",
+      "statusPublished": "Published",
+      "statusDraft": "Draft",
+      "slugDisplay": "/{slug}",
+      "publish": {
+        "publishLabel": "Publish",
+        "unpublishLabel": "Move to draft",
+        "working": "Saving..."
+      },
+      "empty": {
+        "message": "You have not created any courses yet.",
+        "cta": "Create your first course"
+      }
     }
   }
 }

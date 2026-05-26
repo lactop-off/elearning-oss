@@ -2,6 +2,11 @@ import { Prisma } from '@/lib/generated/prisma/client';
 import { prisma } from '@/lib/db';
 import type { Course } from '@/lib/generated/prisma/client';
 
+export type CourseListItem = Pick<
+  Course,
+  'id' | 'slug' | 'title' | 'description' | 'publishedAt' | 'createdAt' | 'updatedAt'
+>;
+
 export class SlugTakenError extends Error {
   readonly code = 'SLUG_TAKEN' as const;
   constructor(slug: string) {
@@ -31,4 +36,31 @@ export async function createCourse(input: {
     }
     throw e;
   }
+}
+
+export async function listCoursesByInstructor(instructorId: string): Promise<CourseListItem[]> {
+  return prisma.course.findMany({
+    where: { instructorId },
+    select: {
+      id: true,
+      slug: true,
+      title: true,
+      description: true,
+      publishedAt: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+    orderBy: { updatedAt: 'desc' },
+  });
+}
+
+export async function findCourseOwnedBy(
+  id: string,
+  instructorId: string,
+): Promise<Course | null> {
+  return prisma.course.findFirst({ where: { id, instructorId } });
+}
+
+export async function setCoursePublishedAt(id: string, value: Date | null): Promise<void> {
+  await prisma.course.update({ where: { id }, data: { publishedAt: value } });
 }

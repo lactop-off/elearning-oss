@@ -3,6 +3,11 @@
     "appName": "E-learning OSS",
     "appDescription": "コース、クイズ、学習進捗トラッキングのためのオープンソースプラットフォームです。"
   },
+  "nav": {
+    "primary": "メインナビゲーション",
+    "myCourses": "マイコース",
+    "signedInAria": "{name} でログイン中"
+  },
   "roles": {
     "LEARNER": "学習者",
     "INSTRUCTOR": "講師",
@@ -76,14 +81,34 @@
       "submitting": "作成しています..."
     },
     "toast": {
-      "created": "コースを作成しました"
+      "created": "コースを作成しました",
+      "published": "コースを公開しました",
+      "unpublished": "コースを下書きに戻しました"
     },
     "errors": {
       "INVALID_INPUT": "入力内容を確認してください。",
       "UNAUTHORIZED": "サインインしてください。",
       "FORBIDDEN": "コースを作成できるのは講師のみです。",
       "SLUG_TAKEN": "このスラッグは既に使われています。別のものを試してください。",
+      "NOT_FOUND": "コースが見つかりません。または所有していません。",
       "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
+    },
+    "list": {
+      "heading": "あなたのコース",
+      "newCta": "新規作成",
+      "listAria": "あなたのコース一覧",
+      "statusPublished": "公開中",
+      "statusDraft": "下書き",
+      "slugDisplay": "/{slug}",
+      "publish": {
+        "publishLabel": "公開する",
+        "unpublishLabel": "下書きに戻す",
+        "working": "保存中..."
+      },
+      "empty": {
+        "message": "まだコースを作成していません。",
+        "cta": "最初のコースを作成"
+      }
     }
   }
 }

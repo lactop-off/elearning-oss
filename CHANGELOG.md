@@ -8,6 +8,25 @@
 ## [Unreleased]
 
 ### Added
+- 講師向け **コース一覧 + 公開トグル + サイトヘッダー** (ハーネス試験 2 回目、1 イテレーションで全 Gate PASS)
+  - `components/site-header.tsx`: Server Component、ロールに応じて
+    ナビゲーション項目を切替 (講師/管理者には "My courses"、未認証
+    には Sign in / Create account)
+  - `app/[locale]/instructor/courses/page.tsx`: 講師の自コース一覧
+    (空時の CTA カード付き)
+  - `features/courses/`:
+    - `data/courses.ts`: `listCoursesByInstructor` / `findCourseOwnedBy`
+      / `setCoursePublishedAt` を追加
+    - `actions/publish.ts`: 公開/下書きトグル Server Action、所有権
+      チェック付き
+    - `components/{course-list-item,course-list-empty,publish-toggle}.tsx`
+  - ホームページを刷新: ヘッダーとの重複を排し、未認証は単一の
+    Create account CTA、講師ログインなら "My courses" CTA を表示
+  - (auth) レイアウトから appName リンク削除 (ヘッダーで提供されるため)
+  - 翻訳キー追加 (ja/en 一致、17 keys): `nav.*`, `courses.list.*`,
+    `courses.toast.{published,unpublished}`, `courses.errors.NOT_FOUND`
+  - E2E テスト `tests/e2e/course-list.spec.ts`: ロール別ナビ表示、
+    講師の公開→下書きフロー
 - 講師向け **コース作成機能** (Builder ⇄ Gate ハーネスの本番試験)
   - `app/[locale]/instructor/courses/new/page.tsx`: 認証 + ロール
     (INSTRUCTOR / ADMIN) チェック付きのコース作成ページ
