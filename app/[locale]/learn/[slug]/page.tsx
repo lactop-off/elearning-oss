@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CompletionBanner } from '@/features/completions/components/completion-banner';
+import { findCertificate } from '@/features/completions/data/completions';
 import { findEnrolledCourseBySlug } from '@/features/enrollments/data/enrollments';
 import { listLessonsByCourse } from '@/features/lessons/data/lessons';
 import { listProgressByEnrollment } from '@/features/progress/data/progress';
@@ -30,9 +32,10 @@ export default async function EnrolledCoursePage({
   const enrollment = await findEnrolledCourseBySlug(user.id, slug);
   if (!enrollment) notFound();
 
-  const [lessons, progressRows, t] = await Promise.all([
+  const [lessons, progressRows, certificate, t] = await Promise.all([
     listLessonsByCourse(enrollment.course.id),
     listProgressByEnrollment(enrollment.enrollmentId),
+    enrollment.completedAt ? findCertificate(user.id, enrollment.course.id) : Promise.resolve(null),
     getTranslations('learn.detail'),
   ]);
 
@@ -67,6 +70,15 @@ export default async function EnrolledCoursePage({
           <p className="text-muted-foreground">{enrollment.course.description}</p>
         ) : null}
       </header>
+
+      {enrollment.completedAt ? (
+        <div className="mb-6">
+          <CompletionBanner
+            completedAt={enrollment.completedAt}
+            serial={certificate?.serial ?? null}
+          />
+        </div>
+      ) : null}
 
       <section aria-labelledby="progress-heading" className="mb-8 grid gap-3">
         <h2 id="progress-heading" className="text-lg font-semibold">

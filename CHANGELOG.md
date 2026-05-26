@@ -8,6 +8,24 @@
 ## [Unreleased]
 
 ### Added
+- **コース修了判定 + 修了証発行** (ハーネス試験 6 回目、1 イテレーションで全 Gate PASS)
+  - `features/completions/data/completions.ts`: `checkAndMarkComplete`
+    を `prisma.$transaction` で実装。所有権検証 + 必修進捗集計 +
+    `Enrollment.completedAt` 設定 + `Certificate` 発行を atomic
+  - `findCertificate(userId, courseId)` で表示用シリアル取得
+  - `features/completions/components/completion-banner.tsx`: `<aside
+    role="status" aria-labelledby>` の修了通知、`Intl.DateTimeFormat`
+    で日付ローカライズ、`CERT-{uuid}` シリアル表示
+  - `features/progress/actions/mark-complete.ts`: `recordProgress`
+    成功後に `checkAndMarkComplete` を呼び、完了時は `/learn` を revalidate。
+    戻り値に `{ courseCompleted, certificateSerial }`
+  - `app/[locale]/learn/[slug]/page.tsx`: completedAt あり時のみ
+    CompletionBanner を表示
+  - 翻訳キー: `completions.banner.{title, description, serialLabel}` (ja/en)
+  - 冪等性: 既完了の early-return + `@@unique([userId,courseId])` の DB 制約で多重防御
+  - Cert.serial は `CERT-${crypto.randomUUID()}` (122-bit entropy)
+  - E2E `tests/e2e/course-completion.spec.ts`: 全 3 必修レッスン完了 →
+    バナー + 進捗 100% + CERT- プレフィックス表示
 - 学習者向け **レッスン閲覧 + 進捗トラッキング** (ハーネス試験 5 回目、Iteration 2 で全 Gate PASS)
   - `app/[locale]/learn/[slug]/page.tsx`: 受講中コース概要 + 進捗バー + レッスン一覧
   - `app/[locale]/learn/[slug]/lessons/[order]/page.tsx`: レッスン読みページ + 前/次ナビ + Mark Complete

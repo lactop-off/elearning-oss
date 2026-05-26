@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 
+import { checkAndMarkComplete } from '@/features/completions/data/completions';
 import { findLessonInEnrollment } from '@/features/lessons/data/lessons';
 import {
   ProgressAlreadyRecordedError,
@@ -11,7 +12,10 @@ import { MarkCompleteSchema } from '@/features/progress/schemas/progress';
 import { AuthError, requireUser } from '@/lib/auth';
 
 type MarkCompleteResult =
-  | { ok: true }
+  | {
+      ok: true;
+      data: { courseCompleted: boolean; certificateSerial: string | null };
+    }
   | {
       ok: false;
       error:
@@ -41,9 +45,7 @@ export async function markLessonCompleteAction(
     throw e;
   }
 
-  // Re-validate that the lesson actually belongs to a course this user is
-  // enrolled in. Server side trust > client-supplied ids. The data layer keeps
-  // Prisma access out of the action.
+  // Re-validate that the lesson belongs to a course this user is enrolled in.
   const lesson = await findLessonInEnrollment(
     parsed.data.enrollmentId,
     user.id,
@@ -53,14 +55,36 @@ export async function markLessonCompleteAction(
 
   try {
     await recordProgress(parsed.data.enrollmentId, lesson.id);
-    revalidatePath(`/learn/${lesson.courseSlug}`);
-    revalidatePath(`/learn/${lesson.courseSlug}/lessons/${lesson.order}`);
-    return { ok: true };
   } catch (e) {
-    if (e instanceof ProgressAlreadyRecordedError) {
-      return { ok: false, error: 'ALREADY_COMPLETED' };
+    if (!(e instanceof ProgressAlreadyRecordedError)) {
+      console.error('[markLessonCompleteAction:recordProgress]', e);
+      return { ok: false, error: 'INTERNAL_ERROR' };
     }
-    console.error('[markLessonCompleteAction]', e);
+    // Otherwise fall through — completion check still runs in case the user
+    // previously hit a completion edge case that didn't set completedAt.
+  }
+
+  let completion;
+  try {
+    completion = await checkAndMarkComplete(parsed.data.enrollmentId, user.id);
+  } catch (e) {
+    // Progress is already recorded; surface the failure but keep the data
+    // consistent. The next mark-complete will retry the completion check.
+    console.error('[markLessonCompleteAction:checkAndMarkComplete]', e);
     return { ok: false, error: 'INTERNAL_ERROR' };
   }
+
+  revalidatePath(`/learn/${lesson.courseSlug}`);
+  revalidatePath(`/learn/${lesson.courseSlug}/lessons/${lesson.order}`);
+  if (completion.wasMarkedComplete) {
+    revalidatePath('/learn');
+  }
+
+  return {
+    ok: true,
+    data: {
+      courseCompleted: completion.wasMarkedComplete || completion.certificateSerial !== null,
+      certificateSerial: completion.certificateSerial,
+    },
+  };
 }

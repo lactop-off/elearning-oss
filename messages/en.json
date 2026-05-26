@@ -212,6 +212,13 @@
       "nextLesson": "Next lesson"
     }
   },
+  "completions": {
+    "banner": {
+      "title": "Course complete!",
+      "description": "You completed every required lesson on {date}.",
+      "serialLabel": "Certificate"
+    }
+  },
   "progress": {
     "summary": {
       "aria": "Course progress summary",

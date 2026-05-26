@@ -212,6 +212,13 @@
       "nextLesson": "次のレッスン"
     }
   },
+  "completions": {
+    "banner": {
+      "title": "コースを修了しました！",
+      "description": "{date} に必修レッスンを全て完了しました。",
+      "serialLabel": "修了証"
+    }
+  },
   "progress": {
     "summary": {
       "aria": "コース進捗の概要",
