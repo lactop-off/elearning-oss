@@ -71,3 +71,50 @@ export async function findCourseBySlugOwnedBy(
 export async function setCoursePublishedAt(id: string, value: Date | null): Promise<void> {
   await prisma.course.update({ where: { id }, data: { publishedAt: value } });
 }
+
+export type PublishedCourseSummary = Pick<
+  Course,
+  'id' | 'slug' | 'title' | 'description' | 'publishedAt'
+> & {
+  instructor: { id: string; name: string };
+};
+
+export async function listPublishedCourses(): Promise<PublishedCourseSummary[]> {
+  return prisma.course.findMany({
+    where: { publishedAt: { not: null } },
+    select: {
+      id: true,
+      slug: true,
+      title: true,
+      description: true,
+      publishedAt: true,
+      instructor: { select: { id: true, name: true } },
+    },
+    orderBy: { publishedAt: 'desc' },
+  });
+}
+
+export async function findPublishedCourseBySlug(
+  slug: string,
+): Promise<PublishedCourseSummary | null> {
+  return prisma.course.findFirst({
+    where: { slug, publishedAt: { not: null } },
+    select: {
+      id: true,
+      slug: true,
+      title: true,
+      description: true,
+      publishedAt: true,
+      instructor: { select: { id: true, name: true } },
+    },
+  });
+}
+
+export async function findPublishedCourseById(
+  id: string,
+): Promise<{ id: string; slug: string } | null> {
+  return prisma.course.findFirst({
+    where: { id, publishedAt: { not: null } },
+    select: { id: true, slug: true },
+  });
+}

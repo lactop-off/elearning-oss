@@ -25,8 +25,18 @@ export async function SiteHeader() {
         </Link>
 
         <ul className="flex items-center gap-2">
+          <li>
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/courses">{t('nav.catalog')}</Link>
+            </Button>
+          </li>
           {user ? (
             <>
+              <li>
+                <Button asChild variant="ghost" size="sm">
+                  <Link href="/learn">{t('nav.myLearning')}</Link>
+                </Button>
+              </li>
               {canManageCourses && (
                 <li>
                   <Button asChild variant="ghost" size="sm">

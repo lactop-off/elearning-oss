@@ -8,6 +8,24 @@
 ## [Unreleased]
 
 ### Added
+- 学習者向け **公開カタログ + 受講登録 + My learning** (ハーネス試験 4 回目、Iteration 2 で全 Gate PASS — i18n で ja.json の `nav.catalog`/`myLearning` 欠落を検出し修正)
+  - `app/[locale]/courses/page.tsx`: 公開コースのカタログ (未認証で閲覧可)
+  - `app/[locale]/courses/[slug]/page.tsx`: 公開コース詳細
+    - 未認証: 「Sign in to enroll」
+    - ログイン済 未登録: 「Enroll」ボタン
+    - ログイン済 登録済: 「You are enrolled」リンク
+  - `app/[locale]/learn/page.tsx`: 受講中コース一覧 (My learning)
+  - `features/enrollments/`:
+    - `schemas/enroll.ts` + テスト
+    - `data/enrollments.ts`: `createEnrollment` (P2002 → `AlreadyEnrolledError`), `findEnrollment`, `listEnrollmentsByUser`
+    - `actions/enroll.ts`: Server Action、サーバー側で `findPublishedCourseById` 再検証で IDOR / 未公開コース登録防止
+    - `components/enroll-button.tsx`: 未認証時は `/sign-in` へ
+  - `features/courses/data/courses.ts`: `listPublishedCourses` / `findPublishedCourseBySlug` / `findPublishedCourseById` を追加 (全て `publishedAt: not null` で絞込)
+  - `auth.config.ts`: `/courses` をパブリックパスに追加 (`/instructor/courses` とは衝突しない)
+  - `components/site-header.tsx`: Catalog / My learning リンク追加 (My learning はログイン時のみ)
+  - `prisma/seed.ts`: 公開済みデモコース "Intro to TypeScript" + 3 レッスンを投入
+  - 翻訳キー追加: `nav.{catalog,myLearning}`, `catalog.*`, `enrollments.*`, `learn.*` (両言語完全一致)
+  - E2E `tests/e2e/catalog-and-enroll.spec.ts` (5 件): 未認証カタログ閲覧、未認証 Enroll CTA、新規ユーザーの登録→My learning 表示、二重登録 UI、ヘッダーのロール別表示
 - 講師向け **コース詳細ページ + レッスン追加機能** (ハーネス試験 3 回目、1 イテレーションで全 Gate PASS)
   - `app/[locale]/instructor/courses/[slug]/page.tsx`: コース詳細 +
     レッスン一覧 + 「レッスンを追加」ボタン

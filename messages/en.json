@@ -5,6 +5,8 @@
   },
   "nav": {
     "primary": "Primary",
+    "catalog": "Catalog",
+    "myLearning": "My learning",
     "myCourses": "My courses",
     "signedInAria": "Signed in as {name}"
   },
@@ -148,6 +150,45 @@
       "FORBIDDEN": "Only the course owner can add lessons.",
       "COURSE_NOT_FOUND": "Course not found, or you do not own it.",
       "INTERNAL_ERROR": "Something went wrong. Please try again."
+    }
+  },
+  "catalog": {
+    "heading": "Course catalog",
+    "subheading": "Browse all published courses on the platform.",
+    "listAria": "Available courses",
+    "empty": "No courses published yet. Check back soon.",
+    "byInstructor": "By {name}",
+    "detail": {
+      "backLink": "← Back to catalog",
+      "byInstructor": "By {name}",
+      "signInToEnroll": "Sign in to enroll",
+      "alreadyEnrolled": "You are enrolled — open in My learning"
+    }
+  },
+  "enrollments": {
+    "button": {
+      "enroll": "Enroll",
+      "working": "Enrolling..."
+    },
+    "toast": {
+      "enrolled": "Enrolled in course"
+    },
+    "errors": {
+      "INVALID_INPUT": "Please try again from the course page.",
+      "UNAUTHORIZED": "Please sign in to enroll.",
+      "COURSE_NOT_PUBLISHED": "This course is not available right now.",
+      "ALREADY_ENROLLED": "You are already enrolled in this course.",
+      "INTERNAL_ERROR": "Something went wrong. Please try again."
+    }
+  },
+  "learn": {
+    "heading": "My learning",
+    "subheading": "Courses you are enrolled in.",
+    "listAria": "Your enrolled courses",
+    "byInstructor": "By {name}",
+    "empty": {
+      "message": "You have not enrolled in any course yet.",
+      "cta": "Browse the catalog"
     }
   }
 }
