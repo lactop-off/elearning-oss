@@ -202,7 +202,12 @@
       "optional": "任意",
       "lessonComplete": "完了",
       "lessonCompleteAria": "このレッスンは完了しました",
-      "contentTypeLabel": "形式: {type}"
+      "contentTypeLabel": "形式: {type}",
+      "quizzesAria": "このレッスンのクイズ",
+      "quizPassed": "合格",
+      "quizPassedAria": "クイズに合格しました",
+      "quizNotPassed": "合格 {passing}%",
+      "quizNotPassedAria": "クイズはまだ合格していません"
     },
     "lesson": {
       "backLink": "← {courseTitle} に戻る",
@@ -283,6 +288,51 @@
       "FORBIDDEN": "コース所有者のみがクイズを管理できます。",
       "LESSON_NOT_FOUND": "レッスンが見つかりません。",
       "QUIZ_NOT_FOUND": "クイズが見つかりません。",
+      "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
+    }
+  },
+  "attempts": {
+    "page": {
+      "backLink": "← {courseTitle} に戻る",
+      "meta": "{questions} 問 · 合格 {passing}% · {required}",
+      "isRequired": "修了に必須",
+      "isOptional": "任意",
+      "noQuestions": "このクイズにはまだ質問がありません — 講師が質問を追加するまで受験できません。",
+      "readyPrompt": "準備ができたら開始してください。何度でも受験できます。",
+      "startCta": "クイズを開始",
+      "retakeCta": "もう一度受験"
+    },
+    "start": {
+      "working": "開始中..."
+    },
+    "take": {
+      "questionsAria": "クイズの質問",
+      "pointsLabel": "{points} 点",
+      "submit": "回答を送信",
+      "working": "採点中...",
+      "selectAtLeastOne": "1 問以上に回答してから送信してください。"
+    },
+    "result": {
+      "passTitle": "合格しました！",
+      "failTitle": "もう一歩",
+      "scoreSummary": "得点: {score}% (合格 {passing}%)",
+      "breakdownAria": "問題ごとの内訳",
+      "choicesAria": "選択肢",
+      "correct": "正解 · +{points} 点",
+      "incorrect": "{awarded} / {possible} 点",
+      "correctMarker": "✓ 正解",
+      "yourPickMarker": "あなたの回答"
+    },
+    "toast": {
+      "passed": "{score}% で合格",
+      "submitted": "送信しました — 得点 {score}%"
+    },
+    "errors": {
+      "INVALID_INPUT": "回答内容を見直して再送信してください。",
+      "UNAUTHORIZED": "サインインしてください。",
+      "NOT_FOUND": "クイズまたは受験記録が見つかりません。",
+      "NOT_IN_PROGRESS": "この受験は既に送信済みです。",
+      "INVALID_ANSWERS": "クイズに含まれない回答が混ざっています。",
       "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
     }
   },

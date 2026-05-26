@@ -8,6 +8,7 @@ import { findEnrolledCourseBySlug } from '@/features/enrollments/data/enrollment
 import { listLessonsByCourse } from '@/features/lessons/data/lessons';
 import { listProgressByEnrollment } from '@/features/progress/data/progress';
 import { ProgressSummary } from '@/features/progress/components/progress-summary';
+import { listQuizzesForEnrolledLearner } from '@/features/quizzes/data/quizzes';
 import { Link, redirect } from '@/i18n/navigation';
 import { AuthError, requireUser } from '@/lib/auth';
 
@@ -32,10 +33,11 @@ export default async function EnrolledCoursePage({
   const enrollment = await findEnrolledCourseBySlug(user.id, slug);
   if (!enrollment) notFound();
 
-  const [lessons, progressRows, certificate, t] = await Promise.all([
+  const [lessons, progressRows, certificate, quizzesByLesson, t] = await Promise.all([
     listLessonsByCourse(enrollment.course.id),
     listProgressByEnrollment(enrollment.enrollmentId),
     enrollment.completedAt ? findCertificate(user.id, enrollment.course.id) : Promise.resolve(null),
+    listQuizzesForEnrolledLearner(slug, user.id),
     getTranslations('learn.detail'),
   ]);
 
@@ -140,8 +142,42 @@ export default async function EnrolledCoursePage({
                         ) : null}
                       </div>
                     </CardHeader>
-                    <CardContent className="text-xs text-muted-foreground">
-                      {t('contentTypeLabel', { type: lesson.contentType })}
+                    <CardContent className="grid gap-2 text-xs text-muted-foreground">
+                      <span>{t('contentTypeLabel', { type: lesson.contentType })}</span>
+                      {(quizzesByLesson.get(lesson.id) ?? []).length > 0 ? (
+                        <ul
+                          aria-label={t('quizzesAria')}
+                          className="grid gap-1 text-sm text-foreground"
+                        >
+                          {(quizzesByLesson.get(lesson.id) ?? []).map((quiz) => (
+                            <li
+                              key={quiz.id}
+                              className="flex items-center justify-between gap-3 rounded bg-muted/40 px-3 py-2"
+                            >
+                              <Link
+                                href={`/learn/${enrollment.course.slug}/quizzes/${quiz.id}`}
+                                className="hover:underline"
+                              >
+                                {quiz.title}
+                              </Link>
+                              <span
+                                className={
+                                  quiz.bestPassed
+                                    ? 'rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary'
+                                    : 'text-xs text-muted-foreground'
+                                }
+                                aria-label={
+                                  quiz.bestPassed ? t('quizPassedAria') : t('quizNotPassedAria')
+                                }
+                              >
+                                {quiz.bestPassed
+                                  ? t('quizPassed')
+                                  : t('quizNotPassed', { passing: quiz.passingScore })}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : null}
                     </CardContent>
                   </Card>
                 </li>

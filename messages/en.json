@@ -202,7 +202,12 @@
       "optional": "Optional",
       "lessonComplete": "Complete",
       "lessonCompleteAria": "Lesson completed",
-      "contentTypeLabel": "Content: {type}"
+      "contentTypeLabel": "Content: {type}",
+      "quizzesAria": "Quizzes for this lesson",
+      "quizPassed": "Passed",
+      "quizPassedAria": "Quiz passed",
+      "quizNotPassed": "Pass at {passing}%",
+      "quizNotPassedAria": "Quiz not passed yet"
     },
     "lesson": {
       "backLink": "← Back to {courseTitle}",
@@ -283,6 +288,51 @@
       "FORBIDDEN": "Only the course owner can manage quizzes.",
       "LESSON_NOT_FOUND": "Lesson not found, or you do not own it.",
       "QUIZ_NOT_FOUND": "Quiz not found, or you do not own it.",
+      "INTERNAL_ERROR": "Something went wrong. Please try again."
+    }
+  },
+  "attempts": {
+    "page": {
+      "backLink": "← Back to {courseTitle}",
+      "meta": "{questions} questions · pass at {passing}% · {required}",
+      "isRequired": "Required for completion",
+      "isOptional": "Optional",
+      "noQuestions": "This quiz has no questions yet — the instructor needs to add some before learners can take it.",
+      "readyPrompt": "When you're ready, start the quiz. You can retake it as many times as you need.",
+      "startCta": "Start quiz",
+      "retakeCta": "Retake quiz"
+    },
+    "start": {
+      "working": "Starting..."
+    },
+    "take": {
+      "questionsAria": "Quiz questions",
+      "pointsLabel": "{points} points",
+      "submit": "Submit answers",
+      "working": "Grading...",
+      "selectAtLeastOne": "Pick at least one answer to submit."
+    },
+    "result": {
+      "passTitle": "You passed!",
+      "failTitle": "Not quite there yet",
+      "scoreSummary": "Score: {score}% (pass at {passing}%)",
+      "breakdownAria": "Per-question breakdown",
+      "choicesAria": "Choices",
+      "correct": "Correct · +{points} points",
+      "incorrect": "{awarded} / {possible} points",
+      "correctMarker": "✓ correct",
+      "yourPickMarker": "your answer"
+    },
+    "toast": {
+      "passed": "Passed with {score}%",
+      "submitted": "Submitted — score {score}%"
+    },
+    "errors": {
+      "INVALID_INPUT": "Please review your answers and try again.",
+      "UNAUTHORIZED": "Please sign in to continue.",
+      "NOT_FOUND": "Quiz or attempt not found.",
+      "NOT_IN_PROGRESS": "This attempt has already been submitted.",
+      "INVALID_ANSWERS": "Some answers didn't match the quiz.",
       "INTERNAL_ERROR": "Something went wrong. Please try again."
     }
   },

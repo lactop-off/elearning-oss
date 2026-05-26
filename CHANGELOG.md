@@ -8,6 +8,33 @@
 ## [Unreleased]
 
 ### Added
+- **クイズ受験 + 自動採点機能 (学習者、Phase 2)** (ハーネス試験 8 回目、1 イテレーションで全 Gate PASS)
+  - `features/attempts/{schemas,data,actions,components}/`:
+    - `schemas/attempt.ts` + テスト: `SubmitAttemptSchema`
+    - `data/attempts.ts`: `findLatestAttempt`, `findInProgressAttempt`,
+      `findAttemptOwnedBy`, `startAttempt`, `gradeAndSubmitAttempt` (transaction
+      内で関係性検証 + 採点 + Answer 作成 + Attempt 状態更新を atomic),
+      `listAnswersByAttempt`
+    - `actions/start-attempt.ts`: クイズ受験開始 (既存 IN_PROGRESS は resume)
+    - `actions/submit-attempt.ts`: 採点提出 Server Action
+    - `components/{quiz-taker,quiz-result,start-quiz-button}.tsx`: 受験フォーム
+      (fieldset/legend で問題ごとにラジオグループ)、結果表示 (合格バナー +
+      問題別正誤、色 + テキストで重複表現)
+  - `features/quizzes/data/quizzes.ts`: `findQuizForLearner` (isCorrect を
+    クライアントに漏らさない select)、`listQuizzesForEnrolledLearner`
+    (学習者コース詳細用、各クイズの合格状況含む)
+  - 新規ページ: `/learn/[slug]/quizzes/[quizId]` (状態別: 未開始 / 進行中 /
+    結果表示の 3 状態をサーバー側で分岐)
+  - `/learn/[slug]` (学習者コース詳細) を更新: レッスンごとにクイズ一覧 + 合格バッジ
+  - 翻訳キー追加: `attempts.{page,start,take,result,toast,errors}.*`,
+    `learn.detail.{quizzesAria,quizPassed,quizPassedAria,quizNotPassed,quizNotPassedAria}`
+  - E2E `tests/e2e/quiz-taking.spec.ts` (3、serial 実行): 受験合格 +
+    `✓ correct` 表示 + コース詳細で Passed バッジ、誤答時の `your answer`
+    マーカー + 不合格スコア、未エンロール 404
+  - 採点: `Math.round(earned/possible * 100)`、合格判定は `score >= passingScore`
+    (>= で境界値合格、CLAUDE.md ルール準拠)
+  - `playwright.config.ts` 維持 + `test.describe.configure({ mode: 'serial' })`
+    で重い設定を含むテストはファイル内 serial 化
 - **クイズ作成機能 (講師、Phase 1)** (ハーネス試験 7 回目、1 イテレーションで全 Gate PASS)
   - `features/quizzes/{schemas,data,actions,components}/`:
     - `schemas/{quiz,question}.ts` + テスト: `CreateQuizSchema`,
