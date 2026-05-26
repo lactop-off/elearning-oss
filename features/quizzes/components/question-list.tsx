@@ -31,6 +31,10 @@ export async function QuestionList({ questions }: { questions: QuestionWithChoic
               </CardTitle>
               <CardDescription>
                 {t('pointsLabel', { points: question.points })}
+                {' · '}
+                {question.type === 'MULTI_CHOICE'
+                  ? t('typeMulti')
+                  : t('typeSingle')}
               </CardDescription>
             </CardHeader>
             <CardContent>

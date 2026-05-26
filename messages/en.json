@@ -247,12 +247,18 @@
       "addQuestionDescription": "Single-choice question. Pick one correct answer."
     },
     "questionForm": {
+      "typeLabel": "Question type",
+      "typeSingle": "Single choice",
+      "typeMulti": "Multiple choice",
+      "typeSingleHelper": "Learners pick exactly one correct answer.",
+      "typeMultiHelper": "Learners must pick every correct choice — partial answers are scored as incorrect.",
       "bodyLabel": "Question",
       "bodyPlaceholder": "What is 1 + 1?",
       "pointsLabel": "Points",
       "pointsHelper": "Default 1 point per question.",
       "choicesLabel": "Choices",
       "choicesHelper": "Add 2 to 6 choices. Select the radio button next to the correct one.",
+      "choicesHelperMulti": "Add 2 to 6 choices. Check every box that is correct (at least one, but not all).",
       "choicePlaceholder": "Choice {index}",
       "correctAria": "Mark choice {index} as correct",
       "removeChoice": "Remove",
@@ -265,6 +271,8 @@
       "listAria": "Quiz questions",
       "empty": "No questions yet. Add the first one below.",
       "pointsLabel": "{points} points",
+      "typeSingle": "single choice",
+      "typeMulti": "multiple choice",
       "choicesAria": "Choices",
       "correctMarker": "✓ correct"
     },
@@ -309,6 +317,8 @@
     "take": {
       "questionsAria": "Quiz questions",
       "pointsLabel": "{points} points",
+      "typeSingle": "Pick one",
+      "typeMulti": "Pick all that apply",
       "submit": "Submit answers",
       "working": "Grading...",
       "selectAtLeastOne": "Pick at least one answer to submit."

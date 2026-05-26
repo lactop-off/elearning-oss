@@ -83,18 +83,26 @@ export type SubmitOutcome = {
 };
 
 /**
- * Grade a SINGLE_CHOICE quiz attempt and persist Answer rows, attempt score
- * and pass/fail in a single transaction. Returns the final score (0-100) and
- * pass result.
+ * Grade a quiz attempt (supports SINGLE_CHOICE and MULTI_CHOICE questions)
+ * and persist Answer rows, attempt score and pass/fail in a single
+ * transaction. Returns the final score (0-100) and pass result.
+ *
+ * Scoring:
+ * - SINGLE_CHOICE: learner picks exactly 1 choice. Correct iff that choice
+ *   has isCorrect=true. Multi-pick on a single-choice question is rejected as
+ *   INVALID_ANSWERS.
+ * - MULTI_CHOICE: all-or-nothing. The set of selected choices must equal the
+ *   set of correct choices exactly (no missing, no extras). Partial credit is
+ *   intentionally out of scope.
  *
  * The caller is responsible for verifying that the attempt belongs to the
- * current user and is in IN_PROGRESS state. This function refuses to grade an
- * already-submitted attempt by checking status inside the transaction.
+ * current user and is in IN_PROGRESS state; we re-check status inside the
+ * transaction for TOCTOU safety.
  */
 export async function gradeAndSubmitAttempt(input: {
   attemptId: string;
   userId: string;
-  answers: { questionId: string; choiceId: string }[];
+  answers: { questionId: string; choiceIds: string[] }[];
 }): Promise<SubmitOutcome | { error: 'NOT_IN_PROGRESS' | 'INVALID_ANSWERS' }> {
   return prisma.$transaction(async (tx) => {
     const attempt = await tx.attempt.findFirst({
@@ -110,6 +118,7 @@ export async function gradeAndSubmitAttempt(input: {
               select: {
                 id: true,
                 points: true,
+                type: true,
                 choices: { select: { id: true, isCorrect: true } },
               },
             },
@@ -121,55 +130,98 @@ export async function gradeAndSubmitAttempt(input: {
       return { error: 'NOT_IN_PROGRESS' as const };
     }
 
-    // Build maps for grading and validate every submitted answer references a
-    // question and choice that actually belong to this quiz.
-    const questionMap = new Map<
-      string,
-      { points: number; correctChoiceId: string | null; choiceIds: Set<string> }
-    >();
+    // Build per-question lookup tables: total points, the set of correct
+    // choiceIds, and the set of all choiceIds (for validating the answer).
+    type QuestionLookup = {
+      points: number;
+      type: 'SINGLE_CHOICE' | 'MULTI_CHOICE' | 'TEXT';
+      correctIds: Set<string>;
+      allIds: Set<string>;
+    };
+    const questionMap = new Map<string, QuestionLookup>();
     for (const question of attempt.quiz.questions) {
-      const correct = question.choices.find((c) => c.isCorrect);
+      const correctIds = new Set<string>();
+      const allIds = new Set<string>();
+      for (const choice of question.choices) {
+        allIds.add(choice.id);
+        if (choice.isCorrect) correctIds.add(choice.id);
+      }
       questionMap.set(question.id, {
         points: question.points,
-        correctChoiceId: correct?.id ?? null,
-        choiceIds: new Set(question.choices.map((c) => c.id)),
+        type: question.type,
+        correctIds,
+        allIds,
       });
     }
 
+    // Validate each submitted answer.
     const seenQuestions = new Set<string>();
     for (const answer of input.answers) {
-      const question = questionMap.get(answer.questionId);
-      if (!question || !question.choiceIds.has(answer.choiceId)) {
-        return { error: 'INVALID_ANSWERS' as const };
-      }
+      const q = questionMap.get(answer.questionId);
+      if (!q) return { error: 'INVALID_ANSWERS' as const };
       if (seenQuestions.has(answer.questionId)) {
         return { error: 'INVALID_ANSWERS' as const };
       }
       seenQuestions.add(answer.questionId);
+
+      // No choices at all is an empty answer — the schema already blocks this,
+      // but defense-in-depth.
+      if (answer.choiceIds.length === 0) return { error: 'INVALID_ANSWERS' as const };
+
+      // SINGLE_CHOICE allows only one selection.
+      if (q.type === 'SINGLE_CHOICE' && answer.choiceIds.length !== 1) {
+        return { error: 'INVALID_ANSWERS' as const };
+      }
+
+      // No duplicate choiceIds within one answer.
+      const submittedSet = new Set(answer.choiceIds);
+      if (submittedSet.size !== answer.choiceIds.length) {
+        return { error: 'INVALID_ANSWERS' as const };
+      }
+
+      // Every submitted choice must belong to the question.
+      for (const choiceId of answer.choiceIds) {
+        if (!q.allIds.has(choiceId)) return { error: 'INVALID_ANSWERS' as const };
+      }
     }
 
     let earned = 0;
     let possible = 0;
-    const answerRecords: {
+    type AnswerRecord = {
       questionId: string;
-      choiceId: string;
+      choiceIds: string[];
       isCorrect: boolean;
       pointsAwarded: number;
-    }[] = [];
+    };
+    const answerRecords: AnswerRecord[] = [];
 
     for (const question of attempt.quiz.questions) {
       possible += question.points;
       const submitted = input.answers.find((a) => a.questionId === question.id);
       if (!submitted) {
-        // Unanswered question counts as 0.
+        // Unanswered counts as 0; no Answer row created.
         continue;
       }
-      const isCorrect = submitted.choiceId === questionMap.get(question.id)?.correctChoiceId;
+      const q = questionMap.get(question.id)!;
+      const submittedSet = new Set(submitted.choiceIds);
+
+      // All-or-nothing equality between submitted and correct sets, for both
+      // SINGLE_CHOICE (set size 1) and MULTI_CHOICE.
+      let isCorrect = submittedSet.size === q.correctIds.size;
+      if (isCorrect) {
+        for (const correctId of q.correctIds) {
+          if (!submittedSet.has(correctId)) {
+            isCorrect = false;
+            break;
+          }
+        }
+      }
+
       const pointsAwarded = isCorrect ? question.points : 0;
       earned += pointsAwarded;
       answerRecords.push({
         questionId: question.id,
-        choiceId: submitted.choiceId,
+        choiceIds: submitted.choiceIds,
         isCorrect,
         pointsAwarded,
       });
@@ -185,7 +237,9 @@ export async function gradeAndSubmitAttempt(input: {
           questionId: record.questionId,
           isCorrect: record.isCorrect,
           pointsAwarded: record.pointsAwarded,
-          selectedChoices: { connect: { id: record.choiceId } },
+          selectedChoices: {
+            connect: record.choiceIds.map((id) => ({ id })),
+          },
         },
       });
     }

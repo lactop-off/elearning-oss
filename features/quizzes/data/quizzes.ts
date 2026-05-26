@@ -159,6 +159,7 @@ export type LearnerQuizView = {
     body: string;
     order: number;
     points: number;
+    type: 'SINGLE_CHOICE' | 'MULTI_CHOICE' | 'TEXT';
     choices: { id: string; body: string; order: number }[];
   }[];
 };
@@ -199,6 +200,7 @@ export async function findQuizForLearner(
           body: true,
           order: true,
           points: true,
+          type: true,
           choices: {
             select: { id: true, body: true, order: true },
             orderBy: { order: 'asc' },

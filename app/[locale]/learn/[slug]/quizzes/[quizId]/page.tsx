@@ -114,7 +114,7 @@ export default async function LearnerQuizPage({
                 passingScore={quiz.passingScore}
                 questions={quiz.questions}
                 answers={resultPayload.answers}
-                correctChoiceByQuestionId={resultPayload.correctChoiceByQuestionId}
+                correctChoiceIdsByQuestionId={resultPayload.correctChoiceIdsByQuestionId}
               />
               <div>
                 <StartQuizButton
@@ -136,10 +136,12 @@ async function loadResultPayload(quizId: string, attemptId: string) {
     listAnswersByAttempt(attemptId),
     listQuestionsByQuiz(quizId),
   ]);
-  const correctChoiceByQuestionId = new Map<string, string | null>();
+  const correctChoiceIdsByQuestionId = new Map<string, Set<string>>();
   for (const question of questions) {
-    const correct = question.choices.find((c) => c.isCorrect);
-    correctChoiceByQuestionId.set(question.id, correct?.id ?? null);
+    correctChoiceIdsByQuestionId.set(
+      question.id,
+      new Set(question.choices.filter((c) => c.isCorrect).map((c) => c.id)),
+    );
   }
-  return { answers, correctChoiceByQuestionId };
+  return { answers, correctChoiceIdsByQuestionId };
 }

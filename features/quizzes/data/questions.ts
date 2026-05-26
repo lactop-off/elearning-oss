@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/db';
-import type { Choice, Question } from '@/lib/generated/prisma/client';
+import type { Choice, Question, QuestionType } from '@/lib/generated/prisma/client';
 
 export type QuestionWithChoices = Pick<
   Question,
@@ -27,17 +27,24 @@ export async function listQuestionsByQuiz(quizId: string): Promise<QuestionWithC
 }
 
 /**
- * Create a SINGLE_CHOICE question with its choices in a single transaction.
- * The next `order` is computed inside the transaction to respect the
- * @@unique([quizId, order]) constraint under concurrent inserts.
+ * Create a SINGLE_CHOICE or MULTI_CHOICE question with its choices in a single
+ * transaction. The next `order` is computed inside the transaction to respect
+ * the @@unique([quizId, order]) constraint under concurrent inserts.
+ *
+ * `correctChoiceIndexes` is the canonical input — a set of indices into
+ * `choices` that should be marked isCorrect. Caller is responsible for
+ * matching its semantics to the question type (the schema enforces exactly 1
+ * for SINGLE_CHOICE and ≥1 for MULTI_CHOICE).
  */
-export async function createSingleChoiceQuestion(input: {
+export async function createQuestionWithChoices(input: {
   quizId: string;
+  type: QuestionType;
   body: string;
   points: number;
   choices: { body: string }[];
-  correctChoiceIndex: number;
+  correctChoiceIndexes: number[];
 }): Promise<{ questionId: string }> {
+  const correctSet = new Set(input.correctChoiceIndexes);
   return prisma.$transaction(async (tx) => {
     const last = await tx.question.findFirst({
       where: { quizId: input.quizId },
@@ -52,12 +59,12 @@ export async function createSingleChoiceQuestion(input: {
         body: input.body,
         order: nextOrder,
         points: input.points,
-        type: 'SINGLE_CHOICE',
+        type: input.type,
         choices: {
           create: input.choices.map((choice, index) => ({
             body: choice.body,
             order: index + 1,
-            isCorrect: index === input.correctChoiceIndex,
+            isCorrect: correctSet.has(index),
           })),
         },
       },
