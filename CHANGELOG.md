@@ -8,6 +8,14 @@
 ## [Unreleased]
 
 ### Added
+- shadcn/ui (radix-nova スタイル、neutral ベースカラー) を導入
+  - `components.json`: shadcn 設定 (alias: `@/components`, `@/lib/utils` 等)
+  - `lib/utils.ts`: `cn()` ヘルパー
+  - 基本コンポーネント: `button`, `card`, `input`, `label`, `form`,
+    `dialog`, `dropdown-menu`, `sonner`
+  - 関連パッケージ: react-hook-form / @hookform/resolvers / zod /
+    @radix-ui/react-slot / @radix-ui/react-label
+  - `form.tsx` は手動配置 (現行 shadcn CLI でレジストリ取得不能のため公式テンプレを移植)
 - Prisma 7.8 + PostgreSQL 環境構築
   - `prisma/schema.prisma` に CLAUDE.md ドメインモデルをフル定義
     (User / Course / Lesson / Enrollment / Progress / Quiz / Question /
