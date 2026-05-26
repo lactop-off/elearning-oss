@@ -8,6 +8,15 @@
 ## [Unreleased]
 
 ### Added
+- 開発用 DB 環境の確立
+  - `docker-compose.yml`: PostgreSQL 16-alpine、port 5432、永続ボリューム、ヘルスチェック付き
+  - 初回マイグレーション `prisma/migrations/20260526015612_init/`
+    (11 テーブル + 4 enum + インデックス・FK 制約)
+  - `db:seed` を `tsx --env-file=.env` 経由に変更し、シェル env なしでも動作
+  - 実 DB に対する E2E テストを追加:
+    - デモ学習者のサインイン → ホームでロール表示 → サインアウト
+    - 未知メールでのサインインエラー表示
+  - 検証結果: vitest 13/13 PASS、playwright **5/5 PASS** (実 DB)
 - 認証 UI: サインイン / サインアップ / サインアウト
   - `app/(auth)/layout.tsx`: 中央寄せのカードレイアウト
   - `app/(auth)/sign-in/page.tsx`, `app/(auth)/sign-up/page.tsx`:
