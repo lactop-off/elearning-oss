@@ -7,6 +7,83 @@
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-05-26
+
+### 概要
+
+E-learning OSS プラットフォーム v0.1.0 — MVP 初回リリース。OSS として「実用に耐える最小単位」を目標に、講師の作成ワークフローと学習者の受講ループを一通りカバー。
+
+### ハイライト
+
+- **講師ワークフロー**: コース・レッスン・クイズ (SINGLE_CHOICE) の作成、公開/下書きトグル
+- **学習者ワークフロー**: 公開カタログ → 受講登録 → レッスン閲覧 → 進捗マーク → クイズ受験 → 自動採点 → コース修了 → 修了証発行
+- **修了判定**: 全必修レッスン完了 + 全必修クイズ合格 (`>=` 判定、`@@unique` 制約 + transaction で冪等性保証)
+- **ハーネス開発**: Claude Code の Builder ⇄ Gate 自動ループで全 9 機能を品質保証付きで実装
+
+### 技術スタック
+
+- Next.js 16 (App Router, Turbopack) / React 19 / TypeScript 5 (strict)
+- Tailwind CSS v4 / shadcn/ui (radix-nova)
+- Prisma 7 + PostgreSQL 16 (driver adapter `@prisma/adapter-pg`)
+- Auth.js v5 (Credentials + JWT)
+- next-intl 4 (ja/en、`localePrefix: 'always'`)
+- Vitest 4 + Playwright 1.60 + Testing Library
+- bcryptjs / Zod / react-hook-form
+
+### 主要機能
+
+#### 認証
+- メール+パスワードのサインアップ/サインイン/サインアウト
+- 3 ロール (LEARNER / INSTRUCTOR / ADMIN)、Server Action での `requireUser` / `requireRole`
+
+#### コース管理 (講師)
+- コース CRUD (作成、一覧、詳細、公開トグル)
+- レッスン追加 (TEXT コンテンツ、自動採番)
+- クイズ作成 (SINGLE_CHOICE、2-6 選択肢、配点)
+
+#### 学習 (学習者)
+- 公開コースカタログ (未認証で閲覧可)
+- 受講登録 (Enrollment)、「My learning」ダッシュボード
+- レッスン読みページ + 前/次ナビ + 完了マーク
+- 進捗バー (必修レッスン完了率)
+- クイズ受験 + 自動採点 + 結果表示 (正解/不正解の理由を視覚化)
+- コース修了 + 修了証発行 (CERT-{uuid})
+
+#### i18n
+- ja (default) / en、約 256 翻訳キー、両言語完全一致
+
+### アーキテクチャ
+
+- features/<domain>/{actions,components,data,schemas} レイヤー
+- Prisma は data/ 配下のみ (architecture-gate で強制)
+- Server Components がデフォルト、`"use client"` は最小限
+- Server Action は `{ ok: true, data } | { ok: false, error }` 形式
+- 全てのドメイン書き込みに**サーバー側所有権再検証** (IDOR 防止)
+
+### テスト
+
+- Vitest: 48/48 PASS (unit + integration)
+- Playwright: 30/30 PASS (実 DB に対するシナリオテスト)
+
+### 開発インフラ
+
+- docker-compose.yml で PostgreSQL 16-alpine をワンコマンド起動
+- `prisma/seed.ts` でデモユーザー 3 + 公開コース "Intro to TypeScript" を投入
+- Conventional Commits + Gitflow
+
+### 既知の制限事項
+
+- クイズは SINGLE_CHOICE のみ (MULTI_CHOICE / TEXT は未対応)
+- レッスン/クイズの編集・削除・並び順変更は未実装
+- 学習者ダッシュボード以外のロール別ダッシュボードなし (管理者画面なし)
+- 認証は Email/Password のみ (OAuth プロバイダ未対応)
+- 通知 (メール) なし
+- レート制限なし
+
+詳細は各機能の commit メッセージを参照。
+
+---
+
 ### Added
 - **コース修了判定にクイズ合格を統合 (Phase 3 / MVP 完成)** (ハーネス試験 9 回目、1 イテレーションで全 Gate PASS)
   - `features/completions/data/completions.ts`:
