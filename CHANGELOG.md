@@ -7,6 +7,24 @@
 
 ## [Unreleased]
 
+### Added
+- **クイズの MULTI_CHOICE 対応** (ハーネス試験 10 回目、1 イテレーションで全 Gate PASS)
+  - `AddQuestionSchema` を `SINGLE_CHOICE` / `MULTI_CHOICE` の discriminated union に変更
+    - SINGLE: `correctChoiceIndex` (単一)、MULTI: `correctChoiceIndices` (1〜N-1 個)
+    - MULTI で全選択をした場合は Zod refine で degenerate として拒否
+  - `createQuestionWithChoices` (data 層): `type` と正解インデックス配列を受け取る汎用関数
+  - `addQuestionAction`: discriminated union を受け取り data 層に橋渡し
+  - `findQuizForLearner` の select に `type` を追加 (`isCorrect` は引き続き非露出)
+  - `gradeAndSubmitAttempt`: SINGLE/MULTI 共通の集合等価比較 (all-or-nothing) に統一
+    - SINGLE は `choiceIds.length !== 1` を `INVALID_ANSWERS` で拒否
+    - MULTI で `submittedSet.size === correctIds.size` かつ全要素一致のときのみ正解
+    - partial credit は意図的に未実装
+  - UI: `question-form` で type ラジオ + 動的選択肢 UI (SINGLE: radio、MULTI: checkbox)
+  - UI: `quiz-taker` で type に応じて input type を切替
+  - UI: `quiz-result` を `Map<questionId, Set<choiceId>>` ベースに刷新 (複数正解対応)
+  - 翻訳キー: `quizzes.questionForm.{typeLabel,typeSingle,typeMulti,typeSingleHelper,typeMultiHelper,choicesHelperMulti}`、`questionList.{typeSingle,typeMulti}`、`attempts.take.{typeSingle,typeMulti}` (ja/en 一致)
+  - E2E: `quiz-multi-choice.spec.ts` (3): 完全一致で合格、部分選択で不合格、余分選択で不合格
+
 ## [0.1.0] - 2026-05-26
 
 ### 概要
