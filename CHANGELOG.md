@@ -8,6 +8,17 @@
 ## [Unreleased]
 
 ### Added
+- Prisma 7.8 + PostgreSQL 環境構築
+  - `prisma/schema.prisma` に CLAUDE.md ドメインモデルをフル定義
+    (User / Course / Lesson / Enrollment / Progress / Quiz / Question /
+    Choice / Attempt / Answer / Certificate + 4 種の Enum)
+  - driver adapter (`@prisma/adapter-pg`) 必須化への対応
+  - `lib/db.ts`: Next.js dev mode 対応のシングルトン PrismaClient
+  - `prisma/seed.ts`: 3 ロールのデモユーザー投入
+  - `.env.example`: DATABASE_URL のテンプレート
+  - npm scripts: `db:generate` / `db:migrate` / `db:migrate:deploy` /
+    `db:push` / `db:studio` / `db:seed` / `db:reset` /
+    `postinstall: prisma generate`
 - Next.js 16 (App Router, Turbopack) プロジェクトの初期化
   - React 19.2 / TypeScript 5 (strict)
   - Tailwind CSS v4

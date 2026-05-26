@@ -24,7 +24,9 @@
 - **UI**: Tailwind CSS v4 / shadcn/ui / Radix UI primitives
 - **Form**: React Hook Form + Zod (バリデーション)
 - **Backend**: Next.js Server Actions / Route Handlers
-- **DB**: PostgreSQL 16 / Prisma ORM
+- **DB**: PostgreSQL 16 / Prisma 7 (ORM, driver adapter `@prisma/adapter-pg` 必須)
+  - クライアントは `lib/db.ts` のシングルトン (`import { prisma } from '@/lib/db'`)
+  - 生成物は `lib/generated/prisma/` (gitignore 済)
 - **Auth**: NextAuth.js (or Lucia — 後で決定)
 - **Test**: Vitest (ユニット) / Playwright (E2E) / Testing Library
 - **i18n**: next-intl

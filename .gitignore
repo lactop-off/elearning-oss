@@ -61,3 +61,6 @@ Thumbs.db
 # Claude Code (local settings only — keep team settings.json tracked)
 .claude/settings.local.json
 .claude/.tmp/
+
+# Prisma — generated client output
+lib/generated/
