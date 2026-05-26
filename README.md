@@ -1,18 +1,25 @@
-# E-learning OSS (working title)
+# E-learning OSS
 
-オープンソースの E-learning プラットフォーム。Next.js + TypeScript + Prisma で構築する Moodle / Open edX の代替を目指す。
+[![CI](https://github.com/lactop-off/elearning-oss/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/lactop-off/elearning-oss/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/lactop-off/elearning-oss)](https://github.com/lactop-off/elearning-oss/releases)
+
+オープンソースの E-learning プラットフォーム。Next.js 16 + TypeScript + Prisma + Auth.js v5 で構築する Moodle / Open edX の代替を目指す MVP。
 
 ## ステータス
 
-🚧 **初期セットアップ段階**: ハーネス (Claude Code) の構成のみが整った状態。プロジェクト本体 (Next.js 等) はまだ作成されていない。
+✅ **v0.1.0 リリース済** — 講師の作成ワークフローと学習者の受講ループ (受講登録 → レッスン閲覧 → クイズ受験 → 修了 + 修了証発行) が一通り動作する MVP。
 
-## 主な機能 (予定)
+## 主な機能
 
-- コース・レッスン管理
-- クイズ・評価機能 (自動採点、合格基準)
-- 学習進捗トラッキング (ダッシュボード、修了判定)
+- コース・レッスン・クイズ作成 (講師)
+- 受講登録、レッスン閲覧、進捗トラッキング (学習者)
+- クイズ自動採点 (SINGLE_CHOICE)
+- 修了判定 (全必修レッスン完了 + 全必修クイズ合格) + 修了証発行
+- 多言語対応 (日本語 / 英語)
+- 3 ロール (Learner / Instructor / Admin)
 
-## 技術スタック (予定)
+## 技術スタック
 
 - Next.js 15 (App Router) / React 19 / TypeScript
 - Tailwind CSS / shadcn/ui
@@ -134,4 +141,4 @@ docker compose down -v         # ボリュームごと削除 (DB リセット)
 
 ## ライセンス
 
-未定 (OSS として公開予定 — MIT または AGPL を検討中)
+[MIT License](LICENSE)
