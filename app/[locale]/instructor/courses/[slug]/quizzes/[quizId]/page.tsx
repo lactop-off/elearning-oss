@@ -1,9 +1,11 @@
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { QuestionForm } from '@/features/quizzes/components/question-form';
 import { QuestionList } from '@/features/quizzes/components/question-list';
+import { QuizDeleteButton } from '@/features/quizzes/components/quiz-delete-button';
 import { listQuestionsByQuiz } from '@/features/quizzes/data/questions';
 import { findQuizOwnedByInstructor } from '@/features/quizzes/data/quizzes';
 import { Link, redirect } from '@/i18n/navigation';
@@ -30,9 +32,10 @@ export default async function InstructorQuizPage({
   const quiz = await findQuizOwnedByInstructor(quizId, user.id);
   if (!quiz || quiz.course.slug !== slug) notFound();
 
-  const [questions, t] = await Promise.all([
+  const [questions, t, tList] = await Promise.all([
     listQuestionsByQuiz(quiz.id),
     getTranslations('quizzes.manage'),
+    getTranslations('quizzes.list'),
   ]);
 
   return (
@@ -52,7 +55,21 @@ export default async function InstructorQuizPage({
             ? t('attachedToLesson', { order: quiz.lesson.order, title: quiz.lesson.title })
             : t('attachedToCourse')}
         </p>
-        <h1 className="text-2xl font-semibold tracking-tight">{quiz.title}</h1>
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <h1 className="text-2xl font-semibold tracking-tight">{quiz.title}</h1>
+          <div className="flex shrink-0 gap-2">
+            <Button asChild variant="outline" size="sm">
+              <Link href={`/instructor/courses/${slug}/quizzes/${quiz.id}/edit`}>
+                {tList('edit')}
+              </Link>
+            </Button>
+            <QuizDeleteButton
+              quizId={quiz.id}
+              quizTitle={quiz.title}
+              courseSlug={slug}
+            />
+          </div>
+        </div>
         {quiz.description ? (
           <p className="text-muted-foreground">{quiz.description}</p>
         ) : null}

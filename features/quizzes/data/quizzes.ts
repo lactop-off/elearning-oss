@@ -26,6 +26,34 @@ export async function createQuiz(input: {
   });
 }
 
+export async function updateQuiz(input: {
+  quizId: string;
+  title: string;
+  description: string;
+  passingScore: number;
+  isRequired: boolean;
+}): Promise<Quiz> {
+  return prisma.quiz.update({
+    where: { id: input.quizId },
+    data: {
+      title: input.title,
+      description: input.description || null,
+      passingScore: input.passingScore,
+      isRequired: input.isRequired,
+    },
+  });
+}
+
+/**
+ * Delete a quiz. Cascades via Prisma to its Questions/Choices and any
+ * Attempts/Answers on those questions (per schema: Quiz onDelete: Cascade).
+ * Issued Certificates and Enrollment.completedAt persist — deleting an
+ * assessment does not retroactively un-issue a credential.
+ */
+export async function deleteQuiz(quizId: string): Promise<void> {
+  await prisma.quiz.delete({ where: { id: quizId } });
+}
+
 export async function listQuizzesByLesson(lessonId: string): Promise<QuizListItem[]> {
   const rows = await prisma.quiz.findMany({
     where: { lessonId },

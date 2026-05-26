@@ -262,6 +262,31 @@
       "submit": "クイズを作成",
       "submitting": "作成中..."
     },
+    "edit": {
+      "title": "クイズを編集",
+      "description": "クイズのメタ情報を更新します。質問は別途管理します。",
+      "backLink": "← {quizTitle} に戻る",
+      "titleLabel": "クイズ名",
+      "titlePlaceholder": "例: 章末確認",
+      "descriptionLabel": "説明",
+      "descriptionPlaceholder": "学習者向けの任意の補足。",
+      "passingScoreLabel": "合格スコア (%)",
+      "passingScoreHelper": "学習者は最低この割合の得点が必要です。",
+      "requiredLabel": "コース修了に必須",
+      "submit": "保存",
+      "submitting": "保存中..."
+    },
+    "delete": {
+      "trigger": "削除",
+      "title": "クイズを削除しますか?",
+      "description": "「{title}」をすべての質問・学習者の解答とともに削除します。この操作は元に戻せません。",
+      "cancel": "キャンセル",
+      "confirm": "削除する",
+      "confirming": "削除中..."
+    },
+    "list": {
+      "edit": "編集"
+    },
     "manage": {
       "backLink": "← {courseTitle} に戻る",
       "attachedToLesson": "レッスン {order}: {title}",
@@ -317,6 +342,8 @@
     },
     "toast": {
       "created": "クイズを作成しました",
+      "updated": "クイズを更新しました",
+      "deleted": "クイズを削除しました",
       "questionAdded": "質問を追加しました"
     },
     "errors": {

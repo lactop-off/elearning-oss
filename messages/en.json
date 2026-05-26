@@ -262,6 +262,31 @@
       "submit": "Create quiz",
       "submitting": "Creating..."
     },
+    "edit": {
+      "title": "Edit quiz",
+      "description": "Update this quiz's metadata. Questions are managed separately.",
+      "backLink": "← Back to {quizTitle}",
+      "titleLabel": "Quiz title",
+      "titlePlaceholder": "Mid-lesson check",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Optional context for learners.",
+      "passingScoreLabel": "Passing score (%)",
+      "passingScoreHelper": "Learners need at least this percentage of points to pass.",
+      "requiredLabel": "Required for course completion",
+      "submit": "Save changes",
+      "submitting": "Saving..."
+    },
+    "delete": {
+      "trigger": "Delete",
+      "title": "Delete this quiz?",
+      "description": "\"{title}\" will be deleted along with all its questions and any learner attempts. This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Delete quiz",
+      "confirming": "Deleting..."
+    },
+    "list": {
+      "edit": "Edit"
+    },
     "manage": {
       "backLink": "← Back to {courseTitle}",
       "attachedToLesson": "Lesson {order}: {title}",
@@ -317,6 +342,8 @@
     },
     "toast": {
       "created": "Quiz created",
+      "updated": "Quiz updated",
+      "deleted": "Quiz deleted",
       "questionAdded": "Question added"
     },
     "errors": {
