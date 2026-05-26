@@ -8,6 +8,26 @@
 ## [Unreleased]
 
 ### Added
+- **コース修了判定にクイズ合格を統合 (Phase 3 / MVP 完成)** (ハーネス試験 9 回目、1 イテレーションで全 Gate PASS)
+  - `features/completions/data/completions.ts`:
+    - `checkAndMarkComplete` を必修レッスン完了 + 必修クイズ合格 (`attempts: { some: { userId, status: SUBMITTED, passed: true } }`) の総合判定に拡張
+    - `totalRequired = requiredLessons + requiredQuizzes`、`totalCompleted = completedLessons + passedQuizzes` で atomic に集計
+    - `getCourseRequirementsProgress(enrollmentId, userId, courseId)` を新規追加 (UI 用、レッスン進捗 + クイズ合格カウント返却)
+  - `features/attempts/actions/submit-attempt.ts`:
+    - 採点が passed のときに `checkAndMarkComplete` を呼び、新規修了 → `/learn` を revalidate
+    - completion チェック失敗は `console.error` のみ (採点結果はそのまま返す = 学習者体験を壊さない)
+  - `app/[locale]/learn/[slug]/page.tsx`:
+    - 必修クイズが存在するときのみ「必修クイズ合格: X/Y」を表示
+  - 翻訳キー追加: `learn.detail.quizProgress` (`{passed}/{total}`)
+  - E2E `tests/e2e/course-completion.spec.ts` を refactor:
+    - 既存のレッスンのみ修了テストを fresh course ベースに変更 (テスト隔離)
+    - 新規: 必修クイズが存在するコースで「レッスン完了だけでは修了しない、クイズ合格で修了」を検証
+  - `playwright.config.ts`: dev サーバー過負荷対策で local workers を 2 に調整 (フレーキ回避)
+
+### MVP 完成
+学習ループが完全に閉じました:
+- 受講登録 → レッスン閲覧 → 完了マーク → 必修クイズ受験 → 全合格 → コース修了 + 修了証発行
+- **コース修了判定 = 全必修レッスン完了 + 全必修クイズ合格** (CLAUDE.md ドメインルール準拠)
 - **クイズ受験 + 自動採点機能 (学習者、Phase 2)** (ハーネス試験 8 回目、1 イテレーションで全 Gate PASS)
   - `features/attempts/{schemas,data,actions,components}/`:
     - `schemas/attempt.ts` + テスト: `SubmitAttemptSchema`

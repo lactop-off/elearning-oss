@@ -207,7 +207,8 @@
       "quizPassed": "Passed",
       "quizPassedAria": "Quiz passed",
       "quizNotPassed": "Pass at {passing}%",
-      "quizNotPassedAria": "Quiz not passed yet"
+      "quizNotPassedAria": "Quiz not passed yet",
+      "quizProgress": "Required quizzes passed: {passed} / {total}"
     },
     "lesson": {
       "backLink": "← Back to {courseTitle}",

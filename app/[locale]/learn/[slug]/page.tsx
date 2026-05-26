@@ -3,7 +3,10 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { CompletionBanner } from '@/features/completions/components/completion-banner';
-import { findCertificate } from '@/features/completions/data/completions';
+import {
+  findCertificate,
+  getCourseRequirementsProgress,
+} from '@/features/completions/data/completions';
 import { findEnrolledCourseBySlug } from '@/features/enrollments/data/enrollments';
 import { listLessonsByCourse } from '@/features/lessons/data/lessons';
 import { listProgressByEnrollment } from '@/features/progress/data/progress';
@@ -33,13 +36,17 @@ export default async function EnrolledCoursePage({
   const enrollment = await findEnrolledCourseBySlug(user.id, slug);
   if (!enrollment) notFound();
 
-  const [lessons, progressRows, certificate, quizzesByLesson, t] = await Promise.all([
-    listLessonsByCourse(enrollment.course.id),
-    listProgressByEnrollment(enrollment.enrollmentId),
-    enrollment.completedAt ? findCertificate(user.id, enrollment.course.id) : Promise.resolve(null),
-    listQuizzesForEnrolledLearner(slug, user.id),
-    getTranslations('learn.detail'),
-  ]);
+  const [lessons, progressRows, certificate, quizzesByLesson, requirementsProgress, t] =
+    await Promise.all([
+      listLessonsByCourse(enrollment.course.id),
+      listProgressByEnrollment(enrollment.enrollmentId),
+      enrollment.completedAt
+        ? findCertificate(user.id, enrollment.course.id)
+        : Promise.resolve(null),
+      listQuizzesForEnrolledLearner(slug, user.id),
+      getCourseRequirementsProgress(enrollment.enrollmentId, user.id, enrollment.course.id),
+      getTranslations('learn.detail'),
+    ]);
 
   const completedSet = new Set(progressRows.map((p) => p.lessonId));
   const totals = lessons.reduce(
@@ -92,6 +99,14 @@ export default async function EnrolledCoursePage({
           requiredCompleted={totals.requiredCompleted}
           requiredTotal={totals.required}
         />
+        {requirementsProgress.requiredQuizzesTotal > 0 ? (
+          <p className="text-sm text-muted-foreground">
+            {t('quizProgress', {
+              passed: requirementsProgress.requiredQuizzesPassed,
+              total: requirementsProgress.requiredQuizzesTotal,
+            })}
+          </p>
+        ) : null}
       </section>
 
       <section aria-labelledby="lessons-heading" className="grid gap-3">

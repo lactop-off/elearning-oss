@@ -207,7 +207,8 @@
       "quizPassed": "合格",
       "quizPassedAria": "クイズに合格しました",
       "quizNotPassed": "合格 {passing}%",
-      "quizNotPassedAria": "クイズはまだ合格していません"
+      "quizNotPassedAria": "クイズはまだ合格していません",
+      "quizProgress": "必修クイズ合格: {passed} / {total}"
     },
     "lesson": {
       "backLink": "← {courseTitle} に戻る",
