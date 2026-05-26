@@ -8,6 +8,28 @@
 ## [Unreleased]
 
 ### Added
+- 講師向け **コース作成機能** (Builder ⇄ Gate ハーネスの本番試験)
+  - `app/[locale]/instructor/courses/new/page.tsx`: 認証 + ロール
+    (INSTRUCTOR / ADMIN) チェック付きのコース作成ページ
+  - `features/courses/{schemas,data,actions,components}/`:
+    - `schemas/course.ts`: Zod `CreateCourseSchema` (title 200/slug 100
+      /description 2000、slug は kebab-case ASCII)
+    - `data/courses.ts`: `createCourse()` + `SlugTakenError`
+      (P2002 → SLUG_TAKEN)
+    - `actions/create.ts`: Server Action、{ ok, ... } 形式、
+      `requireRole` で認可、`revalidatePath('/instructor/courses')`
+    - `components/course-form.tsx`: react-hook-form + zodResolver、
+      タイトルから自動 slug 生成、サブミット可否ロジックも改善
+  - `lib/slug.ts` + `lib/slug.test.ts`: `slugify()` / `isValidSlug()` 共通化
+  - 翻訳キー `courses.{new,toast,errors}.*` を ja/en 両方に追加 (17 keys)
+  - E2E テスト `tests/e2e/course-creation.spec.ts`: 講師作成成功、
+    学習者は home へリダイレクト、未認証は sign-in へ
+- アクセシビリティ強化
+  - `components/ui/card.tsx`: `CardTitle` に `asChild` 対応 (Slot 経由で
+    h1 等のセマンティック要素を渡せる)、`CardDescription` を `<p>` に
+  - `components/ui/textarea.tsx`: shadcn Textarea プリミティブを新規追加
+
+### Changed
 - 国際化対応 (i18n) を next-intl 4 で導入
   - 対応ロケール: `ja` (デフォルト) / `en`
   - URL は `localePrefix: 'always'` (/ja/*, /en/*)、`/` は

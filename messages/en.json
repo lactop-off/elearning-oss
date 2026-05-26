@@ -60,5 +60,30 @@
       "GENERIC_SIGN_IN_FAILED": "Sign-in failed",
       "GENERIC_SIGN_UP_FAILED": "Sign-up failed"
     }
+  },
+  "courses": {
+    "new": {
+      "title": "Create a new course",
+      "description": "Set up the basics. You can add lessons and quizzes after saving.",
+      "titleLabel": "Course title",
+      "titlePlaceholder": "Intro to TypeScript",
+      "slugLabel": "Slug",
+      "slugHelper": "URL fragment. Lowercase letters, digits, and dashes only. Auto-generated from the title until you edit it.",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "A short summary for the catalog (optional).",
+      "descriptionHelper": "Up to 2000 characters. Plain text for now.",
+      "submit": "Create course",
+      "submitting": "Creating..."
+    },
+    "toast": {
+      "created": "Course created"
+    },
+    "errors": {
+      "INVALID_INPUT": "Please check the highlighted fields.",
+      "UNAUTHORIZED": "Please sign in to continue.",
+      "FORBIDDEN": "Only instructors can create courses.",
+      "SLUG_TAKEN": "That slug is already in use. Try a different one.",
+      "INTERNAL_ERROR": "Something went wrong. Please try again."
+    }
   }
 }

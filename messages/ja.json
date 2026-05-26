@@ -60,5 +60,30 @@
       "GENERIC_SIGN_IN_FAILED": "サインインに失敗しました",
       "GENERIC_SIGN_UP_FAILED": "登録に失敗しました"
     }
+  },
+  "courses": {
+    "new": {
+      "title": "新しいコースを作成",
+      "description": "基本情報を入力します。保存後にレッスンやクイズを追加できます。",
+      "titleLabel": "コース名",
+      "titlePlaceholder": "例: TypeScript 入門",
+      "slugLabel": "スラッグ",
+      "slugHelper": "URL の一部です。半角英小文字・数字・ハイフンのみ。タイトルから自動生成され、編集すると固定されます。",
+      "descriptionLabel": "説明",
+      "descriptionPlaceholder": "カタログ用の短い説明 (任意)。",
+      "descriptionHelper": "最大 2000 文字。今のところプレーンテキストのみ。",
+      "submit": "コースを作成",
+      "submitting": "作成しています..."
+    },
+    "toast": {
+      "created": "コースを作成しました"
+    },
+    "errors": {
+      "INVALID_INPUT": "入力内容を確認してください。",
+      "UNAUTHORIZED": "サインインしてください。",
+      "FORBIDDEN": "コースを作成できるのは講師のみです。",
+      "SLUG_TAKEN": "このスラッグは既に使われています。別のものを試してください。",
+      "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
+    }
   }
 }
