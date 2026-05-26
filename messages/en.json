@@ -109,6 +109,45 @@
         "message": "You have not created any courses yet.",
         "cta": "Create your first course"
       }
+    },
+    "detail": {
+      "statusPublished": "Published",
+      "statusDraft": "Draft",
+      "slugDisplay": "/{slug}",
+      "lessonsHeading": "Lessons",
+      "addLesson": "Add lesson"
+    }
+  },
+  "lessons": {
+    "list": {
+      "listAria": "Lessons in this course",
+      "empty": "No lessons yet. Add the first one to get started.",
+      "required": "Required",
+      "optional": "Optional",
+      "contentTypeLabel": "Content: {type}"
+    },
+    "new": {
+      "title": "Add a lesson",
+      "description": "Lessons appear to learners in the order you create them.",
+      "backLink": "← Back to {courseTitle}",
+      "titleLabel": "Lesson title",
+      "titlePlaceholder": "Variables and constants",
+      "contentLabel": "Content",
+      "contentPlaceholder": "Write the lesson body here.",
+      "contentHelper": "Plain text for now. Up to 20,000 characters.",
+      "requiredLabel": "Required for course completion",
+      "submit": "Save lesson",
+      "submitting": "Saving..."
+    },
+    "toast": {
+      "created": "Lesson added"
+    },
+    "errors": {
+      "INVALID_INPUT": "Please check the highlighted fields.",
+      "UNAUTHORIZED": "Please sign in to continue.",
+      "FORBIDDEN": "Only the course owner can add lessons.",
+      "COURSE_NOT_FOUND": "Course not found, or you do not own it.",
+      "INTERNAL_ERROR": "Something went wrong. Please try again."
     }
   }
 }

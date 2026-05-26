@@ -61,6 +61,13 @@ export async function findCourseOwnedBy(
   return prisma.course.findFirst({ where: { id, instructorId } });
 }
 
+export async function findCourseBySlugOwnedBy(
+  slug: string,
+  instructorId: string,
+): Promise<Course | null> {
+  return prisma.course.findFirst({ where: { slug, instructorId } });
+}
+
 export async function setCoursePublishedAt(id: string, value: Date | null): Promise<void> {
   await prisma.course.update({ where: { id }, data: { publishedAt: value } });
 }

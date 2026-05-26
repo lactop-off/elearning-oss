@@ -109,6 +109,45 @@
         "message": "まだコースを作成していません。",
         "cta": "最初のコースを作成"
       }
+    },
+    "detail": {
+      "statusPublished": "公開中",
+      "statusDraft": "下書き",
+      "slugDisplay": "/{slug}",
+      "lessonsHeading": "レッスン",
+      "addLesson": "レッスンを追加"
+    }
+  },
+  "lessons": {
+    "list": {
+      "listAria": "このコースのレッスン一覧",
+      "empty": "まだレッスンがありません。最初の 1 つを追加してください。",
+      "required": "必修",
+      "optional": "任意",
+      "contentTypeLabel": "形式: {type}"
+    },
+    "new": {
+      "title": "レッスンを追加",
+      "description": "レッスンは作成した順に学習者へ表示されます。",
+      "backLink": "← {courseTitle} に戻る",
+      "titleLabel": "レッスン名",
+      "titlePlaceholder": "例: 変数と定数",
+      "contentLabel": "本文",
+      "contentPlaceholder": "レッスンの本文を入力してください。",
+      "contentHelper": "今のところプレーンテキストのみ。最大 20,000 文字。",
+      "requiredLabel": "コース修了に必須",
+      "submit": "保存",
+      "submitting": "保存中..."
+    },
+    "toast": {
+      "created": "レッスンを追加しました"
+    },
+    "errors": {
+      "INVALID_INPUT": "入力内容を確認してください。",
+      "UNAUTHORIZED": "サインインしてください。",
+      "FORBIDDEN": "コースの所有者のみがレッスンを追加できます。",
+      "COURSE_NOT_FOUND": "コースが見つかりません。または所有していません。",
+      "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
     }
   }
 }

@@ -8,6 +8,24 @@
 ## [Unreleased]
 
 ### Added
+- 講師向け **コース詳細ページ + レッスン追加機能** (ハーネス試験 3 回目、1 イテレーションで全 Gate PASS)
+  - `app/[locale]/instructor/courses/[slug]/page.tsx`: コース詳細 +
+    レッスン一覧 + 「レッスンを追加」ボタン
+  - `app/[locale]/instructor/courses/[slug]/lessons/new/page.tsx`:
+    レッスン追加フォーム
+  - `features/lessons/`:
+    - `schemas/lesson.ts` + テスト: `CreateLessonSchema`
+    - `data/lessons.ts`: `listLessonsByCourse` + `prisma.$transaction` で
+      `@@unique([courseId, order])` レースに耐える `order` 自動採番
+    - `actions/create.ts`: 所有権 (`findCourseOwnedBy`) 経由で Server Action
+    - `components/{lesson-list,lesson-form}.tsx`: 順序付き `<ol>` で
+      レッスン一覧、`isRequired` チェックボックス付きフォーム
+  - `features/courses/data/courses.ts`: `findCourseBySlugOwnedBy` 追加
+  - 翻訳キー追加 (ja/en 27 keys): `courses.detail.*`, `lessons.*`
+  - E2E テスト `tests/e2e/lesson-add.spec.ts`: 詳細遷移 + 追加フロー、
+    学習者は home へリダイレクト
+  - `playwright.config.ts`: dev サーバー過負荷回避のためローカル
+    workers を 4 に上限設定
 - 講師向け **コース一覧 + 公開トグル + サイトヘッダー** (ハーネス試験 2 回目、1 イテレーションで全 Gate PASS)
   - `components/site-header.tsx`: Server Component、ロールに応じて
     ナビゲーション項目を切替 (講師/管理者には "My courses"、未認証
