@@ -189,6 +189,50 @@
     "empty": {
       "message": "You have not enrolled in any course yet.",
       "cta": "Browse the catalog"
+    },
+    "detail": {
+      "backLink": "← Back to My learning",
+      "byInstructor": "By {name}",
+      "progressHeading": "Your progress",
+      "lessonsHeading": "Lessons",
+      "noLessons": "No lessons in this course yet.",
+      "listAria": "Course lessons",
+      "required": "Required",
+      "optional": "Optional",
+      "lessonComplete": "Complete",
+      "lessonCompleteAria": "Lesson completed",
+      "contentTypeLabel": "Content: {type}"
+    },
+    "lesson": {
+      "backLink": "← Back to {courseTitle}",
+      "lessonNumber": "Lesson {order}",
+      "required": "Required for completion",
+      "optional": "Optional",
+      "previousLesson": "Previous lesson",
+      "nextLesson": "Next lesson"
+    }
+  },
+  "progress": {
+    "summary": {
+      "aria": "Course progress summary",
+      "completedOfTotal": "{completed} of {total} lessons completed",
+      "requiredCompletion": "{percent}% of required lessons done",
+      "ariaProgressBar": "Required completion: {percent} percent"
+    },
+    "button": {
+      "markComplete": "Mark complete",
+      "alreadyComplete": "Already complete",
+      "working": "Saving..."
+    },
+    "toast": {
+      "completed": "Lesson marked complete"
+    },
+    "errors": {
+      "INVALID_INPUT": "Please try again from the lesson page.",
+      "UNAUTHORIZED": "Please sign in to continue.",
+      "NOT_FOUND": "Lesson not found, or you are not enrolled.",
+      "ALREADY_COMPLETED": "You already completed this lesson.",
+      "INTERNAL_ERROR": "Something went wrong. Please try again."
     }
   }
 }

@@ -189,6 +189,50 @@
     "empty": {
       "message": "まだコースを受講していません。",
       "cta": "コース一覧を見る"
+    },
+    "detail": {
+      "backLink": "← 学習中一覧に戻る",
+      "byInstructor": "講師: {name}",
+      "progressHeading": "進捗",
+      "lessonsHeading": "レッスン",
+      "noLessons": "このコースにはまだレッスンがありません。",
+      "listAria": "コースのレッスン",
+      "required": "必修",
+      "optional": "任意",
+      "lessonComplete": "完了",
+      "lessonCompleteAria": "このレッスンは完了しました",
+      "contentTypeLabel": "形式: {type}"
+    },
+    "lesson": {
+      "backLink": "← {courseTitle} に戻る",
+      "lessonNumber": "レッスン {order}",
+      "required": "修了に必須",
+      "optional": "任意",
+      "previousLesson": "前のレッスン",
+      "nextLesson": "次のレッスン"
+    }
+  },
+  "progress": {
+    "summary": {
+      "aria": "コース進捗の概要",
+      "completedOfTotal": "{total} 中 {completed} レッスン完了",
+      "requiredCompletion": "必修レッスン {percent}% 完了",
+      "ariaProgressBar": "必修レッスン完了率: {percent} パーセント"
+    },
+    "button": {
+      "markComplete": "完了にする",
+      "alreadyComplete": "完了済み",
+      "working": "保存中..."
+    },
+    "toast": {
+      "completed": "レッスンを完了にしました"
+    },
+    "errors": {
+      "INVALID_INPUT": "もう一度レッスンページから操作してください。",
+      "UNAUTHORIZED": "サインインしてください。",
+      "NOT_FOUND": "レッスンが見つかりません。または受講していません。",
+      "ALREADY_COMPLETED": "このレッスンはすでに完了しています。",
+      "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
     }
   }
 }

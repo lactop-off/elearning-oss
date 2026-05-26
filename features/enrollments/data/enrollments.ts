@@ -44,6 +44,65 @@ export async function createEnrollment(userId: string, courseId: string): Promis
   }
 }
 
+export type EnrolledCourseDetail = {
+  enrollmentId: string;
+  enrolledAt: Date;
+  completedAt: Date | null;
+  course: {
+    id: string;
+    slug: string;
+    title: string;
+    description: string | null;
+    instructor: { name: string };
+  };
+};
+
+export async function findEnrolledCourseBySlug(
+  userId: string,
+  slug: string,
+): Promise<EnrolledCourseDetail | null> {
+  const row = await prisma.enrollment.findFirst({
+    where: { userId, course: { slug, publishedAt: { not: null } } },
+    select: {
+      id: true,
+      enrolledAt: true,
+      completedAt: true,
+      course: {
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          description: true,
+          instructor: { select: { name: true } },
+        },
+      },
+    },
+  });
+  if (!row) return null;
+  return {
+    enrollmentId: row.id,
+    enrolledAt: row.enrolledAt,
+    completedAt: row.completedAt,
+    course: row.course,
+  };
+}
+
+export async function findEnrollmentOwnedBy(
+  enrollmentId: string,
+  userId: string,
+): Promise<{
+  id: string;
+  course: { id: string; slug: string };
+} | null> {
+  return prisma.enrollment.findFirst({
+    where: { id: enrollmentId, userId },
+    select: {
+      id: true,
+      course: { select: { id: true, slug: true } },
+    },
+  });
+}
+
 export async function listEnrollmentsByUser(userId: string): Promise<EnrolledCourseSummary[]> {
   const rows = await prisma.enrollment.findMany({
     where: { userId },

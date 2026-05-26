@@ -8,6 +8,19 @@
 ## [Unreleased]
 
 ### Added
+- 学習者向け **レッスン閲覧 + 進捗トラッキング** (ハーネス試験 5 回目、Iteration 2 で全 Gate PASS)
+  - `app/[locale]/learn/[slug]/page.tsx`: 受講中コース概要 + 進捗バー + レッスン一覧
+  - `app/[locale]/learn/[slug]/lessons/[order]/page.tsx`: レッスン読みページ + 前/次ナビ + Mark Complete
+  - `features/progress/`:
+    - `schemas/progress.ts` + テスト: `MarkCompleteSchema`
+    - `data/progress.ts`: `recordProgress` (P2002 → `ProgressAlreadyRecordedError`), `listProgressByEnrollment`
+    - `actions/mark-complete.ts`: Server Action、`findLessonInEnrollment` 経由で所有権 + 関係性を再検証
+    - `components/{progress-summary,mark-complete-button}.tsx`: 必修分母 (`requiredCompleted/requiredTotal`) で進捗率算出、`role="progressbar"` + ARIA、既完了時は `disabled` ボタン
+  - `features/enrollments/data/enrollments.ts`: `findEnrolledCourseBySlug` 追加 (公開済 + 受講者本人のみ)
+  - `features/lessons/data/lessons.ts`: `findLessonByCourseAndOrder`, `findLessonInEnrollment` 追加
+  - 翻訳キー追加 (ja/en 30 keys): `learn.detail.*`, `learn.lesson.*`, `progress.{summary,button,toast,errors}.*`
+  - E2E テスト `tests/e2e/lesson-read.spec.ts` (3): エンロール済学習者の閲覧→完了マーク→進捗反映、未エンロールは 404、未認証は /sign-in
+  - **Iteration 1 の architecture-gate 指摘**: mark-complete.ts が `prisma` を直接呼んでいた → `findLessonInEnrollment` 経由に修正
 - 学習者向け **公開カタログ + 受講登録 + My learning** (ハーネス試験 4 回目、Iteration 2 で全 Gate PASS — i18n で ja.json の `nav.catalog`/`myLearning` 欠落を検出し修正)
   - `app/[locale]/courses/page.tsx`: 公開コースのカタログ (未認証で閲覧可)
   - `app/[locale]/courses/[slug]/page.tsx`: 公開コース詳細

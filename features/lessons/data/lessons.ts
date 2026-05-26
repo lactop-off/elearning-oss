@@ -6,6 +6,60 @@ export type LessonListItem = Pick<
   'id' | 'title' | 'order' | 'contentType' | 'isRequired' | 'createdAt' | 'updatedAt'
 >;
 
+export type LessonReadable = Pick<
+  Lesson,
+  'id' | 'title' | 'order' | 'contentType' | 'content' | 'isRequired'
+>;
+
+export async function findLessonByCourseAndOrder(
+  courseId: string,
+  order: number,
+): Promise<LessonReadable | null> {
+  return prisma.lesson.findFirst({
+    where: { courseId, order },
+    select: {
+      id: true,
+      title: true,
+      order: true,
+      contentType: true,
+      content: true,
+      isRequired: true,
+    },
+  });
+}
+
+export async function countLessonsByCourse(
+  courseId: string,
+): Promise<{ total: number; required: number }> {
+  const [total, required] = await Promise.all([
+    prisma.lesson.count({ where: { courseId } }),
+    prisma.lesson.count({ where: { courseId, isRequired: true } }),
+  ]);
+  return { total, required };
+}
+
+export async function findLessonInEnrollment(
+  enrollmentId: string,
+  userId: string,
+  lessonId: string,
+): Promise<{ id: string; order: number; courseSlug: string } | null> {
+  const row = await prisma.lesson.findFirst({
+    where: {
+      id: lessonId,
+      course: {
+        enrollments: { some: { id: enrollmentId, userId } },
+      },
+    },
+    select: {
+      id: true,
+      order: true,
+      course: { select: { slug: true } },
+    },
+  });
+  if (!row) return null;
+  return { id: row.id, order: row.order, courseSlug: row.course.slug };
+}
+
 export async function listLessonsByCourse(courseId: string): Promise<LessonListItem[]> {
   return prisma.lesson.findMany({
     where: { courseId },
