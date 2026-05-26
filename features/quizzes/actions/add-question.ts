@@ -2,11 +2,9 @@
 
 import { revalidatePath } from 'next/cache';
 
-import {
-  createSingleChoiceQuestion,
-} from '@/features/quizzes/data/questions';
+import { createQuestionWithChoices } from '@/features/quizzes/data/questions';
 import { findQuizOwnedByInstructor } from '@/features/quizzes/data/quizzes';
-import { AddSingleChoiceQuestionSchema } from '@/features/quizzes/schemas/question';
+import { AddQuestionSchema } from '@/features/quizzes/schemas/question';
 import { AuthError, requireRole } from '@/lib/auth';
 
 type AddQuestionResult =
@@ -23,7 +21,7 @@ type AddQuestionResult =
     };
 
 export async function addQuestionAction(input: unknown): Promise<AddQuestionResult> {
-  const parsed = AddSingleChoiceQuestionSchema.safeParse(input);
+  const parsed = AddQuestionSchema.safeParse(input);
   if (!parsed.success) {
     return { ok: false, error: 'INVALID_INPUT', issues: parsed.error.issues };
   }
@@ -39,13 +37,21 @@ export async function addQuestionAction(input: unknown): Promise<AddQuestionResu
   const quiz = await findQuizOwnedByInstructor(parsed.data.quizId, user.id);
   if (!quiz) return { ok: false, error: 'QUIZ_NOT_FOUND' };
 
+  // Normalize the discriminated union down to a flat list of correct indexes
+  // before handing off to the data layer.
+  const correctChoiceIndexes =
+    parsed.data.type === 'SINGLE_CHOICE'
+      ? [parsed.data.correctChoiceIndex]
+      : parsed.data.correctChoiceIndices;
+
   try {
-    const result = await createSingleChoiceQuestion({
+    const result = await createQuestionWithChoices({
       quizId: quiz.id,
+      type: parsed.data.type,
       body: parsed.data.body,
       points: parsed.data.points,
       choices: parsed.data.choices,
-      correctChoiceIndex: parsed.data.correctChoiceIndex,
+      correctChoiceIndexes,
     });
     revalidatePath(`/instructor/courses/${quiz.course.slug}/quizzes/${quiz.id}`);
     revalidatePath(`/instructor/courses/${quiz.course.slug}`);

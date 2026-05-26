@@ -247,12 +247,18 @@
       "addQuestionDescription": "単一選択式。正解を 1 つ選択してください。"
     },
     "questionForm": {
+      "typeLabel": "質問タイプ",
+      "typeSingle": "単一選択",
+      "typeMulti": "複数選択",
+      "typeSingleHelper": "正解は 1 つだけ。学習者は 1 つの選択肢を選びます。",
+      "typeMultiHelper": "正解は複数あり。すべての正解を選ばないと不正解扱い (部分点なし)。",
       "bodyLabel": "質問",
       "bodyPlaceholder": "例: 1 + 1 は？",
       "pointsLabel": "配点",
       "pointsHelper": "デフォルトは 1 点。",
       "choicesLabel": "選択肢",
       "choicesHelper": "2〜6 個の選択肢を追加し、正解にラジオボタンで印を付けてください。",
+      "choicesHelperMulti": "2〜6 個の選択肢を追加し、正解すべてにチェックを付けてください (最低 1 つ、ただし全部はダメ)。",
       "choicePlaceholder": "選択肢 {index}",
       "correctAria": "選択肢 {index} を正解にする",
       "removeChoice": "削除",
@@ -265,6 +271,8 @@
       "listAria": "クイズの質問一覧",
       "empty": "まだ質問がありません。下のフォームから追加してください。",
       "pointsLabel": "{points} 点",
+      "typeSingle": "単一選択",
+      "typeMulti": "複数選択",
       "choicesAria": "選択肢",
       "correctMarker": "✓ 正解"
     },
@@ -309,6 +317,8 @@
     "take": {
       "questionsAria": "クイズの質問",
       "pointsLabel": "{points} 点",
+      "typeSingle": "1 つ選ぶ",
+      "typeMulti": "あてはまるものを全て選ぶ",
       "submit": "回答を送信",
       "working": "採点中...",
       "selectAtLeastOne": "1 問以上に回答してから送信してください。"

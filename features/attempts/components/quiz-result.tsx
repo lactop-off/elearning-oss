@@ -7,13 +7,8 @@ type ResultQuestion = {
   body: string;
   order: number;
   points: number;
+  type: 'SINGLE_CHOICE' | 'MULTI_CHOICE' | 'TEXT';
   choices: { id: string; body: string; order: number }[];
-};
-
-type ResultQuiz = {
-  passingScore: number;
-  questions: ResultQuestion[];
-  correctChoiceByQuestionId: Map<string, string | null>;
 };
 
 export async function QuizResult({
@@ -22,14 +17,14 @@ export async function QuizResult({
   passingScore,
   questions,
   answers,
-  correctChoiceByQuestionId,
+  correctChoiceIdsByQuestionId,
 }: {
   score: number;
   passed: boolean;
   passingScore: number;
-  questions: ResultQuiz['questions'];
+  questions: ResultQuestion[];
   answers: AnswerForResult[];
-  correctChoiceByQuestionId: ResultQuiz['correctChoiceByQuestionId'];
+  correctChoiceIdsByQuestionId: Map<string, Set<string>>;
 }) {
   const t = await getTranslations('attempts.result');
   const answerByQuestion = new Map(answers.map((a) => [a.questionId, a]));
@@ -56,7 +51,7 @@ export async function QuizResult({
       <ol aria-label={t('breakdownAria')} className="grid gap-4">
         {questions.map((question) => {
           const answer = answerByQuestion.get(question.id);
-          const correctChoiceId = correctChoiceByQuestionId.get(question.id) ?? null;
+          const correctIds = correctChoiceIdsByQuestionId.get(question.id) ?? new Set<string>();
           return (
             <li key={question.id}>
               <div className="grid gap-2 rounded-lg border p-4">
@@ -75,7 +70,7 @@ export async function QuizResult({
                 <ul aria-label={t('choicesAria')} className="grid gap-1 text-sm">
                   {question.choices.map((choice) => {
                     const isSelected = answer?.selectedChoiceIds.includes(choice.id) ?? false;
-                    const isCorrect = choice.id === correctChoiceId;
+                    const isCorrect = correctIds.has(choice.id);
                     let className = 'rounded px-2 py-1';
                     if (isCorrect) {
                       className += ' bg-primary/10 text-primary';

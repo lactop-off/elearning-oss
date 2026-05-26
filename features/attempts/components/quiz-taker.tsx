@@ -13,6 +13,7 @@ type QuestionInput = {
   body: string;
   order: number;
   points: number;
+  type: 'SINGLE_CHOICE' | 'MULTI_CHOICE' | 'TEXT';
   choices: { id: string; body: string; order: number }[];
 };
 
@@ -48,11 +49,13 @@ export function QuizTaker({
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const answers: { questionId: string; choiceId: string }[] = [];
+    const answers: { questionId: string; choiceIds: string[] }[] = [];
     for (const question of questions) {
-      const choiceId = formData.get(`q-${question.id}`);
-      if (typeof choiceId === 'string' && choiceId.length > 0) {
-        answers.push({ questionId: question.id, choiceId });
+      const raw = formData.getAll(`q-${question.id}`);
+      const choiceIds = raw
+        .filter((value): value is string => typeof value === 'string' && value.length > 0);
+      if (choiceIds.length > 0) {
+        answers.push({ questionId: question.id, choiceIds });
       }
     }
     if (answers.length === 0) {
@@ -78,35 +81,40 @@ export function QuizTaker({
   return (
     <form onSubmit={handleSubmit} className="grid gap-6">
       <ol aria-label={t('questionsAria')} className="grid gap-6">
-        {questions.map((question) => (
-          <li key={question.id}>
-            <fieldset className="grid gap-3">
-              <legend className="text-base font-medium">
-                <span className="mr-2 text-muted-foreground">{question.order}.</span>
-                {question.body}
-              </legend>
-              <p className="text-xs text-muted-foreground">
-                {t('pointsLabel', { points: question.points })}
-              </p>
-              <div className="grid gap-2">
-                {question.choices.map((choice) => (
-                  <label
-                    key={choice.id}
-                    className="flex items-center gap-2 rounded border px-3 py-2 has-[input:checked]:border-primary has-[input:checked]:bg-primary/5"
-                  >
-                    <input
-                      type="radio"
-                      name={`q-${question.id}`}
-                      value={choice.id}
-                      className="size-4"
-                    />
-                    <span className="text-sm">{choice.body}</span>
-                  </label>
-                ))}
-              </div>
-            </fieldset>
-          </li>
-        ))}
+        {questions.map((question) => {
+          const isMulti = question.type === 'MULTI_CHOICE';
+          return (
+            <li key={question.id}>
+              <fieldset className="grid gap-3">
+                <legend className="text-base font-medium">
+                  <span className="mr-2 text-muted-foreground">{question.order}.</span>
+                  {question.body}
+                </legend>
+                <p className="text-xs text-muted-foreground">
+                  {t('pointsLabel', { points: question.points })}
+                  {' · '}
+                  {isMulti ? t('typeMulti') : t('typeSingle')}
+                </p>
+                <div className="grid gap-2">
+                  {question.choices.map((choice) => (
+                    <label
+                      key={choice.id}
+                      className="flex items-center gap-2 rounded border px-3 py-2 has-[input:checked]:border-primary has-[input:checked]:bg-primary/5"
+                    >
+                      <input
+                        type={isMulti ? 'checkbox' : 'radio'}
+                        name={`q-${question.id}`}
+                        value={choice.id}
+                        className="size-4"
+                      />
+                      <span className="text-sm">{choice.body}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+            </li>
+          );
+        })}
       </ol>
 
       <Button type="submit" disabled={isPending} size="lg">
