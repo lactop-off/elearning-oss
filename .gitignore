@@ -1,7 +1,12 @@
 # Dependencies
 node_modules/
 .pnp
-.pnp.js
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
 # Testing
 coverage/
@@ -44,6 +49,9 @@ pnpm-debug.log*
 .DS_Store
 Thumbs.db
 
+# Security (private keys / certs)
+*.pem
+
 # IDE
 .vscode/*
 !.vscode/settings.json
@@ -53,3 +61,13 @@ Thumbs.db
 # Claude Code (local settings only — keep team settings.json tracked)
 .claude/settings.local.json
 .claude/.tmp/
+
+# Prisma — generated client output
+lib/generated/
+
+# Playwright
+/playwright/.cache/
+/playwright-report/
+/blob-report/
+/test-results/
+/.playwright

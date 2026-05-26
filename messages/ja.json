@@ -1,0 +1,370 @@
+{
+  "common": {
+    "appName": "E-learning OSS",
+    "appDescription": "コース、クイズ、学習進捗トラッキングのためのオープンソースプラットフォームです。"
+  },
+  "nav": {
+    "primary": "メインナビゲーション",
+    "catalog": "コース一覧",
+    "myLearning": "学習中",
+    "myCourses": "マイコース",
+    "signedInAria": "{name} でログイン中"
+  },
+  "roles": {
+    "LEARNER": "学習者",
+    "INSTRUCTOR": "講師",
+    "ADMIN": "管理者"
+  },
+  "home": {
+    "signedInAs": "{name} さんでログイン中",
+    "roleLabel": "({role})"
+  },
+  "auth": {
+    "signIn": {
+      "title": "サインイン",
+      "description": "おかえりなさい。認証情報を入力してください。",
+      "emailLabel": "メールアドレス",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "パスワード",
+      "submit": "サインイン",
+      "submitting": "サインインしています...",
+      "noAccount": "アカウントをお持ちでない方は",
+      "createOne": "新規登録"
+    },
+    "signUp": {
+      "title": "アカウントを作成",
+      "description": "1 分以内で学習を始められます。",
+      "nameLabel": "お名前",
+      "namePlaceholder": "山田 太郎",
+      "emailLabel": "メールアドレス",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "パスワード",
+      "passwordPlaceholder": "8 文字以上",
+      "submit": "アカウントを作成",
+      "submitting": "作成しています...",
+      "hasAccount": "すでにアカウントをお持ちの方は",
+      "signInLink": "サインイン"
+    },
+    "signOut": {
+      "submit": "サインアウト",
+      "submitting": "サインアウトしています..."
+    },
+    "cta": {
+      "signIn": "サインイン",
+      "createAccount": "アカウントを作成"
+    },
+    "toast": {
+      "signedIn": "サインインしました",
+      "signedOut": "サインアウトしました",
+      "welcome": "ようこそ"
+    },
+    "errors": {
+      "INVALID_INPUT": "入力内容をご確認ください。",
+      "INVALID_CREDENTIALS": "メールアドレスまたはパスワードが正しくありません。",
+      "EMAIL_TAKEN": "このメールアドレスは既に登録されています。",
+      "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。",
+      "AUTO_SIGN_IN_FAILED": "アカウントは作成されましたが、自動サインインに失敗しました。手動でサインインしてください。",
+      "GENERIC_SIGN_IN_FAILED": "サインインに失敗しました",
+      "GENERIC_SIGN_UP_FAILED": "登録に失敗しました"
+    }
+  },
+  "courses": {
+    "new": {
+      "title": "新しいコースを作成",
+      "description": "基本情報を入力します。保存後にレッスンやクイズを追加できます。",
+      "titleLabel": "コース名",
+      "titlePlaceholder": "例: TypeScript 入門",
+      "slugLabel": "スラッグ",
+      "slugHelper": "URL の一部です。半角英小文字・数字・ハイフンのみ。タイトルから自動生成され、編集すると固定されます。",
+      "descriptionLabel": "説明",
+      "descriptionPlaceholder": "カタログ用の短い説明 (任意)。",
+      "descriptionHelper": "最大 2000 文字。今のところプレーンテキストのみ。",
+      "submit": "コースを作成",
+      "submitting": "作成しています..."
+    },
+    "toast": {
+      "created": "コースを作成しました",
+      "published": "コースを公開しました",
+      "unpublished": "コースを下書きに戻しました"
+    },
+    "errors": {
+      "INVALID_INPUT": "入力内容を確認してください。",
+      "UNAUTHORIZED": "サインインしてください。",
+      "FORBIDDEN": "コースを作成できるのは講師のみです。",
+      "SLUG_TAKEN": "このスラッグは既に使われています。別のものを試してください。",
+      "NOT_FOUND": "コースが見つかりません。または所有していません。",
+      "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
+    },
+    "list": {
+      "heading": "あなたのコース",
+      "newCta": "新規作成",
+      "listAria": "あなたのコース一覧",
+      "statusPublished": "公開中",
+      "statusDraft": "下書き",
+      "slugDisplay": "/{slug}",
+      "publish": {
+        "publishLabel": "公開する",
+        "unpublishLabel": "下書きに戻す",
+        "working": "保存中..."
+      },
+      "empty": {
+        "message": "まだコースを作成していません。",
+        "cta": "最初のコースを作成"
+      }
+    },
+    "detail": {
+      "statusPublished": "公開中",
+      "statusDraft": "下書き",
+      "slugDisplay": "/{slug}",
+      "lessonsHeading": "レッスン",
+      "addLesson": "レッスンを追加",
+      "quizzesHeading": "クイズ"
+    }
+  },
+  "lessons": {
+    "list": {
+      "listAria": "このコースのレッスン一覧",
+      "empty": "まだレッスンがありません。最初の 1 つを追加してください。",
+      "required": "必修",
+      "optional": "任意",
+      "contentTypeLabel": "形式: {type}"
+    },
+    "new": {
+      "title": "レッスンを追加",
+      "description": "レッスンは作成した順に学習者へ表示されます。",
+      "backLink": "← {courseTitle} に戻る",
+      "titleLabel": "レッスン名",
+      "titlePlaceholder": "例: 変数と定数",
+      "contentLabel": "本文",
+      "contentPlaceholder": "レッスンの本文を入力してください。",
+      "contentHelper": "今のところプレーンテキストのみ。最大 20,000 文字。",
+      "requiredLabel": "コース修了に必須",
+      "submit": "保存",
+      "submitting": "保存中..."
+    },
+    "toast": {
+      "created": "レッスンを追加しました"
+    },
+    "errors": {
+      "INVALID_INPUT": "入力内容を確認してください。",
+      "UNAUTHORIZED": "サインインしてください。",
+      "FORBIDDEN": "コースの所有者のみがレッスンを追加できます。",
+      "COURSE_NOT_FOUND": "コースが見つかりません。または所有していません。",
+      "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
+    }
+  },
+  "catalog": {
+    "heading": "コース一覧",
+    "subheading": "プラットフォームで公開されている全てのコースを閲覧できます。",
+    "listAria": "受講可能なコース",
+    "empty": "まだ公開されているコースはありません。少し時間をおいてご確認ください。",
+    "byInstructor": "講師: {name}",
+    "detail": {
+      "backLink": "← コース一覧に戻る",
+      "byInstructor": "講師: {name}",
+      "signInToEnroll": "サインインして受講登録",
+      "alreadyEnrolled": "受講中 — 学習画面を開く"
+    }
+  },
+  "enrollments": {
+    "button": {
+      "enroll": "受講登録",
+      "working": "登録中..."
+    },
+    "toast": {
+      "enrolled": "受講登録しました"
+    },
+    "errors": {
+      "INVALID_INPUT": "もう一度コースページから操作してください。",
+      "UNAUTHORIZED": "サインインしてください。",
+      "COURSE_NOT_PUBLISHED": "このコースは現在受講できません。",
+      "ALREADY_ENROLLED": "すでにこのコースを受講中です。",
+      "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
+    }
+  },
+  "learn": {
+    "heading": "学習中",
+    "subheading": "受講登録しているコースの一覧です。",
+    "listAria": "受講中のコース一覧",
+    "byInstructor": "講師: {name}",
+    "empty": {
+      "message": "まだコースを受講していません。",
+      "cta": "コース一覧を見る"
+    },
+    "detail": {
+      "backLink": "← 学習中一覧に戻る",
+      "byInstructor": "講師: {name}",
+      "progressHeading": "進捗",
+      "lessonsHeading": "レッスン",
+      "noLessons": "このコースにはまだレッスンがありません。",
+      "listAria": "コースのレッスン",
+      "required": "必修",
+      "optional": "任意",
+      "lessonComplete": "完了",
+      "lessonCompleteAria": "このレッスンは完了しました",
+      "contentTypeLabel": "形式: {type}",
+      "quizzesAria": "このレッスンのクイズ",
+      "quizPassed": "合格",
+      "quizPassedAria": "クイズに合格しました",
+      "quizNotPassed": "合格 {passing}%",
+      "quizNotPassedAria": "クイズはまだ合格していません",
+      "quizProgress": "必修クイズ合格: {passed} / {total}"
+    },
+    "lesson": {
+      "backLink": "← {courseTitle} に戻る",
+      "lessonNumber": "レッスン {order}",
+      "required": "修了に必須",
+      "optional": "任意",
+      "previousLesson": "前のレッスン",
+      "nextLesson": "次のレッスン"
+    }
+  },
+  "quizzes": {
+    "new": {
+      "title": "クイズを作成",
+      "description": "学習者はこのクイズをレッスンの一部として受けます。",
+      "backLink": "← {lessonTitle} に戻る",
+      "titleLabel": "クイズ名",
+      "titlePlaceholder": "例: 章末確認",
+      "descriptionLabel": "説明",
+      "descriptionPlaceholder": "学習者向けの任意の補足。",
+      "passingScoreLabel": "合格スコア (%)",
+      "passingScoreHelper": "学習者は最低この割合の得点が必要です。",
+      "requiredLabel": "コース修了に必須",
+      "submit": "クイズを作成",
+      "submitting": "作成中..."
+    },
+    "manage": {
+      "backLink": "← {courseTitle} に戻る",
+      "attachedToLesson": "レッスン {order}: {title}",
+      "attachedToCourse": "コース全体のクイズ",
+      "meta": "合格スコア: {passing}% · {required}",
+      "isRequired": "修了に必須",
+      "isOptional": "任意",
+      "questionsHeading": "質問 ({count})",
+      "addQuestionHeading": "質問を追加",
+      "addQuestionTitle": "新しい質問",
+      "addQuestionDescription": "単一選択式。正解を 1 つ選択してください。"
+    },
+    "questionForm": {
+      "bodyLabel": "質問",
+      "bodyPlaceholder": "例: 1 + 1 は？",
+      "pointsLabel": "配点",
+      "pointsHelper": "デフォルトは 1 点。",
+      "choicesLabel": "選択肢",
+      "choicesHelper": "2〜6 個の選択肢を追加し、正解にラジオボタンで印を付けてください。",
+      "choicePlaceholder": "選択肢 {index}",
+      "correctAria": "選択肢 {index} を正解にする",
+      "removeChoice": "削除",
+      "removeChoiceAria": "選択肢 {index} を削除",
+      "addChoice": "選択肢を追加",
+      "submit": "質問を追加",
+      "submitting": "保存中..."
+    },
+    "questionList": {
+      "listAria": "クイズの質問一覧",
+      "empty": "まだ質問がありません。下のフォームから追加してください。",
+      "pointsLabel": "{points} 点",
+      "choicesAria": "選択肢",
+      "correctMarker": "✓ 正解"
+    },
+    "overview": {
+      "listAria": "レッスン別クイズ",
+      "noLessons": "先にレッスンを追加してください。クイズはレッスンに紐付きます。",
+      "noQuizzes": "このレッスンにはまだクイズがありません。",
+      "quizzesAria": "このレッスンのクイズ",
+      "quizMeta": "{questions} 問 · 合格 {passing}% · {required}",
+      "isRequired": "必修",
+      "isOptional": "任意",
+      "addQuizCta": "クイズを追加",
+      "manageCta": "管理"
+    },
+    "toast": {
+      "created": "クイズを作成しました",
+      "questionAdded": "質問を追加しました"
+    },
+    "errors": {
+      "INVALID_INPUT": "入力内容を確認してください。",
+      "UNAUTHORIZED": "サインインしてください。",
+      "FORBIDDEN": "コース所有者のみがクイズを管理できます。",
+      "LESSON_NOT_FOUND": "レッスンが見つかりません。",
+      "QUIZ_NOT_FOUND": "クイズが見つかりません。",
+      "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
+    }
+  },
+  "attempts": {
+    "page": {
+      "backLink": "← {courseTitle} に戻る",
+      "meta": "{questions} 問 · 合格 {passing}% · {required}",
+      "isRequired": "修了に必須",
+      "isOptional": "任意",
+      "noQuestions": "このクイズにはまだ質問がありません — 講師が質問を追加するまで受験できません。",
+      "readyPrompt": "準備ができたら開始してください。何度でも受験できます。",
+      "startCta": "クイズを開始",
+      "retakeCta": "もう一度受験"
+    },
+    "start": {
+      "working": "開始中..."
+    },
+    "take": {
+      "questionsAria": "クイズの質問",
+      "pointsLabel": "{points} 点",
+      "submit": "回答を送信",
+      "working": "採点中...",
+      "selectAtLeastOne": "1 問以上に回答してから送信してください。"
+    },
+    "result": {
+      "passTitle": "合格しました！",
+      "failTitle": "もう一歩",
+      "scoreSummary": "得点: {score}% (合格 {passing}%)",
+      "breakdownAria": "問題ごとの内訳",
+      "choicesAria": "選択肢",
+      "correct": "正解 · +{points} 点",
+      "incorrect": "{awarded} / {possible} 点",
+      "correctMarker": "✓ 正解",
+      "yourPickMarker": "あなたの回答"
+    },
+    "toast": {
+      "passed": "{score}% で合格",
+      "submitted": "送信しました — 得点 {score}%"
+    },
+    "errors": {
+      "INVALID_INPUT": "回答内容を見直して再送信してください。",
+      "UNAUTHORIZED": "サインインしてください。",
+      "NOT_FOUND": "クイズまたは受験記録が見つかりません。",
+      "NOT_IN_PROGRESS": "この受験は既に送信済みです。",
+      "INVALID_ANSWERS": "クイズに含まれない回答が混ざっています。",
+      "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
+    }
+  },
+  "completions": {
+    "banner": {
+      "title": "コースを修了しました！",
+      "description": "{date} に必修レッスンを全て完了しました。",
+      "serialLabel": "修了証"
+    }
+  },
+  "progress": {
+    "summary": {
+      "aria": "コース進捗の概要",
+      "completedOfTotal": "{total} 中 {completed} レッスン完了",
+      "requiredCompletion": "必修レッスン {percent}% 完了",
+      "ariaProgressBar": "必修レッスン完了率: {percent} パーセント"
+    },
+    "button": {
+      "markComplete": "完了にする",
+      "alreadyComplete": "完了済み",
+      "working": "保存中..."
+    },
+    "toast": {
+      "completed": "レッスンを完了にしました"
+    },
+    "errors": {
+      "INVALID_INPUT": "もう一度レッスンページから操作してください。",
+      "UNAUTHORIZED": "サインインしてください。",
+      "NOT_FOUND": "レッスンが見つかりません。または受講していません。",
+      "ALREADY_COMPLETED": "このレッスンはすでに完了しています。",
+      "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
+    }
+  }
+}

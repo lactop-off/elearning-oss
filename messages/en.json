@@ -1,0 +1,370 @@
+{
+  "common": {
+    "appName": "E-learning OSS",
+    "appDescription": "An open-source platform for online courses, quizzes, and learner progress tracking."
+  },
+  "nav": {
+    "primary": "Primary",
+    "catalog": "Catalog",
+    "myLearning": "My learning",
+    "myCourses": "My courses",
+    "signedInAria": "Signed in as {name}"
+  },
+  "roles": {
+    "LEARNER": "learner",
+    "INSTRUCTOR": "instructor",
+    "ADMIN": "admin"
+  },
+  "home": {
+    "signedInAs": "Signed in as {name}",
+    "roleLabel": "({role})"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Sign in",
+      "description": "Welcome back. Enter your credentials to continue.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "noAccount": "No account yet?",
+      "createOne": "Create one"
+    },
+    "signUp": {
+      "title": "Create your account",
+      "description": "Start learning in less than a minute.",
+      "nameLabel": "Name",
+      "namePlaceholder": "Ada Lovelace",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "At least 8 characters",
+      "submit": "Create account",
+      "submitting": "Creating account...",
+      "hasAccount": "Already have an account?",
+      "signInLink": "Sign in"
+    },
+    "signOut": {
+      "submit": "Sign out",
+      "submitting": "Signing out..."
+    },
+    "cta": {
+      "signIn": "Sign in",
+      "createAccount": "Create account"
+    },
+    "toast": {
+      "signedIn": "Signed in",
+      "signedOut": "Signed out",
+      "welcome": "Welcome aboard"
+    },
+    "errors": {
+      "INVALID_INPUT": "Please check your input.",
+      "INVALID_CREDENTIALS": "Email or password is incorrect.",
+      "EMAIL_TAKEN": "An account with this email already exists.",
+      "INTERNAL_ERROR": "Something went wrong. Please try again.",
+      "AUTO_SIGN_IN_FAILED": "Account created but auto sign-in failed. Please sign in manually.",
+      "GENERIC_SIGN_IN_FAILED": "Sign-in failed",
+      "GENERIC_SIGN_UP_FAILED": "Sign-up failed"
+    }
+  },
+  "courses": {
+    "new": {
+      "title": "Create a new course",
+      "description": "Set up the basics. You can add lessons and quizzes after saving.",
+      "titleLabel": "Course title",
+      "titlePlaceholder": "Intro to TypeScript",
+      "slugLabel": "Slug",
+      "slugHelper": "URL fragment. Lowercase letters, digits, and dashes only. Auto-generated from the title until you edit it.",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "A short summary for the catalog (optional).",
+      "descriptionHelper": "Up to 2000 characters. Plain text for now.",
+      "submit": "Create course",
+      "submitting": "Creating..."
+    },
+    "toast": {
+      "created": "Course created",
+      "published": "Course published",
+      "unpublished": "Course moved to draft"
+    },
+    "errors": {
+      "INVALID_INPUT": "Please check the highlighted fields.",
+      "UNAUTHORIZED": "Please sign in to continue.",
+      "FORBIDDEN": "Only instructors can create courses.",
+      "SLUG_TAKEN": "That slug is already in use. Try a different one.",
+      "NOT_FOUND": "Course not found, or you do not own it.",
+      "INTERNAL_ERROR": "Something went wrong. Please try again."
+    },
+    "list": {
+      "heading": "Your courses",
+      "newCta": "New course",
+      "listAria": "Your courses",
+      "statusPublished": "Published",
+      "statusDraft": "Draft",
+      "slugDisplay": "/{slug}",
+      "publish": {
+        "publishLabel": "Publish",
+        "unpublishLabel": "Move to draft",
+        "working": "Saving..."
+      },
+      "empty": {
+        "message": "You have not created any courses yet.",
+        "cta": "Create your first course"
+      }
+    },
+    "detail": {
+      "statusPublished": "Published",
+      "statusDraft": "Draft",
+      "slugDisplay": "/{slug}",
+      "lessonsHeading": "Lessons",
+      "addLesson": "Add lesson",
+      "quizzesHeading": "Quizzes"
+    }
+  },
+  "lessons": {
+    "list": {
+      "listAria": "Lessons in this course",
+      "empty": "No lessons yet. Add the first one to get started.",
+      "required": "Required",
+      "optional": "Optional",
+      "contentTypeLabel": "Content: {type}"
+    },
+    "new": {
+      "title": "Add a lesson",
+      "description": "Lessons appear to learners in the order you create them.",
+      "backLink": "← Back to {courseTitle}",
+      "titleLabel": "Lesson title",
+      "titlePlaceholder": "Variables and constants",
+      "contentLabel": "Content",
+      "contentPlaceholder": "Write the lesson body here.",
+      "contentHelper": "Plain text for now. Up to 20,000 characters.",
+      "requiredLabel": "Required for course completion",
+      "submit": "Save lesson",
+      "submitting": "Saving..."
+    },
+    "toast": {
+      "created": "Lesson added"
+    },
+    "errors": {
+      "INVALID_INPUT": "Please check the highlighted fields.",
+      "UNAUTHORIZED": "Please sign in to continue.",
+      "FORBIDDEN": "Only the course owner can add lessons.",
+      "COURSE_NOT_FOUND": "Course not found, or you do not own it.",
+      "INTERNAL_ERROR": "Something went wrong. Please try again."
+    }
+  },
+  "catalog": {
+    "heading": "Course catalog",
+    "subheading": "Browse all published courses on the platform.",
+    "listAria": "Available courses",
+    "empty": "No courses published yet. Check back soon.",
+    "byInstructor": "By {name}",
+    "detail": {
+      "backLink": "← Back to catalog",
+      "byInstructor": "By {name}",
+      "signInToEnroll": "Sign in to enroll",
+      "alreadyEnrolled": "You are enrolled — open in My learning"
+    }
+  },
+  "enrollments": {
+    "button": {
+      "enroll": "Enroll",
+      "working": "Enrolling..."
+    },
+    "toast": {
+      "enrolled": "Enrolled in course"
+    },
+    "errors": {
+      "INVALID_INPUT": "Please try again from the course page.",
+      "UNAUTHORIZED": "Please sign in to enroll.",
+      "COURSE_NOT_PUBLISHED": "This course is not available right now.",
+      "ALREADY_ENROLLED": "You are already enrolled in this course.",
+      "INTERNAL_ERROR": "Something went wrong. Please try again."
+    }
+  },
+  "learn": {
+    "heading": "My learning",
+    "subheading": "Courses you are enrolled in.",
+    "listAria": "Your enrolled courses",
+    "byInstructor": "By {name}",
+    "empty": {
+      "message": "You have not enrolled in any course yet.",
+      "cta": "Browse the catalog"
+    },
+    "detail": {
+      "backLink": "← Back to My learning",
+      "byInstructor": "By {name}",
+      "progressHeading": "Your progress",
+      "lessonsHeading": "Lessons",
+      "noLessons": "No lessons in this course yet.",
+      "listAria": "Course lessons",
+      "required": "Required",
+      "optional": "Optional",
+      "lessonComplete": "Complete",
+      "lessonCompleteAria": "Lesson completed",
+      "contentTypeLabel": "Content: {type}",
+      "quizzesAria": "Quizzes for this lesson",
+      "quizPassed": "Passed",
+      "quizPassedAria": "Quiz passed",
+      "quizNotPassed": "Pass at {passing}%",
+      "quizNotPassedAria": "Quiz not passed yet",
+      "quizProgress": "Required quizzes passed: {passed} / {total}"
+    },
+    "lesson": {
+      "backLink": "← Back to {courseTitle}",
+      "lessonNumber": "Lesson {order}",
+      "required": "Required for completion",
+      "optional": "Optional",
+      "previousLesson": "Previous lesson",
+      "nextLesson": "Next lesson"
+    }
+  },
+  "quizzes": {
+    "new": {
+      "title": "Create a quiz",
+      "description": "Learners take this quiz as part of the lesson.",
+      "backLink": "← Back to {lessonTitle}",
+      "titleLabel": "Quiz title",
+      "titlePlaceholder": "Mid-lesson check",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Optional context for learners.",
+      "passingScoreLabel": "Passing score (%)",
+      "passingScoreHelper": "Learners need at least this percentage of points to pass.",
+      "requiredLabel": "Required for course completion",
+      "submit": "Create quiz",
+      "submitting": "Creating..."
+    },
+    "manage": {
+      "backLink": "← Back to {courseTitle}",
+      "attachedToLesson": "Lesson {order}: {title}",
+      "attachedToCourse": "Course-level quiz",
+      "meta": "Passing score: {passing}% · {required}",
+      "isRequired": "Required for completion",
+      "isOptional": "Optional",
+      "questionsHeading": "Questions ({count})",
+      "addQuestionHeading": "Add a question",
+      "addQuestionTitle": "New question",
+      "addQuestionDescription": "Single-choice question. Pick one correct answer."
+    },
+    "questionForm": {
+      "bodyLabel": "Question",
+      "bodyPlaceholder": "What is 1 + 1?",
+      "pointsLabel": "Points",
+      "pointsHelper": "Default 1 point per question.",
+      "choicesLabel": "Choices",
+      "choicesHelper": "Add 2 to 6 choices. Select the radio button next to the correct one.",
+      "choicePlaceholder": "Choice {index}",
+      "correctAria": "Mark choice {index} as correct",
+      "removeChoice": "Remove",
+      "removeChoiceAria": "Remove choice {index}",
+      "addChoice": "Add choice",
+      "submit": "Add question",
+      "submitting": "Saving..."
+    },
+    "questionList": {
+      "listAria": "Quiz questions",
+      "empty": "No questions yet. Add the first one below.",
+      "pointsLabel": "{points} points",
+      "choicesAria": "Choices",
+      "correctMarker": "✓ correct"
+    },
+    "overview": {
+      "listAria": "Quizzes by lesson",
+      "noLessons": "Add lessons first — quizzes attach to a lesson.",
+      "noQuizzes": "No quizzes yet for this lesson.",
+      "quizzesAria": "Quizzes for this lesson",
+      "quizMeta": "{questions} questions · pass at {passing}% · {required}",
+      "isRequired": "required",
+      "isOptional": "optional",
+      "addQuizCta": "Add quiz",
+      "manageCta": "Manage"
+    },
+    "toast": {
+      "created": "Quiz created",
+      "questionAdded": "Question added"
+    },
+    "errors": {
+      "INVALID_INPUT": "Please review the highlighted fields.",
+      "UNAUTHORIZED": "Please sign in to continue.",
+      "FORBIDDEN": "Only the course owner can manage quizzes.",
+      "LESSON_NOT_FOUND": "Lesson not found, or you do not own it.",
+      "QUIZ_NOT_FOUND": "Quiz not found, or you do not own it.",
+      "INTERNAL_ERROR": "Something went wrong. Please try again."
+    }
+  },
+  "attempts": {
+    "page": {
+      "backLink": "← Back to {courseTitle}",
+      "meta": "{questions} questions · pass at {passing}% · {required}",
+      "isRequired": "Required for completion",
+      "isOptional": "Optional",
+      "noQuestions": "This quiz has no questions yet — the instructor needs to add some before learners can take it.",
+      "readyPrompt": "When you're ready, start the quiz. You can retake it as many times as you need.",
+      "startCta": "Start quiz",
+      "retakeCta": "Retake quiz"
+    },
+    "start": {
+      "working": "Starting..."
+    },
+    "take": {
+      "questionsAria": "Quiz questions",
+      "pointsLabel": "{points} points",
+      "submit": "Submit answers",
+      "working": "Grading...",
+      "selectAtLeastOne": "Pick at least one answer to submit."
+    },
+    "result": {
+      "passTitle": "You passed!",
+      "failTitle": "Not quite there yet",
+      "scoreSummary": "Score: {score}% (pass at {passing}%)",
+      "breakdownAria": "Per-question breakdown",
+      "choicesAria": "Choices",
+      "correct": "Correct · +{points} points",
+      "incorrect": "{awarded} / {possible} points",
+      "correctMarker": "✓ correct",
+      "yourPickMarker": "your answer"
+    },
+    "toast": {
+      "passed": "Passed with {score}%",
+      "submitted": "Submitted — score {score}%"
+    },
+    "errors": {
+      "INVALID_INPUT": "Please review your answers and try again.",
+      "UNAUTHORIZED": "Please sign in to continue.",
+      "NOT_FOUND": "Quiz or attempt not found.",
+      "NOT_IN_PROGRESS": "This attempt has already been submitted.",
+      "INVALID_ANSWERS": "Some answers didn't match the quiz.",
+      "INTERNAL_ERROR": "Something went wrong. Please try again."
+    }
+  },
+  "completions": {
+    "banner": {
+      "title": "Course complete!",
+      "description": "You completed every required lesson on {date}.",
+      "serialLabel": "Certificate"
+    }
+  },
+  "progress": {
+    "summary": {
+      "aria": "Course progress summary",
+      "completedOfTotal": "{completed} of {total} lessons completed",
+      "requiredCompletion": "{percent}% of required lessons done",
+      "ariaProgressBar": "Required completion: {percent} percent"
+    },
+    "button": {
+      "markComplete": "Mark complete",
+      "alreadyComplete": "Already complete",
+      "working": "Saving..."
+    },
+    "toast": {
+      "completed": "Lesson marked complete"
+    },
+    "errors": {
+      "INVALID_INPUT": "Please try again from the lesson page.",
+      "UNAUTHORIZED": "Please sign in to continue.",
+      "NOT_FOUND": "Lesson not found, or you are not enrolled.",
+      "ALREADY_COMPLETED": "You already completed this lesson.",
+      "INTERNAL_ERROR": "Something went wrong. Please try again."
+    }
+  }
+}

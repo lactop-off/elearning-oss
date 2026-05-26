@@ -90,14 +90,46 @@
 
 ## セットアップ
 
-(プロジェクト本体作成後に追記予定)
+### 必要なもの
+- Node.js 20+
+- Docker (PostgreSQL 用、ローカル開発のみ)
+
+### 手順
 
 ```bash
-# Coming soon
+# 1. 依存パッケージのインストール
 npm install
+
+# 2. 環境変数の準備
 cp .env.example .env
-npx prisma migrate dev
+# .env を編集 — 最低限 AUTH_SECRET を設定する:
+#   openssl rand -base64 32
+
+# 3. PostgreSQL の起動 (docker)
+docker compose up -d
+
+# 4. マイグレーション
+npm run db:migrate
+
+# 5. デモデータ投入
+npm run db:seed
+# → admin@example.com / instructor@example.com / learner@example.com
+#    すべて共通パスワード: demo1234
+
+# 6. 開発サーバー起動
 npm run dev
+# http://localhost:3000
+
+# テスト実行
+npm test           # Vitest
+npm run test:e2e   # Playwright (実 DB に対して)
+```
+
+### 終了するとき
+
+```bash
+docker compose down            # コンテナ停止 (データは残る)
+docker compose down -v         # ボリュームごと削除 (DB リセット)
 ```
 
 ## ライセンス

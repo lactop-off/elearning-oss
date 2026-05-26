@@ -1,5 +1,7 @@
 # E-learning OSS — Project Context
 
+> **AI エージェント向け重要事項**: このプロジェクトは Next.js 16 を使用しています。Next.js 15 以前と API・規約・ファイル構造が異なる点があります。実装前に `@AGENTS.md` と `node_modules/next/dist/docs/` の関連ガイドを参照してください。
+
 ## プロジェクト概要
 
 オープンソースの E-learning プラットフォーム。Moodle / Open edX の代替を目指し、モダンな技術スタックで再構築する。
@@ -18,12 +20,16 @@
 
 ## 技術スタック
 
-- **Frontend**: Next.js 15 (App Router) / React 19 / TypeScript (strict)
-- **UI**: Tailwind CSS / shadcn/ui / Radix UI primitives
+- **Frontend**: Next.js 16 (App Router, Turbopack) / React 19 / TypeScript (strict)
+- **UI**: Tailwind CSS v4 / shadcn/ui / Radix UI primitives
 - **Form**: React Hook Form + Zod (バリデーション)
 - **Backend**: Next.js Server Actions / Route Handlers
-- **DB**: PostgreSQL 16 / Prisma ORM
-- **Auth**: NextAuth.js (or Lucia — 後で決定)
+- **DB**: PostgreSQL 16 / Prisma 7 (ORM, driver adapter `@prisma/adapter-pg` 必須)
+  - クライアントは `lib/db.ts` のシングルトン (`import { prisma } from '@/lib/db'`)
+  - 生成物は `lib/generated/prisma/` (gitignore 済)
+- **Auth**: Auth.js v5 (next-auth@beta) / Credentials provider + JWT セッション
+  - `lib/auth.ts` の `requireUser` / `requireRole(...)` を Server Action / Component の冒頭で呼ぶ
+  - パスワードは `lib/password.ts` 経由で bcryptjs (cost 12) ハッシュ
 - **Test**: Vitest (ユニット) / Playwright (E2E) / Testing Library
 - **i18n**: next-intl
 - **Lint/Format**: ESLint / Prettier / TypeScript strict
