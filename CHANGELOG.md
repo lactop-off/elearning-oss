@@ -8,6 +8,14 @@
 ## [Unreleased]
 
 ### Added
+- Next.js 16 (App Router, Turbopack) プロジェクトの初期化
+  - React 19.2 / TypeScript 5 (strict)
+  - Tailwind CSS v4
+  - ESLint 9 (eslint-config-next)
+  - Prettier 3 と `.prettierrc.json` / `.prettierignore`
+  - npm scripts: `dev`, `build`, `start`, `lint`, `lint:fix`, `typecheck`, `format`, `format:check`
+  - `next.config.ts` で turbopack.root を明示
+  - Next.js 16 の AI エージェント向けガイド (`AGENTS.md`)
 - Claude Code ハーネス構成 (Builder ⇄ Gate 自動ループ)
   - 5 種の Builder エージェント (frontend / backend / db / test / refactor)
   - 11 種の Gate エージェント (type-safety / lint-format / test-coverage / unit-test-runner / e2e-test / accessibility / security / performance / i18n / architecture / domain-logic)

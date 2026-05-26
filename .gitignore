@@ -1,7 +1,12 @@
 # Dependencies
 node_modules/
 .pnp
-.pnp.js
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
 # Testing
 coverage/
@@ -43,6 +48,9 @@ pnpm-debug.log*
 # OS
 .DS_Store
 Thumbs.db
+
+# Security (private keys / certs)
+*.pem
 
 # IDE
 .vscode/*

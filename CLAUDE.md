@@ -1,5 +1,7 @@
 # E-learning OSS — Project Context
 
+> **AI エージェント向け重要事項**: このプロジェクトは Next.js 16 を使用しています。Next.js 15 以前と API・規約・ファイル構造が異なる点があります。実装前に `@AGENTS.md` と `node_modules/next/dist/docs/` の関連ガイドを参照してください。
+
 ## プロジェクト概要
 
 オープンソースの E-learning プラットフォーム。Moodle / Open edX の代替を目指し、モダンな技術スタックで再構築する。
@@ -18,8 +20,8 @@
 
 ## 技術スタック
 
-- **Frontend**: Next.js 15 (App Router) / React 19 / TypeScript (strict)
-- **UI**: Tailwind CSS / shadcn/ui / Radix UI primitives
+- **Frontend**: Next.js 16 (App Router, Turbopack) / React 19 / TypeScript (strict)
+- **UI**: Tailwind CSS v4 / shadcn/ui / Radix UI primitives
 - **Form**: React Hook Form + Zod (バリデーション)
 - **Backend**: Next.js Server Actions / Route Handlers
 - **DB**: PostgreSQL 16 / Prisma ORM
