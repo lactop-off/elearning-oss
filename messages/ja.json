@@ -117,7 +117,8 @@
       "statusDraft": "下書き",
       "slugDisplay": "/{slug}",
       "lessonsHeading": "レッスン",
-      "addLesson": "レッスンを追加"
+      "addLesson": "レッスンを追加",
+      "quizzesHeading": "クイズ"
     }
   },
   "lessons": {
@@ -210,6 +211,79 @@
       "optional": "任意",
       "previousLesson": "前のレッスン",
       "nextLesson": "次のレッスン"
+    }
+  },
+  "quizzes": {
+    "new": {
+      "title": "クイズを作成",
+      "description": "学習者はこのクイズをレッスンの一部として受けます。",
+      "backLink": "← {lessonTitle} に戻る",
+      "titleLabel": "クイズ名",
+      "titlePlaceholder": "例: 章末確認",
+      "descriptionLabel": "説明",
+      "descriptionPlaceholder": "学習者向けの任意の補足。",
+      "passingScoreLabel": "合格スコア (%)",
+      "passingScoreHelper": "学習者は最低この割合の得点が必要です。",
+      "requiredLabel": "コース修了に必須",
+      "submit": "クイズを作成",
+      "submitting": "作成中..."
+    },
+    "manage": {
+      "backLink": "← {courseTitle} に戻る",
+      "attachedToLesson": "レッスン {order}: {title}",
+      "attachedToCourse": "コース全体のクイズ",
+      "meta": "合格スコア: {passing}% · {required}",
+      "isRequired": "修了に必須",
+      "isOptional": "任意",
+      "questionsHeading": "質問 ({count})",
+      "addQuestionHeading": "質問を追加",
+      "addQuestionTitle": "新しい質問",
+      "addQuestionDescription": "単一選択式。正解を 1 つ選択してください。"
+    },
+    "questionForm": {
+      "bodyLabel": "質問",
+      "bodyPlaceholder": "例: 1 + 1 は？",
+      "pointsLabel": "配点",
+      "pointsHelper": "デフォルトは 1 点。",
+      "choicesLabel": "選択肢",
+      "choicesHelper": "2〜6 個の選択肢を追加し、正解にラジオボタンで印を付けてください。",
+      "choicePlaceholder": "選択肢 {index}",
+      "correctAria": "選択肢 {index} を正解にする",
+      "removeChoice": "削除",
+      "removeChoiceAria": "選択肢 {index} を削除",
+      "addChoice": "選択肢を追加",
+      "submit": "質問を追加",
+      "submitting": "保存中..."
+    },
+    "questionList": {
+      "listAria": "クイズの質問一覧",
+      "empty": "まだ質問がありません。下のフォームから追加してください。",
+      "pointsLabel": "{points} 点",
+      "choicesAria": "選択肢",
+      "correctMarker": "✓ 正解"
+    },
+    "overview": {
+      "listAria": "レッスン別クイズ",
+      "noLessons": "先にレッスンを追加してください。クイズはレッスンに紐付きます。",
+      "noQuizzes": "このレッスンにはまだクイズがありません。",
+      "quizzesAria": "このレッスンのクイズ",
+      "quizMeta": "{questions} 問 · 合格 {passing}% · {required}",
+      "isRequired": "必修",
+      "isOptional": "任意",
+      "addQuizCta": "クイズを追加",
+      "manageCta": "管理"
+    },
+    "toast": {
+      "created": "クイズを作成しました",
+      "questionAdded": "質問を追加しました"
+    },
+    "errors": {
+      "INVALID_INPUT": "入力内容を確認してください。",
+      "UNAUTHORIZED": "サインインしてください。",
+      "FORBIDDEN": "コース所有者のみがクイズを管理できます。",
+      "LESSON_NOT_FOUND": "レッスンが見つかりません。",
+      "QUIZ_NOT_FOUND": "クイズが見つかりません。",
+      "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
     }
   },
   "completions": {

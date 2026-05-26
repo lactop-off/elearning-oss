@@ -117,7 +117,8 @@
       "statusDraft": "Draft",
       "slugDisplay": "/{slug}",
       "lessonsHeading": "Lessons",
-      "addLesson": "Add lesson"
+      "addLesson": "Add lesson",
+      "quizzesHeading": "Quizzes"
     }
   },
   "lessons": {
@@ -210,6 +211,79 @@
       "optional": "Optional",
       "previousLesson": "Previous lesson",
       "nextLesson": "Next lesson"
+    }
+  },
+  "quizzes": {
+    "new": {
+      "title": "Create a quiz",
+      "description": "Learners take this quiz as part of the lesson.",
+      "backLink": "← Back to {lessonTitle}",
+      "titleLabel": "Quiz title",
+      "titlePlaceholder": "Mid-lesson check",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Optional context for learners.",
+      "passingScoreLabel": "Passing score (%)",
+      "passingScoreHelper": "Learners need at least this percentage of points to pass.",
+      "requiredLabel": "Required for course completion",
+      "submit": "Create quiz",
+      "submitting": "Creating..."
+    },
+    "manage": {
+      "backLink": "← Back to {courseTitle}",
+      "attachedToLesson": "Lesson {order}: {title}",
+      "attachedToCourse": "Course-level quiz",
+      "meta": "Passing score: {passing}% · {required}",
+      "isRequired": "Required for completion",
+      "isOptional": "Optional",
+      "questionsHeading": "Questions ({count})",
+      "addQuestionHeading": "Add a question",
+      "addQuestionTitle": "New question",
+      "addQuestionDescription": "Single-choice question. Pick one correct answer."
+    },
+    "questionForm": {
+      "bodyLabel": "Question",
+      "bodyPlaceholder": "What is 1 + 1?",
+      "pointsLabel": "Points",
+      "pointsHelper": "Default 1 point per question.",
+      "choicesLabel": "Choices",
+      "choicesHelper": "Add 2 to 6 choices. Select the radio button next to the correct one.",
+      "choicePlaceholder": "Choice {index}",
+      "correctAria": "Mark choice {index} as correct",
+      "removeChoice": "Remove",
+      "removeChoiceAria": "Remove choice {index}",
+      "addChoice": "Add choice",
+      "submit": "Add question",
+      "submitting": "Saving..."
+    },
+    "questionList": {
+      "listAria": "Quiz questions",
+      "empty": "No questions yet. Add the first one below.",
+      "pointsLabel": "{points} points",
+      "choicesAria": "Choices",
+      "correctMarker": "✓ correct"
+    },
+    "overview": {
+      "listAria": "Quizzes by lesson",
+      "noLessons": "Add lessons first — quizzes attach to a lesson.",
+      "noQuizzes": "No quizzes yet for this lesson.",
+      "quizzesAria": "Quizzes for this lesson",
+      "quizMeta": "{questions} questions · pass at {passing}% · {required}",
+      "isRequired": "required",
+      "isOptional": "optional",
+      "addQuizCta": "Add quiz",
+      "manageCta": "Manage"
+    },
+    "toast": {
+      "created": "Quiz created",
+      "questionAdded": "Question added"
+    },
+    "errors": {
+      "INVALID_INPUT": "Please review the highlighted fields.",
+      "UNAUTHORIZED": "Please sign in to continue.",
+      "FORBIDDEN": "Only the course owner can manage quizzes.",
+      "LESSON_NOT_FOUND": "Lesson not found, or you do not own it.",
+      "QUIZ_NOT_FOUND": "Quiz not found, or you do not own it.",
+      "INTERNAL_ERROR": "Something went wrong. Please try again."
     }
   },
   "completions": {

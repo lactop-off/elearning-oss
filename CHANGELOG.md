@@ -8,6 +8,37 @@
 ## [Unreleased]
 
 ### Added
+- **クイズ作成機能 (講師、Phase 1)** (ハーネス試験 7 回目、1 イテレーションで全 Gate PASS)
+  - `features/quizzes/{schemas,data,actions,components}/`:
+    - `schemas/{quiz,question}.ts` + テスト: `CreateQuizSchema`,
+      `AddSingleChoiceQuestionSchema` (cross-field refine で
+      `correctChoiceIndex < choices.length` を保証)
+    - `data/quizzes.ts`: createQuiz, listQuizzesByLesson,
+      findQuizOwnedByInstructor, findLessonOwnedByInstructorForQuiz,
+      listLessonQuizzesByCourseOwned (コース直下のレッスン+クイズ一覧)
+    - `data/questions.ts`: listQuestionsByQuiz,
+      createSingleChoiceQuestion (`prisma.$transaction` で
+      `@@unique([quizId, order])` レース対策の自動採番、Choices を
+      ネスト create で同時生成)
+    - `actions/create-quiz.ts`: クライアント供給 lessonId をサーバ
+      解決値と照合 (`!==` で拒否)、講師所有権を二重検証
+    - `actions/add-question.ts`: クイズ所有権を再検証
+    - `components/{quiz-form,question-form,question-list,
+      lesson-quizzes-overview}.tsx`:
+      - 動的選択肢 (2-6 個、useFieldArray)、`<fieldset><legend>` +
+        ラジオ + `aria-label` で a11y
+      - 質問リストは `<ol>` 順序付き、正解は色 + テキスト
+        (`✓ correct`) で重複表現
+  - 新規ページ:
+    - `/instructor/courses/[slug]/lessons/[order]/quizzes/new`
+    - `/instructor/courses/[slug]/quizzes/[quizId]`
+  - 講師コース詳細ページに「クイズ」セクション追加: レッスン別の
+    クイズ一覧 + 「クイズを追加」ボタン
+  - 翻訳キー追加 (ja/en 各 219 keys 完全一致): `courses.detail.quizzesHeading`,
+    `quizzes.{new,manage,questionForm,questionList,overview,toast,errors}.*`
+  - E2E `tests/e2e/quiz-authoring.spec.ts` (2): フレッシュコース →
+    レッスン → クイズ作成 → 質問追加 → 正解マーク表示、学習者は
+    home へリダイレクト
 - **コース修了判定 + 修了証発行** (ハーネス試験 6 回目、1 イテレーションで全 Gate PASS)
   - `features/completions/data/completions.ts`: `checkAndMarkComplete`
     を `prisma.$transaction` で実装。所有権検証 + 必修進捗集計 +

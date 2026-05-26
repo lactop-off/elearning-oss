@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { findCourseBySlugOwnedBy } from '@/features/courses/data/courses';
 import { LessonList } from '@/features/lessons/components/lesson-list';
 import { listLessonsByCourse } from '@/features/lessons/data/lessons';
+import { LessonQuizzesOverview } from '@/features/quizzes/components/lesson-quizzes-overview';
+import { listLessonQuizzesByCourseOwned } from '@/features/quizzes/data/quizzes';
 import { Link, redirect } from '@/i18n/navigation';
 import { AuthError, requireRole } from '@/lib/auth';
 
@@ -29,8 +31,9 @@ export default async function CourseDetailPage({
   const course = await findCourseBySlugOwnedBy(slug, user.id);
   if (!course) notFound();
 
-  const [lessons, t] = await Promise.all([
+  const [lessons, quizzesOverview, t] = await Promise.all([
     listLessonsByCourse(course.id),
+    listLessonQuizzesByCourseOwned(slug, user.id),
     getTranslations('courses.detail'),
   ]);
 
@@ -49,7 +52,7 @@ export default async function CourseDetailPage({
         <p className="text-xs text-muted-foreground">{t('slugDisplay', { slug: course.slug })}</p>
       </header>
 
-      <section aria-labelledby="lessons-heading" className="grid gap-3">
+      <section aria-labelledby="lessons-heading" className="mb-8 grid gap-3">
         <div className="flex items-center justify-between gap-3">
           <h2 id="lessons-heading" className="text-lg font-semibold">
             {t('lessonsHeading')}
@@ -61,6 +64,13 @@ export default async function CourseDetailPage({
           </Button>
         </div>
         <LessonList lessons={lessons} />
+      </section>
+
+      <section aria-labelledby="quizzes-heading" className="grid gap-3">
+        <h2 id="quizzes-heading" className="text-lg font-semibold">
+          {t('quizzesHeading')}
+        </h2>
+        <LessonQuizzesOverview items={quizzesOverview} courseSlug={course.slug} />
       </section>
     </main>
   );
