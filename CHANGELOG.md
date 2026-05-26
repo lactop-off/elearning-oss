@@ -8,6 +8,19 @@
 ## [Unreleased]
 
 ### Added
+- 認証 UI: サインイン / サインアップ / サインアウト
+  - `app/(auth)/layout.tsx`: 中央寄せのカードレイアウト
+  - `app/(auth)/sign-in/page.tsx`, `app/(auth)/sign-up/page.tsx`:
+    既ログイン時は `/` へリダイレクト
+  - `features/auth/components/sign-in-form.tsx`,
+    `sign-up-form.tsx`, `sign-out-button.tsx`: react-hook-form +
+    zodResolver + shadcn Form、sonner で結果通知
+  - サインアップ成功後は自動でサインインまで実行 (失敗時は
+    `/sign-in` にフォールバック)
+  - ルートレイアウトに `<Toaster>` を追加
+  - ホームページを刷新: 未ログイン時は Sign in / Create account
+    リンク、ログイン時はユーザー名 + ロール + Sign out ボタン
+  - E2E テスト 3 件 (ホーム、サインイン、サインアップの表示)
 - 認証コアを Auth.js v5 (next-auth@beta) で実装
   - Email/Password (Credentials provider) のみ、JWT セッション
   - `auth.config.ts` (Edge-safe) と `auth.ts` (Node-side) の分割構成
