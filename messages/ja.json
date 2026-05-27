@@ -22,7 +22,26 @@
   },
   "home": {
     "signedInAs": "{name} さんでログイン中",
-    "roleLabel": "({role})"
+    "roleLabel": "({role})",
+    "eyebrow": "オープンソースの学習プラットフォーム",
+    "browseCatalog": "コース一覧を見る",
+    "continueLearning": "学習を続ける",
+    "manageCourses": "コースを管理",
+    "features": {
+      "heading": "教える・学ぶに必要なものを一通り",
+      "courses": {
+        "title": "体系的なコース",
+        "description": "レッスンをコース単位で整理し、自分のペースで学習を進められます。"
+      },
+      "quizzes": {
+        "title": "自動採点クイズ",
+        "description": "単一・複数選択を即時採点。合格基準も明確です。"
+      },
+      "certificate": {
+        "title": "修了証の発行",
+        "description": "必修レッスンとクイズをすべて修了すると、検証可能な修了証を取得できます。"
+      }
+    }
   },
   "auth": {
     "signIn": {

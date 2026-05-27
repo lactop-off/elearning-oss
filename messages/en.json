@@ -22,7 +22,26 @@
   },
   "home": {
     "signedInAs": "Signed in as {name}",
-    "roleLabel": "({role})"
+    "roleLabel": "({role})",
+    "eyebrow": "Open-source learning platform",
+    "browseCatalog": "Browse courses",
+    "continueLearning": "Continue learning",
+    "manageCourses": "Manage courses",
+    "features": {
+      "heading": "Everything you need to teach and learn",
+      "courses": {
+        "title": "Structured courses",
+        "description": "Lessons organized into courses you can work through at your own pace."
+      },
+      "quizzes": {
+        "title": "Auto-graded quizzes",
+        "description": "Single and multiple choice questions scored instantly against a clear pass mark."
+      },
+      "certificate": {
+        "title": "Completion certificates",
+        "description": "Finish every required lesson and quiz to earn a verifiable certificate."
+      }
+    }
   },
   "auth": {
     "signIn": {
