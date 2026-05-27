@@ -2,14 +2,12 @@
 
 import { revalidatePath } from 'next/cache';
 
-import {
-  findAttemptOwnedBy,
-  gradeAndSubmitAttempt,
-} from '@/features/attempts/data/attempts';
+import { findAttemptOwnedBy, gradeAndSubmitAttempt } from '@/features/attempts/data/attempts';
 import { SubmitAttemptSchema } from '@/features/attempts/schemas/attempt';
 import { checkAndMarkComplete } from '@/features/completions/data/completions';
 import { findEnrolledCourseBySlug } from '@/features/enrollments/data/enrollments';
 import { AuthError, requireUser } from '@/lib/auth';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 type SubmitAttemptResult =
   | { ok: true; data: { score: number; passed: boolean } }
@@ -18,6 +16,7 @@ type SubmitAttemptResult =
       error:
         | 'INVALID_INPUT'
         | 'UNAUTHORIZED'
+        | 'RATE_LIMITED'
         | 'NOT_FOUND'
         | 'NOT_IN_PROGRESS'
         | 'INVALID_ANSWERS'
@@ -49,6 +48,17 @@ export async function submitAttemptAction(
   if (!attempt) return { ok: false, error: 'NOT_FOUND' };
   if (attempt.status !== 'IN_PROGRESS') {
     return { ok: false, error: 'NOT_IN_PROGRESS' };
+  }
+
+  // Rate limit: 10 submissions per minute keyed on userId + quizId.
+  // Checked after ownership verification so quizId is available.
+  const rl = await checkRateLimit({
+    key: `submit-attempt:${user.id}:${attempt.quizId}`,
+    limit: 10,
+    windowMs: 60 * 1000,
+  });
+  if (!rl.allowed) {
+    return { ok: false, error: 'RATE_LIMITED' };
   }
 
   let result;

@@ -21,7 +21,12 @@ import { signUp } from '@/features/auth/actions/signup';
 import { SignUpSchema, type SignUpInput } from '@/features/auth/schemas/credentials';
 import { useRouter } from '@/i18n/navigation';
 
-const KNOWN_SIGN_UP_CODES = ['INVALID_INPUT', 'EMAIL_TAKEN', 'INTERNAL_ERROR'] as const;
+const KNOWN_SIGN_UP_CODES = [
+  'INVALID_INPUT',
+  'EMAIL_TAKEN',
+  'RATE_LIMITED',
+  'INTERNAL_ERROR',
+] as const;
 type KnownSignUpCode = (typeof KNOWN_SIGN_UP_CODES)[number];
 
 function isKnownSignUpCode(code: string): code is KnownSignUpCode {
@@ -77,11 +82,7 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>{t('nameLabel')}</FormLabel>
               <FormControl>
-                <Input
-                  autoComplete="name"
-                  placeholder={t('namePlaceholder')}
-                  {...field}
-                />
+                <Input autoComplete="name" placeholder={t('namePlaceholder')} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -65,7 +65,8 @@
       "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。",
       "AUTO_SIGN_IN_FAILED": "アカウントは作成されましたが、自動サインインに失敗しました。手動でサインインしてください。",
       "GENERIC_SIGN_IN_FAILED": "サインインに失敗しました",
-      "GENERIC_SIGN_UP_FAILED": "登録に失敗しました"
+      "GENERIC_SIGN_UP_FAILED": "登録に失敗しました",
+      "RATE_LIMITED": "リクエストが多すぎます。しばらく時間をおいてから再度お試しください。"
     }
   },
   "courses": {
@@ -344,7 +345,8 @@
       "NOT_FOUND": "クイズまたは受験記録が見つかりません。",
       "NOT_IN_PROGRESS": "この受験は既に送信済みです。",
       "INVALID_ANSWERS": "クイズに含まれない回答が混ざっています。",
-      "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
+      "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。",
+      "RATE_LIMITED": "リクエストが多すぎます。しばらく時間をおいてから再度お試しください。"
     }
   },
   "completions": {

@@ -23,6 +23,7 @@ const KNOWN = [
   'NOT_FOUND',
   'NOT_IN_PROGRESS',
   'INVALID_ANSWERS',
+  'RATE_LIMITED',
   'INTERNAL_ERROR',
 ] as const;
 type KnownErrorCode = (typeof KNOWN)[number];
@@ -52,8 +53,9 @@ export function QuizTaker({
     const answers: { questionId: string; choiceIds: string[] }[] = [];
     for (const question of questions) {
       const raw = formData.getAll(`q-${question.id}`);
-      const choiceIds = raw
-        .filter((value): value is string => typeof value === 'string' && value.length > 0);
+      const choiceIds = raw.filter(
+        (value): value is string => typeof value === 'string' && value.length > 0,
+      );
       if (choiceIds.length > 0) {
         answers.push({ questionId: question.id, choiceIds });
       }

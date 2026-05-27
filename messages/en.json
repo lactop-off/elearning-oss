@@ -65,7 +65,8 @@
       "INTERNAL_ERROR": "Something went wrong. Please try again.",
       "AUTO_SIGN_IN_FAILED": "Account created but auto sign-in failed. Please sign in manually.",
       "GENERIC_SIGN_IN_FAILED": "Sign-in failed",
-      "GENERIC_SIGN_UP_FAILED": "Sign-up failed"
+      "GENERIC_SIGN_UP_FAILED": "Sign-up failed",
+      "RATE_LIMITED": "Too many requests. Please wait a moment and try again."
     }
   },
   "courses": {
@@ -344,7 +345,8 @@
       "NOT_FOUND": "Quiz or attempt not found.",
       "NOT_IN_PROGRESS": "This attempt has already been submitted.",
       "INVALID_ANSWERS": "Some answers didn't match the quiz.",
-      "INTERNAL_ERROR": "Something went wrong. Please try again."
+      "INTERNAL_ERROR": "Something went wrong. Please try again.",
+      "RATE_LIMITED": "Too many requests. Please wait a moment and try again."
     }
   },
   "completions": {

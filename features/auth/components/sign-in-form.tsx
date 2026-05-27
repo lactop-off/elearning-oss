@@ -20,7 +20,12 @@ import { signInWithCredentials } from '@/features/auth/actions/signin';
 import { SignInSchema, type SignInInput } from '@/features/auth/schemas/credentials';
 import { useRouter } from '@/i18n/navigation';
 
-const KNOWN_ERROR_CODES = ['INVALID_INPUT', 'INVALID_CREDENTIALS', 'INTERNAL_ERROR'] as const;
+const KNOWN_ERROR_CODES = [
+  'INVALID_INPUT',
+  'INVALID_CREDENTIALS',
+  'RATE_LIMITED',
+  'INTERNAL_ERROR',
+] as const;
 type KnownErrorCode = (typeof KNOWN_ERROR_CODES)[number];
 
 function isKnownErrorCode(code: string): code is KnownErrorCode {
@@ -83,11 +88,7 @@ export function SignInForm() {
             <FormItem>
               <FormLabel>{t('passwordLabel')}</FormLabel>
               <FormControl>
-                <Input
-                  type="password"
-                  autoComplete="current-password"
-                  {...field}
-                />
+                <Input type="password" autoComplete="current-password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
