@@ -343,6 +343,7 @@
       "choicesAria": "Choices",
       "correct": "Correct · +{points} points",
       "incorrect": "{awarded} / {possible} points",
+      "textGraded": "{awarded} / {possible} pts",
       "correctMarker": "✓ correct",
       "yourPickMarker": "your answer"
     },
@@ -373,6 +374,7 @@
       "backLink": "← Back to grading queue",
       "autoSummary": "Auto-graded: {autoEarned} / {autoPossible} points",
       "passingScoreLabel": "Passing score: {passing}%",
+      "questionsLabel": "Questions to grade",
       "textAnswerLabel": "Learner's answer",
       "noAnswer": "(no answer provided)",
       "pointsLabel": "Points awarded (max {max})",

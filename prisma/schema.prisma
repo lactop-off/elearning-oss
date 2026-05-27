@@ -214,6 +214,7 @@ model Attempt {
 
   @@index([userId, quizId])
   @@index([quizId])
+  @@index([status, submittedAt])
 }
 
 model Answer {

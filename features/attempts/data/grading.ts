@@ -285,8 +285,10 @@ export async function finalizeGradedAttempt(input: {
 
     for (const grade of input.grades) {
       const existing = existingAnswerMap.get(grade.questionId);
-      const question = textQuestions.get(grade.questionId)!;
-      const isCorrect = grade.pointsAwarded === question.points;
+      const question = textQuestions.get(grade.questionId);
+      if (!question) return { error: 'INVALID_GRADES' as const };
+      const isCorrect =
+        grade.pointsAwarded === question.points ? true : grade.pointsAwarded === 0 ? false : null;
 
       if (existing) {
         await tx.answer.update({

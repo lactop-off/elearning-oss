@@ -10,6 +10,8 @@ export type AttemptSummary = {
   passed: boolean | null;
 };
 
+export type SubmittedAttemptStatus = Exclude<AttemptSummary['status'], 'IN_PROGRESS'>;
+
 export async function findLatestAttempt(
   userId: string,
   quizId: string,
@@ -180,7 +182,10 @@ export async function gradeAndSubmitAttempt(input: {
         // Choice-based answers must have choiceIds only.
         if (!hasChoices || hasText) return { error: 'INVALID_ANSWERS' as const };
 
-        const choiceIds = answer.choiceIds!;
+        const choiceIds = answer.choiceIds;
+        if (!choiceIds || choiceIds.length === 0) {
+          return { error: 'INVALID_ANSWERS' as const };
+        }
 
         // SINGLE_CHOICE allows only one selection.
         if (q.type === 'SINGLE_CHOICE' && choiceIds.length !== 1) {
@@ -227,12 +232,19 @@ export async function gradeAndSubmitAttempt(input: {
       const q = questionMap.get(question.id)!;
 
       if (q.type === 'TEXT') {
+        const text = submitted.textAnswer;
+        if (text === undefined || text === null) {
+          return { error: 'INVALID_ANSWERS' as const };
+        }
         textAnswerRecords.push({
           questionId: question.id,
-          textAnswer: submitted.textAnswer!,
+          textAnswer: text,
         });
       } else {
-        const choiceIds = submitted.choiceIds!;
+        const choiceIds = submitted.choiceIds;
+        if (!choiceIds || choiceIds.length === 0) {
+          return { error: 'INVALID_ANSWERS' as const };
+        }
         const submittedSet = new Set(choiceIds);
 
         // All-or-nothing equality between submitted and correct sets.

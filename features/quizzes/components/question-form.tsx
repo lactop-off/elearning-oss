@@ -1,11 +1,10 @@
 'use client';
 
 import { useEffect, useTransition } from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { type Resolver, useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -22,7 +21,24 @@ import { addQuestionAction } from '@/features/quizzes/actions/add-question';
 import { AddQuestionSchema } from '@/features/quizzes/schemas/question';
 import { useRouter } from '@/i18n/navigation';
 
-type QuestionFormValues = z.input<typeof AddQuestionSchema>;
+/**
+ * Flat form type that covers all three question variants (SINGLE_CHOICE,
+ * MULTI_CHOICE, TEXT) without discriminated-union branching.  The resolver
+ * still validates against the discriminated AddQuestionSchema, which strips
+ * variant-irrelevant fields before returning the parsed value to onSubmit.
+ *
+ * Using a flat type lets us call form.setValue / form.watch / form.getValues
+ * for every field without "as never" casts.
+ */
+type QuestionFormValues = {
+  type: 'SINGLE_CHOICE' | 'MULTI_CHOICE' | 'TEXT';
+  quizId: string;
+  body: string;
+  points: number;
+  choices?: { body: string }[];
+  correctChoiceIndex?: number;
+  correctChoiceIndices?: number[];
+};
 
 const KNOWN = [
   'INVALID_INPUT',
@@ -63,35 +79,44 @@ export function QuestionForm({ quizId }: { quizId: string }) {
   const tToast = useTranslations('quizzes.toast');
   const tError = useTranslations('quizzes.errors');
 
+  // zodResolver validates against the discriminated AddQuestionSchema.
+  // The resolver type expects the same generic as useForm, so we cast once here
+  // at the boundary — the flat QuestionFormValues is a superset of every
+  // discriminated variant, so all runtime values are valid inputs to the schema.
   const form = useForm<QuestionFormValues>({
-    resolver: zodResolver(AddQuestionSchema),
+    // QuestionFormValues is a flat superset of every discriminated variant.
+    // The cast to Resolver<QuestionFormValues> is necessary because zodResolver
+    // infers its generic from the schema's discriminated-union input type, which
+    // does not extend FieldValues in the same shape.  Using Resolver<T> (not
+    // `any`) preserves full type-checking for the rest of the form.
+    resolver: zodResolver(AddQuestionSchema) as Resolver<QuestionFormValues>,
     defaultValues: defaultsForType('SINGLE_CHOICE', quizId),
   });
 
   const choices = useFieldArray({ control: form.control, name: 'choices' });
   const type = form.watch('type');
 
-  // When the type toggles, reset the correctness fields so the discriminated
-  // schema doesn't see stale data from the other variant.
+  // When the type toggles, reset variant-specific correctness fields so the
+  // discriminated schema does not see stale data from the other variant.
   useEffect(() => {
-    const current = form.getValues();
     if (type === 'SINGLE_CHOICE') {
-      form.setValue('correctChoiceIndex' as never, 0 as never, { shouldValidate: false });
-      form.unregister('correctChoiceIndices' as never);
+      form.setValue('correctChoiceIndex', 0, { shouldValidate: false });
+      form.setValue('correctChoiceIndices', undefined, { shouldValidate: false });
     } else if (type === 'MULTI_CHOICE') {
-      form.setValue('correctChoiceIndices' as never, [] as never, { shouldValidate: false });
-      form.unregister('correctChoiceIndex' as never);
+      form.setValue('correctChoiceIndices', [], { shouldValidate: false });
+      form.setValue('correctChoiceIndex', undefined, { shouldValidate: false });
     } else {
       // TEXT — no correctness fields needed
-      form.unregister('correctChoiceIndex' as never);
-      form.unregister('correctChoiceIndices' as never);
+      form.setValue('correctChoiceIndex', undefined, { shouldValidate: false });
+      form.setValue('correctChoiceIndices', undefined, { shouldValidate: false });
     }
-    void current;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 
   function onSubmit(values: QuestionFormValues) {
     startTransition(async () => {
+      // addQuestionAction accepts unknown and runs AddQuestionSchema.safeParse
+      // internally, so passing the flat QuestionFormValues is correct.
       const result = await addQuestionAction(values);
       if (result.ok) {
         toast.success(tToast('questionAdded'));
@@ -103,13 +128,10 @@ export function QuestionForm({ quizId }: { quizId: string }) {
     });
   }
 
-  const currentMultiIndices = ((form.watch('correctChoiceIndices' as never) as unknown) ??
-    []) as number[];
+  const currentMultiIndices: number[] = form.watch('correctChoiceIndices') ?? [];
 
   function toggleMultiIndex(index: number) {
-    const current = (
-      ((form.getValues('correctChoiceIndices' as never) as unknown) ?? []) as number[]
-    ).slice();
+    const current = (form.getValues('correctChoiceIndices') ?? []).slice();
     const pos = current.indexOf(index);
     if (pos >= 0) {
       current.splice(pos, 1);
@@ -117,12 +139,10 @@ export function QuestionForm({ quizId }: { quizId: string }) {
       current.push(index);
       current.sort((a, b) => a - b);
     }
-    form.setValue('correctChoiceIndices' as never, current as never, { shouldValidate: true });
+    form.setValue('correctChoiceIndices', current, { shouldValidate: true });
   }
 
-  const currentSingleIndex = form.watch('correctChoiceIndex' as never) as unknown as
-    | number
-    | undefined;
+  const currentSingleIndex: number | undefined = form.watch('correctChoiceIndex');
 
   return (
     <Form {...form}>
@@ -223,7 +243,7 @@ export function QuestionForm({ quizId }: { quizId: string }) {
                       value={index}
                       checked={singleChecked}
                       onChange={() =>
-                        form.setValue('correctChoiceIndex' as never, index as never, {
+                        form.setValue('correctChoiceIndex', index, {
                           shouldValidate: true,
                         })
                       }
@@ -244,6 +264,9 @@ export function QuestionForm({ quizId }: { quizId: string }) {
                     name={`choices.${index}.body`}
                     render={({ field: bodyField }) => (
                       <FormItem className="grid gap-0">
+                        <FormLabel className="sr-only">
+                          {t('choicePlaceholder', { index: index + 1 })}
+                        </FormLabel>
                         <FormControl>
                           <Input
                             autoComplete="off"
@@ -279,22 +302,14 @@ export function QuestionForm({ quizId }: { quizId: string }) {
                 {t('addChoice')}
               </Button>
             </div>
-            {(form.formState.errors as Record<string, { message?: string } | undefined>)
-              .correctChoiceIndex?.message ? (
+            {form.formState.errors.correctChoiceIndex?.message ? (
               <p className="text-destructive text-sm">
-                {
-                  (form.formState.errors as Record<string, { message?: string }>).correctChoiceIndex
-                    .message
-                }
+                {form.formState.errors.correctChoiceIndex.message}
               </p>
             ) : null}
-            {(form.formState.errors as Record<string, { message?: string } | undefined>)
-              .correctChoiceIndices?.message ? (
+            {form.formState.errors.correctChoiceIndices?.message ? (
               <p className="text-destructive text-sm">
-                {
-                  (form.formState.errors as Record<string, { message?: string }>)
-                    .correctChoiceIndices.message
-                }
+                {form.formState.errors.correctChoiceIndices.message}
               </p>
             ) : null}
           </fieldset>

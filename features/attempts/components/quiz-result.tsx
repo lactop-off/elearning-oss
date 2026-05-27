@@ -37,7 +37,7 @@ export async function QuizResult({
     <div className="grid gap-6">
       {isPendingReview ? (
         <aside
-          role="status"
+          role="region"
           aria-labelledby="result-heading"
           className="grid gap-2 rounded-lg border border-amber-400/40 bg-amber-50/50 p-4 dark:bg-amber-900/10"
         >
@@ -48,7 +48,7 @@ export async function QuizResult({
         </aside>
       ) : (
         <aside
-          role="status"
+          role="region"
           aria-labelledby="result-heading"
           className={
             passed
@@ -84,7 +84,7 @@ export async function QuizResult({
                   </p>
                   <p className="text-xs text-muted-foreground">
                     {isGraded
-                      ? t('incorrect', {
+                      ? t('textGraded', {
                           awarded: pointsAwarded,
                           possible: question.points,
                         })

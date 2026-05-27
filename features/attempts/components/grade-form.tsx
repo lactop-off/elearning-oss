@@ -89,7 +89,7 @@ export function GradeForm({ attemptId, textItems }: { attemptId: string; textIte
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-8">
-        <ol className="grid gap-6">
+        <ol aria-label={t('questionsLabel')} className="grid gap-6">
           {textItems.map((item, index) => (
             <li key={item.questionId}>
               <div className="grid gap-3 rounded-lg border p-4">

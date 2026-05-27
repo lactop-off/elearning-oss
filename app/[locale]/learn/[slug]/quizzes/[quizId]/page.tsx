@@ -6,6 +6,7 @@ import {
   findAttemptOwnedBy,
   findLatestAttempt,
   listAnswersByAttempt,
+  type SubmittedAttemptStatus,
 } from '@/features/attempts/data/attempts';
 import { QuizResult } from '@/features/attempts/components/quiz-result';
 import { QuizTaker } from '@/features/attempts/components/quiz-taker';
@@ -95,21 +96,23 @@ export default async function LearnerQuizPage({
             <QuizTaker courseSlug={slug} attemptId={latestAttempt.id} questions={quiz.questions} />
           ) : resultPayload ? (
             <div className="grid gap-6">
-              <QuizResult
-                score={latestAttempt.score}
-                passed={latestAttempt.passed}
-                status={
-                  latestAttempt.status as
-                    | 'SUBMITTED'
-                    | 'PENDING_REVIEW'
-                    | 'AUTO_SUBMITTED'
-                    | 'ABANDONED'
-                }
-                passingScore={quiz.passingScore}
-                questions={quiz.questions}
-                answers={resultPayload.answers}
-                correctChoiceIdsByQuestionId={resultPayload.correctChoiceIdsByQuestionId}
-              />
+              {/* latestAttempt.status !== 'IN_PROGRESS' is guaranteed by the
+                  enclosing else branch; the variable assignment below narrows
+                  the type without an explicit cast. */}
+              {(() => {
+                const submittedStatus: SubmittedAttemptStatus = latestAttempt.status;
+                return (
+                  <QuizResult
+                    score={latestAttempt.score}
+                    passed={latestAttempt.passed}
+                    status={submittedStatus}
+                    passingScore={quiz.passingScore}
+                    questions={quiz.questions}
+                    answers={resultPayload.answers}
+                    correctChoiceIdsByQuestionId={resultPayload.correctChoiceIdsByQuestionId}
+                  />
+                );
+              })()}
               <div>
                 <StartQuizButton courseSlug={slug} quizId={quiz.id} label={t('retakeCta')} />
               </div>

@@ -28,19 +28,19 @@ type GradeAttemptResult =
 // ─── Action ───────────────────────────────────────────────────────────────────
 
 export async function gradeAttemptAction(input: unknown): Promise<GradeAttemptResult> {
-  // 1. Input validation
-  const parsed = GradeAttemptSchema.safeParse(input);
-  if (!parsed.success) {
-    return { ok: false, error: 'INVALID_INPUT', issues: parsed.error.issues };
-  }
-
-  // 2. Auth: only instructors and admins may grade
+  // 1. Auth: only instructors and admins may grade
   let user;
   try {
     user = await requireRole('INSTRUCTOR', 'ADMIN');
   } catch (e) {
     if (e instanceof AuthError) return { ok: false, error: e.code };
     throw e;
+  }
+
+  // 2. Input validation
+  const parsed = GradeAttemptSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, error: 'INVALID_INPUT', issues: parsed.error.issues };
   }
 
   // 3. Business logic

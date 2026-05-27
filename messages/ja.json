@@ -343,6 +343,7 @@
       "choicesAria": "選択肢",
       "correct": "正解 · +{points} 点",
       "incorrect": "{awarded} / {possible} 点",
+      "textGraded": "{awarded} / {possible} 点",
       "correctMarker": "✓ 正解",
       "yourPickMarker": "あなたの回答"
     },
@@ -371,6 +372,7 @@
       "submittedAtLabel": "送信日時",
       "reviewCta": "採点する",
       "backLink": "← 採点キューに戻る",
+      "questionsLabel": "採点する設問",
       "autoSummary": "自動採点: {autoEarned} / {autoPossible} 点",
       "passingScoreLabel": "合格ライン: {passing}%",
       "textAnswerLabel": "学習者の回答",
