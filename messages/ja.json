@@ -10,6 +10,11 @@
     "myCourses": "マイコース",
     "signedInAria": "{name} でログイン中"
   },
+  "footer": {
+    "tagline": "オープンソースの学習プラットフォーム",
+    "aria": "フッター",
+    "copyright": "© {year} E-learning OSS"
+  },
   "roles": {
     "LEARNER": "学習者",
     "INSTRUCTOR": "講師",

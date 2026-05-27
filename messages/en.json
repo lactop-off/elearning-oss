@@ -10,6 +10,11 @@
     "myCourses": "My courses",
     "signedInAria": "Signed in as {name}"
   },
+  "footer": {
+    "tagline": "Open-source learning platform",
+    "aria": "Footer",
+    "copyright": "© {year} E-learning OSS"
+  },
   "roles": {
     "LEARNER": "learner",
     "INSTRUCTOR": "instructor",

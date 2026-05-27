@@ -38,7 +38,7 @@
 ├── settings.local.json           # 個人ローカル設定 (gitignore)
 ├── agents/
 │   ├── builders/                 # 実装エージェント (5 種)
-│   └── gates/                    # 品質ゲート (11 種)
+│   └── gates/                    # 品質ゲート (12 種)
 └── commands/
     ├── build-with-gates.md       # メインの自動ループコマンド
     ├── verify-only.md            # 検証のみ
@@ -66,6 +66,7 @@
 | `unit-test-runner-gate` | `npm test` 実行結果 |
 | `e2e-test-gate` | Playwright + axe |
 | `accessibility-gate` | WCAG 2.1 AA |
+| `design-gate` | 視覚デザイン (トークン遵守、余白/タイポ階層、一貫性) |
 | `security-gate` | OWASP Top 10、認可漏れ |
 | `performance-gate` | N+1、bundle size |
 | `i18n-gate` | ハードコード、翻訳整合性 |
