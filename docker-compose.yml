@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: elearning-postgres
+    container_name: elearning-oss-postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
@@ -16,6 +16,34 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: elearning-oss-app
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # コンテナ内からは postgres サービス名で接続する (.env の localhost を上書き)
+      DATABASE_URL: 'postgresql://postgres:postgres@postgres:5432/elearning_dev?schema=public'
+      NODE_ENV: development
+      # WSL/Docker のバインドマウントでホットリロードを安定させる
+      WATCHPACK_POLLING: 'true'
+      CHOKIDAR_USEPOLLING: 'true'
+    ports:
+      - '3000:3000'
+    volumes:
+      # ソースをマウントして即時反映。node_modules と .next はコンテナ側を優先 (匿名ボリューム)
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    # 起動時に Prisma クライアントを (マウントされたホスト側へ) 生成してから dev サーバー起動
+    command: sh -c "npm run db:generate && npm run dev -- -H 0.0.0.0"
+    depends_on:
+      postgres:
+        condition: service_healthy
 
 volumes:
   elearning-postgres-data:
