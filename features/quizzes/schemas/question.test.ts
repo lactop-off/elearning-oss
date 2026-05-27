@@ -106,3 +106,62 @@ describe('AddQuestionSchema (MULTI_CHOICE)', () => {
     ).toBe(false);
   });
 });
+
+describe('AddQuestionSchema (TEXT)', () => {
+  function basePayload() {
+    return {
+      type: 'TEXT' as const,
+      quizId: 'q1',
+      body: 'Explain the concept of recursion.',
+      points: 10,
+    };
+  }
+
+  it('accepts a valid TEXT question without choices', () => {
+    expect(AddQuestionSchema.safeParse(basePayload()).success).toBe(true);
+  });
+
+  it('accepts a TEXT question with minimum points (1)', () => {
+    expect(AddQuestionSchema.safeParse({ ...basePayload(), points: 1 }).success).toBe(true);
+  });
+
+  it('accepts a TEXT question with maximum points (100)', () => {
+    expect(AddQuestionSchema.safeParse({ ...basePayload(), points: 100 }).success).toBe(true);
+  });
+
+  it('ignores extra fields like choices when type is TEXT (discriminatedUnion strips/passes through unknown keys)', () => {
+    // discriminatedUnion selects the TEXT variant; extra keys are stripped by Zod's default (strip mode)
+    const result = AddQuestionSchema.safeParse({
+      ...basePayload(),
+      choices: [{ body: 'a' }, { body: 'b' }],
+      correctChoiceIndex: 0,
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects a TEXT question with empty body', () => {
+    expect(AddQuestionSchema.safeParse({ ...basePayload(), body: '' }).success).toBe(false);
+  });
+
+  it('rejects a TEXT question with body exceeding 1000 characters', () => {
+    expect(AddQuestionSchema.safeParse({ ...basePayload(), body: 'a'.repeat(1001) }).success).toBe(
+      false,
+    );
+  });
+
+  it('rejects a TEXT question with points = 0 (below minimum)', () => {
+    expect(AddQuestionSchema.safeParse({ ...basePayload(), points: 0 }).success).toBe(false);
+  });
+
+  it('rejects a TEXT question with points = 101 (above maximum)', () => {
+    expect(AddQuestionSchema.safeParse({ ...basePayload(), points: 101 }).success).toBe(false);
+  });
+
+  it('rejects a TEXT question with non-integer points', () => {
+    expect(AddQuestionSchema.safeParse({ ...basePayload(), points: 2.5 }).success).toBe(false);
+  });
+
+  it('rejects a TEXT question with empty quizId', () => {
+    expect(AddQuestionSchema.safeParse({ ...basePayload(), quizId: '' }).success).toBe(false);
+  });
+});

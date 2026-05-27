@@ -11,12 +11,7 @@ type AddQuestionResult =
   | { ok: true; data: { questionId: string } }
   | {
       ok: false;
-      error:
-        | 'INVALID_INPUT'
-        | 'UNAUTHORIZED'
-        | 'FORBIDDEN'
-        | 'QUIZ_NOT_FOUND'
-        | 'INTERNAL_ERROR';
+      error: 'INVALID_INPUT' | 'UNAUTHORIZED' | 'FORBIDDEN' | 'QUIZ_NOT_FOUND' | 'INTERNAL_ERROR';
       issues?: unknown;
     };
 
@@ -38,11 +33,21 @@ export async function addQuestionAction(input: unknown): Promise<AddQuestionResu
   if (!quiz) return { ok: false, error: 'QUIZ_NOT_FOUND' };
 
   // Normalize the discriminated union down to a flat list of correct indexes
-  // before handing off to the data layer.
-  const correctChoiceIndexes =
-    parsed.data.type === 'SINGLE_CHOICE'
-      ? [parsed.data.correctChoiceIndex]
-      : parsed.data.correctChoiceIndices;
+  // before handing off to the data layer. TEXT questions have neither choices
+  // nor correct indexes — pass empty arrays so the data layer skips them.
+  let choices: { body: string }[];
+  let correctChoiceIndexes: number[];
+  if (parsed.data.type === 'SINGLE_CHOICE') {
+    choices = parsed.data.choices;
+    correctChoiceIndexes = [parsed.data.correctChoiceIndex];
+  } else if (parsed.data.type === 'MULTI_CHOICE') {
+    choices = parsed.data.choices;
+    correctChoiceIndexes = parsed.data.correctChoiceIndices;
+  } else {
+    // TEXT
+    choices = [];
+    correctChoiceIndexes = [];
+  }
 
   try {
     const result = await createQuestionWithChoices({
@@ -50,7 +55,7 @@ export async function addQuestionAction(input: unknown): Promise<AddQuestionResu
       type: parsed.data.type,
       body: parsed.data.body,
       points: parsed.data.points,
-      choices: parsed.data.choices,
+      choices,
       correctChoiceIndexes,
     });
     revalidatePath(`/instructor/courses/${quiz.course.slug}/quizzes/${quiz.id}`);

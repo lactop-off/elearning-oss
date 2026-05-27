@@ -8,6 +8,7 @@
     "catalog": "Catalog",
     "myLearning": "My learning",
     "myCourses": "My courses",
+    "grading": "Grading queue",
     "signedInAria": "Signed in as {name}"
   },
   "roles": {
@@ -251,8 +252,10 @@
       "typeLabel": "Question type",
       "typeSingle": "Single choice",
       "typeMulti": "Multiple choice",
+      "typeText": "Written answer",
       "typeSingleHelper": "Learners pick exactly one correct answer.",
       "typeMultiHelper": "Learners must pick every correct choice — partial answers are scored as incorrect.",
+      "typeTextHelper": "Learners write a free-form answer. An instructor grades it manually.",
       "bodyLabel": "Question",
       "bodyPlaceholder": "What is 1 + 1?",
       "pointsLabel": "Points",
@@ -274,6 +277,7 @@
       "pointsLabel": "{points} points",
       "typeSingle": "single choice",
       "typeMulti": "multiple choice",
+      "typeText": "written answer",
       "choicesAria": "Choices",
       "correctMarker": "✓ correct"
     },
@@ -320,6 +324,9 @@
       "pointsLabel": "{points} points",
       "typeSingle": "Pick one",
       "typeMulti": "Pick all that apply",
+      "typeText": "Written answer (graded by instructor)",
+      "textAnswerPlaceholder": "Type your answer here...",
+      "textAnswerAria": "Written answer field",
       "submit": "Submit answers",
       "working": "Grading...",
       "selectAtLeastOne": "Pick at least one answer to submit."
@@ -328,6 +335,10 @@
       "passTitle": "You passed!",
       "failTitle": "Not quite there yet",
       "scoreSummary": "Score: {score}% (pass at {passing}%)",
+      "pendingTitle": "Awaiting instructor review",
+      "pendingBody": "Your quiz includes written questions that need to be graded manually. Your score will be confirmed once the instructor has reviewed your answers.",
+      "textAnswerLabel": "Your answer",
+      "awaitingGrade": "Awaiting grade",
       "breakdownAria": "Per-question breakdown",
       "choicesAria": "Choices",
       "correct": "Correct · +{points} points",
@@ -337,7 +348,8 @@
     },
     "toast": {
       "passed": "Passed with {score}%",
-      "submitted": "Submitted — score {score}%"
+      "submitted": "Submitted — score {score}%",
+      "pendingReview": "Submitted — written answers are awaiting instructor review"
     },
     "errors": {
       "INVALID_INPUT": "Please review your answers and try again.",
@@ -347,6 +359,36 @@
       "INVALID_ANSWERS": "Some answers didn't match the quiz.",
       "INTERNAL_ERROR": "Something went wrong. Please try again.",
       "RATE_LIMITED": "Too many requests. Please wait a moment and try again."
+    }
+  },
+  "instructor": {
+    "grading": {
+      "title": "Grading queue",
+      "description": "Written answers waiting for your review.",
+      "empty": "No submissions awaiting review.",
+      "learnerLabel": "Learner",
+      "quizLabel": "Quiz",
+      "submittedAtLabel": "Submitted at",
+      "reviewCta": "Review",
+      "backLink": "← Back to grading queue",
+      "autoSummary": "Auto-graded: {autoEarned} / {autoPossible} points",
+      "passingScoreLabel": "Passing score: {passing}%",
+      "textAnswerLabel": "Learner's answer",
+      "noAnswer": "(no answer provided)",
+      "pointsLabel": "Points awarded (max {max})",
+      "pointsHelper": "Enter a whole number from 0 to {max}.",
+      "submit": "Confirm grades",
+      "submitting": "Saving...",
+      "successToast": "Grades saved",
+      "errors": {
+        "FORBIDDEN": "You do not have permission to grade this quiz.",
+        "NOT_FOUND": "Attempt not found.",
+        "NOT_PENDING": "This attempt has already been graded.",
+        "INVALID_GRADES": "One or more scores are out of range. Please check and try again.",
+        "INVALID_INPUT": "Please review the highlighted fields.",
+        "UNAUTHORIZED": "Please sign in to continue.",
+        "INTERNAL_ERROR": "Something went wrong. Please try again."
+      }
     }
   },
   "completions": {

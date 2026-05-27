@@ -14,13 +14,15 @@ type ResultQuestion = {
 export async function QuizResult({
   score,
   passed,
+  status,
   passingScore,
   questions,
   answers,
   correctChoiceIdsByQuestionId,
 }: {
-  score: number;
-  passed: boolean;
+  score: number | null;
+  passed: boolean | null;
+  status: 'SUBMITTED' | 'PENDING_REVIEW' | 'AUTO_SUBMITTED' | 'ABANDONED';
   passingScore: number;
   questions: ResultQuestion[];
   answers: AnswerForResult[];
@@ -29,29 +31,80 @@ export async function QuizResult({
   const t = await getTranslations('attempts.result');
   const answerByQuestion = new Map(answers.map((a) => [a.questionId, a]));
 
+  const isPendingReview = status === 'PENDING_REVIEW';
+
   return (
     <div className="grid gap-6">
-      <aside
-        role="status"
-        aria-labelledby="result-heading"
-        className={
-          passed
-            ? 'grid gap-2 rounded-lg border border-primary/40 bg-primary/5 p-4'
-            : 'grid gap-2 rounded-lg border border-destructive/40 bg-destructive/5 p-4'
-        }
-      >
-        <h2 id="result-heading" className="text-base font-semibold">
-          {passed ? t('passTitle') : t('failTitle')}
-        </h2>
-        <p className="text-sm text-muted-foreground">
-          {t('scoreSummary', { score, passing: passingScore })}
-        </p>
-      </aside>
+      {isPendingReview ? (
+        <aside
+          role="status"
+          aria-labelledby="result-heading"
+          className="grid gap-2 rounded-lg border border-amber-400/40 bg-amber-50/50 p-4 dark:bg-amber-900/10"
+        >
+          <h2 id="result-heading" className="text-base font-semibold">
+            {t('pendingTitle')}
+          </h2>
+          <p className="text-sm text-muted-foreground">{t('pendingBody')}</p>
+        </aside>
+      ) : (
+        <aside
+          role="status"
+          aria-labelledby="result-heading"
+          className={
+            passed
+              ? 'grid gap-2 rounded-lg border border-primary/40 bg-primary/5 p-4'
+              : 'grid gap-2 rounded-lg border border-destructive/40 bg-destructive/5 p-4'
+          }
+        >
+          <h2 id="result-heading" className="text-base font-semibold">
+            {passed ? t('passTitle') : t('failTitle')}
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            {t('scoreSummary', { score: score ?? 0, passing: passingScore })}
+          </p>
+        </aside>
+      )}
 
       <ol aria-label={t('breakdownAria')} className="grid gap-4">
         {questions.map((question) => {
           const answer = answerByQuestion.get(question.id);
           const correctIds = correctChoiceIdsByQuestionId.get(question.id) ?? new Set<string>();
+
+          if (question.type === 'TEXT') {
+            const textAnswer = answer?.textAnswer ?? null;
+            const pointsAwarded = answer?.pointsAwarded ?? null;
+            const isGraded = pointsAwarded !== null;
+
+            return (
+              <li key={question.id}>
+                <div className="grid gap-2 rounded-lg border p-4">
+                  <p className="font-medium">
+                    <span className="mr-2 text-muted-foreground">{question.order}.</span>
+                    {question.body}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {isGraded
+                      ? t('incorrect', {
+                          awarded: pointsAwarded,
+                          possible: question.points,
+                        })
+                      : t('awaitingGrade')}
+                  </p>
+                  <div className="rounded bg-muted/40 px-3 py-2 text-sm">
+                    <p className="mb-1 text-xs font-medium text-muted-foreground">
+                      {t('textAnswerLabel')}
+                    </p>
+                    <p className="whitespace-pre-wrap">
+                      {textAnswer ?? (
+                        <em className="text-muted-foreground">{t('awaitingGrade')}</em>
+                      )}
+                    </p>
+                  </div>
+                </div>
+              </li>
+            );
+          }
+
           return (
             <li key={question.id}>
               <div className="grid gap-2 rounded-lg border p-4">
@@ -87,9 +140,7 @@ export async function QuizResult({
                           <span className="ml-2 text-xs font-medium">{t('correctMarker')}</span>
                         ) : null}
                         {isSelected && !isCorrect ? (
-                          <span className="ml-2 text-xs font-medium">
-                            {t('yourPickMarker')}
-                          </span>
+                          <span className="ml-2 text-xs font-medium">{t('yourPickMarker')}</span>
                         ) : null}
                       </li>
                     );

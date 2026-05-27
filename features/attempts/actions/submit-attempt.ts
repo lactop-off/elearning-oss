@@ -10,7 +10,14 @@ import { AuthError, requireUser } from '@/lib/auth';
 import { checkRateLimit } from '@/lib/rate-limit';
 
 type SubmitAttemptResult =
-  | { ok: true; data: { score: number; passed: boolean } }
+  | {
+      ok: true;
+      data: {
+        status: 'SUBMITTED' | 'PENDING_REVIEW';
+        score: number | null;
+        passed: boolean | null;
+      };
+    }
   | {
       ok: false;
       error:
@@ -76,11 +83,10 @@ export async function submitAttemptAction(
     return { ok: false, error: result.error };
   }
 
-  // If this submission was a passing one, re-run the completion check so a
-  // newly-met requirement flips the course to "complete" and issues a cert.
-  // Failures here mustn't surface to the learner — the score was recorded
-  // successfully.
-  if (result.passed) {
+  // Only trigger the completion check for auto-graded, passing submissions.
+  // PENDING_REVIEW attempts are not yet scored — the completion check will be
+  // triggered later by gradeAttemptAction once the instructor finalises grades.
+  if (result.status === 'SUBMITTED' && result.passed === true) {
     try {
       const enrollment = await findEnrolledCourseBySlug(user.id, context.courseSlug);
       if (enrollment) {
@@ -96,5 +102,12 @@ export async function submitAttemptAction(
 
   revalidatePath(`/learn/${context.courseSlug}/quizzes/${attempt.quizId}`);
   revalidatePath(`/learn/${context.courseSlug}`);
-  return { ok: true, data: { score: result.score, passed: result.passed } };
+  return {
+    ok: true,
+    data: {
+      status: result.status,
+      score: result.score,
+      passed: result.passed,
+    },
+  };
 }

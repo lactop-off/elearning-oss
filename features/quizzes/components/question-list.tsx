@@ -34,32 +34,34 @@ export async function QuestionList({ questions }: { questions: QuestionWithChoic
                 {' · '}
                 {question.type === 'MULTI_CHOICE'
                   ? t('typeMulti')
-                  : t('typeSingle')}
+                  : question.type === 'TEXT'
+                    ? t('typeText')
+                    : t('typeSingle')}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ul aria-label={t('choicesAria')} className="grid gap-1 text-sm">
-                {question.choices.map((choice) => (
-                  <li
-                    key={choice.id}
-                    className={
-                      choice.isCorrect
-                        ? 'rounded bg-primary/10 px-2 py-1 text-primary'
-                        : 'rounded px-2 py-1'
-                    }
-                  >
-                    <span className="mr-2 text-muted-foreground">
-                      {String.fromCharCode(64 + choice.order)}.
-                    </span>
-                    {choice.body}
-                    {choice.isCorrect ? (
-                      <span className="ml-2 text-xs font-medium">
-                        {t('correctMarker')}
+              {question.type === 'TEXT' ? null : (
+                <ul aria-label={t('choicesAria')} className="grid gap-1 text-sm">
+                  {question.choices.map((choice) => (
+                    <li
+                      key={choice.id}
+                      className={
+                        choice.isCorrect
+                          ? 'rounded bg-primary/10 px-2 py-1 text-primary'
+                          : 'rounded px-2 py-1'
+                      }
+                    >
+                      <span className="mr-2 text-muted-foreground">
+                        {String.fromCharCode(64 + choice.order)}.
                       </span>
-                    ) : null}
-                  </li>
-                ))}
-              </ul>
+                      {choice.body}
+                      {choice.isCorrect ? (
+                        <span className="ml-2 text-xs font-medium">{t('correctMarker')}</span>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </CardContent>
           </Card>
         </li>

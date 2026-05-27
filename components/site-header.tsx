@@ -17,10 +17,7 @@ export async function SiteHeader() {
         aria-label={t('nav.primary')}
         className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4"
       >
-        <Link
-          href="/"
-          className="text-sm font-semibold tracking-tight hover:text-foreground/80"
-        >
+        <Link href="/" className="text-sm font-semibold tracking-tight hover:text-foreground/80">
           {t('common.appName')}
         </Link>
 
@@ -38,11 +35,18 @@ export async function SiteHeader() {
                 </Button>
               </li>
               {canManageCourses && (
-                <li>
-                  <Button asChild variant="ghost" size="sm">
-                    <Link href="/instructor/courses">{t('nav.myCourses')}</Link>
-                  </Button>
-                </li>
+                <>
+                  <li>
+                    <Button asChild variant="ghost" size="sm">
+                      <Link href="/instructor/courses">{t('nav.myCourses')}</Link>
+                    </Button>
+                  </li>
+                  <li>
+                    <Button asChild variant="ghost" size="sm">
+                      <Link href="/instructor/grading">{t('nav.grading')}</Link>
+                    </Button>
+                  </li>
+                </>
               )}
               <li
                 className="hidden text-sm text-muted-foreground sm:inline"

@@ -8,6 +8,7 @@
     "catalog": "コース一覧",
     "myLearning": "学習中",
     "myCourses": "マイコース",
+    "grading": "採点キュー",
     "signedInAria": "{name} でログイン中"
   },
   "roles": {
@@ -251,8 +252,10 @@
       "typeLabel": "質問タイプ",
       "typeSingle": "単一選択",
       "typeMulti": "複数選択",
+      "typeText": "記述式",
       "typeSingleHelper": "正解は 1 つだけ。学習者は 1 つの選択肢を選びます。",
       "typeMultiHelper": "正解は複数あり。すべての正解を選ばないと不正解扱い (部分点なし)。",
+      "typeTextHelper": "学習者が自由記述で回答します。講師が手動で採点します。",
       "bodyLabel": "質問",
       "bodyPlaceholder": "例: 1 + 1 は？",
       "pointsLabel": "配点",
@@ -274,6 +277,7 @@
       "pointsLabel": "{points} 点",
       "typeSingle": "単一選択",
       "typeMulti": "複数選択",
+      "typeText": "記述式",
       "choicesAria": "選択肢",
       "correctMarker": "✓ 正解"
     },
@@ -320,6 +324,9 @@
       "pointsLabel": "{points} 点",
       "typeSingle": "1 つ選ぶ",
       "typeMulti": "あてはまるものを全て選ぶ",
+      "typeText": "記述式 (講師が採点)",
+      "textAnswerPlaceholder": "ここに回答を入力してください...",
+      "textAnswerAria": "記述回答の入力欄",
       "submit": "回答を送信",
       "working": "採点中...",
       "selectAtLeastOne": "1 問以上に回答してから送信してください。"
@@ -328,6 +335,10 @@
       "passTitle": "合格しました！",
       "failTitle": "もう一歩",
       "scoreSummary": "得点: {score}% (合格 {passing}%)",
+      "pendingTitle": "採点待ち",
+      "pendingBody": "記述式問題を含むため、講師による採点をお待ちください。採点が完了するとスコアが確定します。",
+      "textAnswerLabel": "あなたの回答",
+      "awaitingGrade": "採点待ち",
       "breakdownAria": "問題ごとの内訳",
       "choicesAria": "選択肢",
       "correct": "正解 · +{points} 点",
@@ -337,7 +348,8 @@
     },
     "toast": {
       "passed": "{score}% で合格",
-      "submitted": "送信しました — 得点 {score}%"
+      "submitted": "送信しました — 得点 {score}%",
+      "pendingReview": "送信しました — 記述式問題を講師が採点します"
     },
     "errors": {
       "INVALID_INPUT": "回答内容を見直して再送信してください。",
@@ -347,6 +359,36 @@
       "INVALID_ANSWERS": "クイズに含まれない回答が混ざっています。",
       "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。",
       "RATE_LIMITED": "リクエストが多すぎます。しばらく時間をおいてから再度お試しください。"
+    }
+  },
+  "instructor": {
+    "grading": {
+      "title": "採点キュー",
+      "description": "採点待ちの記述式回答一覧です。",
+      "empty": "採点待ちの回答はありません。",
+      "learnerLabel": "学習者",
+      "quizLabel": "クイズ",
+      "submittedAtLabel": "送信日時",
+      "reviewCta": "採点する",
+      "backLink": "← 採点キューに戻る",
+      "autoSummary": "自動採点: {autoEarned} / {autoPossible} 点",
+      "passingScoreLabel": "合格ライン: {passing}%",
+      "textAnswerLabel": "学習者の回答",
+      "noAnswer": "(回答なし)",
+      "pointsLabel": "付与点 (最大 {max} 点)",
+      "pointsHelper": "0 以上 {max} 以下の整数を入力してください。",
+      "submit": "採点を確定",
+      "submitting": "保存中...",
+      "successToast": "採点を保存しました",
+      "errors": {
+        "FORBIDDEN": "このクイズの採点権限がありません。",
+        "NOT_FOUND": "受験記録が見つかりません。",
+        "NOT_PENDING": "この受験はすでに採点済みです。",
+        "INVALID_GRADES": "入力した点数が不正です。再度ご確認ください。",
+        "INVALID_INPUT": "入力内容を確認してください。",
+        "UNAUTHORIZED": "サインインしてください。",
+        "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
+      }
     }
   },
   "completions": {

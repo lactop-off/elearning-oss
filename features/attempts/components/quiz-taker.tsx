@@ -50,14 +50,22 @@ export function QuizTaker({
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const answers: { questionId: string; choiceIds: string[] }[] = [];
+    const answers: { questionId: string; choiceIds?: string[]; textAnswer?: string }[] = [];
     for (const question of questions) {
-      const raw = formData.getAll(`q-${question.id}`);
-      const choiceIds = raw.filter(
-        (value): value is string => typeof value === 'string' && value.length > 0,
-      );
-      if (choiceIds.length > 0) {
-        answers.push({ questionId: question.id, choiceIds });
+      if (question.type === 'TEXT') {
+        const raw = formData.get(`q-${question.id}`);
+        const textAnswer = typeof raw === 'string' ? raw.trim() : '';
+        if (textAnswer.length > 0) {
+          answers.push({ questionId: question.id, textAnswer });
+        }
+      } else {
+        const raw = formData.getAll(`q-${question.id}`);
+        const choiceIds = raw.filter(
+          (value): value is string => typeof value === 'string' && value.length > 0,
+        );
+        if (choiceIds.length > 0) {
+          answers.push({ questionId: question.id, choiceIds });
+        }
       }
     }
     if (answers.length === 0) {
@@ -68,11 +76,14 @@ export function QuizTaker({
     startTransition(async () => {
       const result = await submitAttemptAction({ courseSlug }, { attemptId, answers });
       if (result.ok) {
-        toast.success(
-          result.data.passed
-            ? tToast('passed', { score: result.data.score })
-            : tToast('submitted', { score: result.data.score }),
-        );
+        if (result.data.status === 'PENDING_REVIEW') {
+          toast.success(tToast('pendingReview'));
+        } else {
+          const score = result.data.score ?? 0;
+          toast.success(
+            result.data.passed ? tToast('passed', { score }) : tToast('submitted', { score }),
+          );
+        }
         router.refresh();
         return;
       }
@@ -95,24 +106,37 @@ export function QuizTaker({
                 <p className="text-xs text-muted-foreground">
                   {t('pointsLabel', { points: question.points })}
                   {' · '}
-                  {isMulti ? t('typeMulti') : t('typeSingle')}
+                  {question.type === 'TEXT'
+                    ? t('typeText')
+                    : isMulti
+                      ? t('typeMulti')
+                      : t('typeSingle')}
                 </p>
-                <div className="grid gap-2">
-                  {question.choices.map((choice) => (
-                    <label
-                      key={choice.id}
-                      className="flex items-center gap-2 rounded border px-3 py-2 has-[input:checked]:border-primary has-[input:checked]:bg-primary/5"
-                    >
-                      <input
-                        type={isMulti ? 'checkbox' : 'radio'}
-                        name={`q-${question.id}`}
-                        value={choice.id}
-                        className="size-4"
-                      />
-                      <span className="text-sm">{choice.body}</span>
-                    </label>
-                  ))}
-                </div>
+                {question.type === 'TEXT' ? (
+                  <textarea
+                    name={`q-${question.id}`}
+                    aria-label={t('textAnswerAria')}
+                    placeholder={t('textAnswerPlaceholder')}
+                    className="min-h-24 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
+                  />
+                ) : (
+                  <div className="grid gap-2">
+                    {question.choices.map((choice) => (
+                      <label
+                        key={choice.id}
+                        className="flex items-center gap-2 rounded border px-3 py-2 has-[input:checked]:border-primary has-[input:checked]:bg-primary/5"
+                      >
+                        <input
+                          type={isMulti ? 'checkbox' : 'radio'}
+                          name={`q-${question.id}`}
+                          value={choice.id}
+                          className="size-4"
+                        />
+                        <span className="text-sm">{choice.body}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
               </fieldset>
             </li>
           );

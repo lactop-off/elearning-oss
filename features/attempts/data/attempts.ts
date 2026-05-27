@@ -3,7 +3,7 @@ import type { Attempt } from '@/lib/generated/prisma/client';
 
 export type AttemptSummary = {
   id: string;
-  status: 'IN_PROGRESS' | 'SUBMITTED' | 'AUTO_SUBMITTED' | 'ABANDONED';
+  status: 'IN_PROGRESS' | 'SUBMITTED' | 'AUTO_SUBMITTED' | 'ABANDONED' | 'PENDING_REVIEW';
   startedAt: Date;
   submittedAt: Date | null;
   score: number | null;
@@ -78,22 +78,29 @@ export async function startAttempt(userId: string, quizId: string): Promise<Atte
 
 export type SubmitOutcome = {
   attemptId: string;
-  score: number;
-  passed: boolean;
+  status: 'SUBMITTED' | 'PENDING_REVIEW';
+  score: number | null;
+  passed: boolean | null;
 };
 
 /**
- * Grade a quiz attempt (supports SINGLE_CHOICE and MULTI_CHOICE questions)
- * and persist Answer rows, attempt score and pass/fail in a single
- * transaction. Returns the final score (0-100) and pass result.
+ * Grade a quiz attempt and persist Answer rows, attempt score and pass/fail in
+ * a single transaction.
+ *
+ * Supports SINGLE_CHOICE, MULTI_CHOICE, and TEXT question types.
  *
  * Scoring:
  * - SINGLE_CHOICE: learner picks exactly 1 choice. Correct iff that choice
  *   has isCorrect=true. Multi-pick on a single-choice question is rejected as
  *   INVALID_ANSWERS.
  * - MULTI_CHOICE: all-or-nothing. The set of selected choices must equal the
- *   set of correct choices exactly (no missing, no extras). Partial credit is
- *   intentionally out of scope.
+ *   set of correct choices exactly. Partial credit is intentionally out of scope.
+ * - TEXT: no auto-grading. pointsAwarded=null, isCorrect=null stored.
+ *
+ * If the quiz contains at least one TEXT question the attempt is set to
+ * PENDING_REVIEW with score=null, passed=null. The instructor must call
+ * finalizeGradedAttempt (features/attempts/data/grading.ts) to complete
+ * scoring.
  *
  * The caller is responsible for verifying that the attempt belongs to the
  * current user and is in IN_PROGRESS state; we re-check status inside the
@@ -102,7 +109,7 @@ export type SubmitOutcome = {
 export async function gradeAndSubmitAttempt(input: {
   attemptId: string;
   userId: string;
-  answers: { questionId: string; choiceIds: string[] }[];
+  answers: { questionId: string; choiceIds?: string[]; textAnswer?: string }[];
 }): Promise<SubmitOutcome | { error: 'NOT_IN_PROGRESS' | 'INVALID_ANSWERS' }> {
   return prisma.$transaction(async (tx) => {
     const attempt = await tx.attempt.findFirst({
@@ -130,8 +137,7 @@ export async function gradeAndSubmitAttempt(input: {
       return { error: 'NOT_IN_PROGRESS' as const };
     }
 
-    // Build per-question lookup tables: total points, the set of correct
-    // choiceIds, and the set of all choiceIds (for validating the answer).
+    // Build per-question lookup tables.
     type QuestionLookup = {
       points: number;
       type: 'SINGLE_CHOICE' | 'MULTI_CHOICE' | 'TEXT';
@@ -164,73 +170,95 @@ export async function gradeAndSubmitAttempt(input: {
       }
       seenQuestions.add(answer.questionId);
 
-      // No choices at all is an empty answer — the schema already blocks this,
-      // but defense-in-depth.
-      if (answer.choiceIds.length === 0) return { error: 'INVALID_ANSWERS' as const };
+      const hasChoices = (answer.choiceIds?.length ?? 0) > 0;
+      const hasText = (answer.textAnswer?.length ?? 0) > 0;
 
-      // SINGLE_CHOICE allows only one selection.
-      if (q.type === 'SINGLE_CHOICE' && answer.choiceIds.length !== 1) {
-        return { error: 'INVALID_ANSWERS' as const };
-      }
+      if (q.type === 'TEXT') {
+        // TEXT answers must have textAnswer only.
+        if (!hasText || hasChoices) return { error: 'INVALID_ANSWERS' as const };
+      } else {
+        // Choice-based answers must have choiceIds only.
+        if (!hasChoices || hasText) return { error: 'INVALID_ANSWERS' as const };
 
-      // No duplicate choiceIds within one answer.
-      const submittedSet = new Set(answer.choiceIds);
-      if (submittedSet.size !== answer.choiceIds.length) {
-        return { error: 'INVALID_ANSWERS' as const };
-      }
+        const choiceIds = answer.choiceIds!;
 
-      // Every submitted choice must belong to the question.
-      for (const choiceId of answer.choiceIds) {
-        if (!q.allIds.has(choiceId)) return { error: 'INVALID_ANSWERS' as const };
+        // SINGLE_CHOICE allows only one selection.
+        if (q.type === 'SINGLE_CHOICE' && choiceIds.length !== 1) {
+          return { error: 'INVALID_ANSWERS' as const };
+        }
+
+        // No duplicate choiceIds within one answer.
+        const submittedSet = new Set(choiceIds);
+        if (submittedSet.size !== choiceIds.length) {
+          return { error: 'INVALID_ANSWERS' as const };
+        }
+
+        // Every submitted choice must belong to the question.
+        for (const choiceId of choiceIds) {
+          if (!q.allIds.has(choiceId)) return { error: 'INVALID_ANSWERS' as const };
+        }
       }
     }
 
-    let earned = 0;
-    let possible = 0;
-    type AnswerRecord = {
+    // Determine whether any TEXT question exists in this quiz.
+    const hasTextQuestion = attempt.quiz.questions.some((q) => q.type === 'TEXT');
+
+    // Per-question scoring and answer records.
+    type ChoiceAnswerRecord = {
       questionId: string;
       choiceIds: string[];
       isCorrect: boolean;
       pointsAwarded: number;
     };
-    const answerRecords: AnswerRecord[] = [];
+    type TextAnswerRecord = {
+      questionId: string;
+      textAnswer: string;
+    };
+
+    const choiceAnswerRecords: ChoiceAnswerRecord[] = [];
+    const textAnswerRecords: TextAnswerRecord[] = [];
+
+    let autoEarned = 0;
 
     for (const question of attempt.quiz.questions) {
-      possible += question.points;
       const submitted = input.answers.find((a) => a.questionId === question.id);
-      if (!submitted) {
-        // Unanswered counts as 0; no Answer row created.
-        continue;
-      }
-      const q = questionMap.get(question.id)!;
-      const submittedSet = new Set(submitted.choiceIds);
+      if (!submitted) continue;
 
-      // All-or-nothing equality between submitted and correct sets, for both
-      // SINGLE_CHOICE (set size 1) and MULTI_CHOICE.
-      let isCorrect = submittedSet.size === q.correctIds.size;
-      if (isCorrect) {
-        for (const correctId of q.correctIds) {
-          if (!submittedSet.has(correctId)) {
-            isCorrect = false;
-            break;
+      const q = questionMap.get(question.id)!;
+
+      if (q.type === 'TEXT') {
+        textAnswerRecords.push({
+          questionId: question.id,
+          textAnswer: submitted.textAnswer!,
+        });
+      } else {
+        const choiceIds = submitted.choiceIds!;
+        const submittedSet = new Set(choiceIds);
+
+        // All-or-nothing equality between submitted and correct sets.
+        let isCorrect = submittedSet.size === q.correctIds.size;
+        if (isCorrect) {
+          for (const correctId of q.correctIds) {
+            if (!submittedSet.has(correctId)) {
+              isCorrect = false;
+              break;
+            }
           }
         }
-      }
 
-      const pointsAwarded = isCorrect ? question.points : 0;
-      earned += pointsAwarded;
-      answerRecords.push({
-        questionId: question.id,
-        choiceIds: submitted.choiceIds,
-        isCorrect,
-        pointsAwarded,
-      });
+        const pointsAwarded = isCorrect ? question.points : 0;
+        autoEarned += pointsAwarded;
+        choiceAnswerRecords.push({
+          questionId: question.id,
+          choiceIds,
+          isCorrect,
+          pointsAwarded,
+        });
+      }
     }
 
-    const score = possible === 0 ? 0 : Math.round((earned / possible) * 100);
-    const passed = possible > 0 && score >= attempt.quiz.passingScore;
-
-    for (const record of answerRecords) {
+    // Persist Answer rows for choice-based questions.
+    for (const record of choiceAnswerRecords) {
       await tx.answer.create({
         data: {
           attemptId: attempt.id,
@@ -244,6 +272,43 @@ export async function gradeAndSubmitAttempt(input: {
       });
     }
 
+    // Persist Answer rows for TEXT questions (unscored).
+    for (const record of textAnswerRecords) {
+      await tx.answer.create({
+        data: {
+          attemptId: attempt.id,
+          questionId: record.questionId,
+          textAnswer: record.textAnswer,
+          isCorrect: null,
+          pointsAwarded: null,
+        },
+      });
+    }
+
+    if (hasTextQuestion) {
+      // Defer final scoring to instructor review.
+      await tx.attempt.update({
+        where: { id: attempt.id },
+        data: {
+          status: 'PENDING_REVIEW',
+          submittedAt: new Date(),
+          score: null,
+          passed: null,
+        },
+      });
+      return {
+        attemptId: attempt.id,
+        status: 'PENDING_REVIEW',
+        score: null,
+        passed: null,
+      } satisfies SubmitOutcome;
+    }
+
+    // All questions are choice-based — auto-grade now.
+    const possible = attempt.quiz.questions.reduce((sum, q) => sum + q.points, 0);
+    const score = possible === 0 ? 0 : Math.round((autoEarned / possible) * 100);
+    const passed = possible > 0 && score >= attempt.quiz.passingScore;
+
     await tx.attempt.update({
       where: { id: attempt.id },
       data: {
@@ -254,7 +319,12 @@ export async function gradeAndSubmitAttempt(input: {
       },
     });
 
-    return { attemptId: attempt.id, score, passed } satisfies SubmitOutcome;
+    return {
+      attemptId: attempt.id,
+      status: 'SUBMITTED',
+      score,
+      passed,
+    } satisfies SubmitOutcome;
   });
 }
 
@@ -263,6 +333,7 @@ export type AnswerForResult = {
   isCorrect: boolean | null;
   pointsAwarded: number | null;
   selectedChoiceIds: string[];
+  textAnswer: string | null;
 };
 
 export async function listAnswersByAttempt(attemptId: string): Promise<AnswerForResult[]> {
@@ -272,6 +343,7 @@ export async function listAnswersByAttempt(attemptId: string): Promise<AnswerFor
       questionId: true,
       isCorrect: true,
       pointsAwarded: true,
+      textAnswer: true,
       selectedChoices: { select: { id: true } },
     },
   });
@@ -279,6 +351,7 @@ export async function listAnswersByAttempt(attemptId: string): Promise<AnswerFor
     questionId: row.questionId,
     isCorrect: row.isCorrect,
     pointsAwarded: row.pointsAwarded,
+    textAnswer: row.textAnswer,
     selectedChoiceIds: row.selectedChoices.map((c) => c.id),
   }));
 }

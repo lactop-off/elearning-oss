@@ -46,9 +46,7 @@ export default async function LearnerQuizPage({
 
   // The result view needs the answer key. We fetch with isCorrect ONLY for
   // submitted attempts (the answer key never reaches the wire while taking).
-  let resultPayload: Awaited<
-    ReturnType<typeof loadResultPayload>
-  > | null = null;
+  let resultPayload: Awaited<ReturnType<typeof loadResultPayload>> | null = null;
   if (latestAttempt && latestAttempt.status !== 'IN_PROGRESS') {
     const attempt = await findAttemptOwnedBy(latestAttempt.id, user.id);
     if (attempt) {
@@ -59,10 +57,7 @@ export default async function LearnerQuizPage({
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8">
       <p className="mb-3 text-sm">
-        <Link
-          href={`/learn/${slug}`}
-          className="text-muted-foreground hover:text-foreground"
-        >
+        <Link href={`/learn/${slug}`} className="text-muted-foreground hover:text-foreground">
           {t('backLink', { courseTitle: enrollment.course.title })}
         </Link>
       </p>
@@ -93,35 +88,30 @@ export default async function LearnerQuizPage({
             <div className="grid gap-2">
               <p className="text-sm">{t('readyPrompt')}</p>
               <div>
-                <StartQuizButton
-                  courseSlug={slug}
-                  quizId={quiz.id}
-                  label={t('startCta')}
-                />
+                <StartQuizButton courseSlug={slug} quizId={quiz.id} label={t('startCta')} />
               </div>
             </div>
           ) : latestAttempt.status === 'IN_PROGRESS' ? (
-            <QuizTaker
-              courseSlug={slug}
-              attemptId={latestAttempt.id}
-              questions={quiz.questions}
-            />
+            <QuizTaker courseSlug={slug} attemptId={latestAttempt.id} questions={quiz.questions} />
           ) : resultPayload ? (
             <div className="grid gap-6">
               <QuizResult
-                score={latestAttempt.score ?? 0}
-                passed={latestAttempt.passed ?? false}
+                score={latestAttempt.score}
+                passed={latestAttempt.passed}
+                status={
+                  latestAttempt.status as
+                    | 'SUBMITTED'
+                    | 'PENDING_REVIEW'
+                    | 'AUTO_SUBMITTED'
+                    | 'ABANDONED'
+                }
                 passingScore={quiz.passingScore}
                 questions={quiz.questions}
                 answers={resultPayload.answers}
                 correctChoiceIdsByQuestionId={resultPayload.correctChoiceIdsByQuestionId}
               />
               <div>
-                <StartQuizButton
-                  courseSlug={slug}
-                  quizId={quiz.id}
-                  label={t('retakeCta')}
-                />
+                <StartQuizButton courseSlug={slug} quizId={quiz.id} label={t('retakeCta')} />
               </div>
             </div>
           ) : null}

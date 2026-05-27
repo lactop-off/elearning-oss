@@ -24,10 +24,7 @@ export class AlreadyEnrolledError extends Error {
   }
 }
 
-export async function findEnrollment(
-  userId: string,
-  courseId: string,
-): Promise<Enrollment | null> {
+export async function findEnrollment(userId: string, courseId: string): Promise<Enrollment | null> {
   return prisma.enrollment.findUnique({
     where: { userId_courseId: { userId, courseId } },
   });
@@ -101,6 +98,23 @@ export async function findEnrollmentOwnedBy(
       course: { select: { id: true, slug: true } },
     },
   });
+}
+
+/**
+ * Find an enrollment by userId and courseId. Returns the enrollmentId when the
+ * user is enrolled, or null otherwise. Used by grading flows that need to
+ * trigger the completion check after a quiz is manually graded.
+ */
+export async function findEnrollmentByCourse(
+  userId: string,
+  courseId: string,
+): Promise<{ enrollmentId: string } | null> {
+  const row = await prisma.enrollment.findUnique({
+    where: { userId_courseId: { userId, courseId } },
+    select: { id: true },
+  });
+  if (!row) return null;
+  return { enrollmentId: row.id };
 }
 
 export async function listEnrollmentsByUser(userId: string): Promise<EnrolledCourseSummary[]> {
