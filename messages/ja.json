@@ -192,6 +192,7 @@
     "listAria": "受講可能なコース",
     "empty": "まだ公開されているコースはありません。少し時間をおいてご確認ください。",
     "byInstructor": "講師: {name}",
+    "viewCourse": "コースを見る",
     "detail": {
       "backLink": "← コース一覧に戻る",
       "byInstructor": "講師: {name}",
@@ -220,6 +221,10 @@
     "subheading": "受講登録しているコースの一覧です。",
     "listAria": "受講中のコース一覧",
     "byInstructor": "講師: {name}",
+    "statusCompleted": "修了",
+    "statusInProgress": "受講中",
+    "continueCta": "学習を続ける",
+    "reviewCta": "コースを復習する",
     "empty": {
       "message": "まだコースを受講していません。",
       "cta": "コース一覧を見る"

@@ -1,7 +1,9 @@
+import { ArrowRight, CheckCircle2, GraduationCap, User } from 'lucide-react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CourseCard } from '@/features/courses/components/course-card';
 import { listEnrollmentsByUser } from '@/features/enrollments/data/enrollments';
 import { Link, redirect } from '@/i18n/navigation';
 import { AuthError, requireUser } from '@/lib/auth';
@@ -32,48 +34,72 @@ export default async function MyLearningPage({
   return (
     <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-8">
       <header className="mb-6 grid gap-2">
-        <h1 className="text-3xl font-semibold tracking-tight">{t('heading')}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t('heading')}</h1>
         <p className="text-muted-foreground">{t('subheading')}</p>
       </header>
 
       {enrollments.length === 0 ? (
         <div
           role="status"
-          className="flex flex-col items-center gap-3 rounded-lg border border-dashed py-12 text-center"
+          className="flex flex-col items-center gap-3 rounded-lg border border-dashed py-16 text-center"
         >
+          <GraduationCap
+            className="size-10 text-muted-foreground/60"
+            aria-hidden="true"
+          />
           <p className="text-muted-foreground">{t('empty.message')}</p>
           <Button asChild>
             <Link href="/courses">{t('empty.cta')}</Link>
           </Button>
         </div>
       ) : (
-        <ul aria-label={t('listAria')} className="grid gap-4">
-          {enrollments.map((enrollment) => (
-            <li key={enrollment.enrollmentId}>
-              <Card>
-                <CardHeader>
-                  <CardTitle asChild>
-                    <h2>
-                      <Link
-                        href={`/courses/${enrollment.course.slug}`}
-                        className="hover:underline"
-                      >
-                        {enrollment.course.title}
-                      </Link>
-                    </h2>
-                  </CardTitle>
-                  <CardDescription>
-                    {t('byInstructor', { name: enrollment.course.instructor.name })}
-                  </CardDescription>
-                </CardHeader>
-                {enrollment.course.description ? (
-                  <CardContent className="text-sm text-muted-foreground">
-                    {enrollment.course.description}
-                  </CardContent>
-                ) : null}
-              </Card>
-            </li>
-          ))}
+        <ul aria-label={t('listAria')} className="grid gap-4 sm:grid-cols-2">
+          {enrollments.map((enrollment) => {
+            const isCompleted = enrollment.completedAt !== null;
+            return (
+              <li key={enrollment.enrollmentId}>
+                <CourseCard
+                  seed={enrollment.course.slug}
+                  badges={
+                    isCompleted ? (
+                      <Badge variant="primarySoft">
+                        <CheckCircle2 aria-hidden="true" />
+                        {t('statusCompleted')}
+                      </Badge>
+                    ) : (
+                      <Badge variant="muted">{t('statusInProgress')}</Badge>
+                    )
+                  }
+                  title={
+                    <Link
+                      href={`/courses/${enrollment.course.slug}`}
+                      className="transition-colors hover:text-primary focus-visible:text-primary focus-visible:outline-none"
+                    >
+                      {enrollment.course.title}
+                    </Link>
+                  }
+                  meta={
+                    <span className="flex items-center gap-1.5">
+                      <User className="size-3.5" aria-hidden="true" />
+                      {t('byInstructor', {
+                        name: enrollment.course.instructor.name,
+                      })}
+                    </span>
+                  }
+                  description={enrollment.course.description}
+                  footer={
+                    <Link
+                      href={`/courses/${enrollment.course.slug}`}
+                      className="inline-flex items-center gap-1 text-sm font-medium text-primary transition-colors hover:text-primary/80 focus-visible:underline focus-visible:outline-none"
+                    >
+                      {isCompleted ? t('reviewCta') : t('continueCta')}
+                      <ArrowRight className="size-4" aria-hidden="true" />
+                    </Link>
+                  }
+                />
+              </li>
+            );
+          })}
         </ul>
       )}
     </main>

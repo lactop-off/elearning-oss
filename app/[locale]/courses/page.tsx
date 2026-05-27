@@ -1,6 +1,7 @@
+import { ArrowRight, BookOpen, User } from 'lucide-react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CourseCard } from '@/features/courses/components/course-card';
 import { listPublishedCourses } from '@/features/courses/data/courses';
 import { Link } from '@/i18n/navigation';
 
@@ -20,43 +21,52 @@ export default async function CatalogPage({
   return (
     <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-8">
       <header className="mb-6 grid gap-2">
-        <h1 className="text-3xl font-semibold tracking-tight">{t('heading')}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t('heading')}</h1>
         <p className="text-muted-foreground">{t('subheading')}</p>
       </header>
 
       {courses.length === 0 ? (
         <div
           role="status"
-          className="rounded-lg border border-dashed py-12 text-center text-muted-foreground"
+          className="flex flex-col items-center gap-3 rounded-lg border border-dashed py-16 text-center"
         >
-          {t('empty')}
+          <BookOpen
+            className="size-10 text-muted-foreground/60"
+            aria-hidden="true"
+          />
+          <p className="text-muted-foreground">{t('empty')}</p>
         </div>
       ) : (
         <ul aria-label={t('listAria')} className="grid gap-4 sm:grid-cols-2">
           {courses.map((course) => (
             <li key={course.id}>
-              <Card>
-                <CardHeader>
-                  <CardTitle asChild>
-                    <h2>
-                      <Link
-                        href={`/courses/${course.slug}`}
-                        className="hover:underline"
-                      >
-                        {course.title}
-                      </Link>
-                    </h2>
-                  </CardTitle>
-                  <CardDescription>
+              <CourseCard
+                seed={course.slug}
+                title={
+                  <Link
+                    href={`/courses/${course.slug}`}
+                    className="transition-colors hover:text-primary focus-visible:text-primary focus-visible:outline-none"
+                  >
+                    {course.title}
+                  </Link>
+                }
+                meta={
+                  <span className="flex items-center gap-1.5">
+                    <User className="size-3.5" aria-hidden="true" />
                     {t('byInstructor', { name: course.instructor.name })}
-                  </CardDescription>
-                </CardHeader>
-                {course.description ? (
-                  <CardContent className="text-sm text-muted-foreground">
-                    {course.description}
-                  </CardContent>
-                ) : null}
-              </Card>
+                  </span>
+                }
+                description={course.description}
+                footer={
+                  <Link
+                    href={`/courses/${course.slug}`}
+                    className="inline-flex items-center gap-1 text-sm font-medium text-primary transition-colors hover:text-primary/80 focus-visible:underline focus-visible:outline-none"
+                  >
+                    {t('viewCourse')}
+                    <ArrowRight className="size-4" aria-hidden="true" />
+                  </Link>
+                }
+              />
             </li>
           ))}
         </ul>

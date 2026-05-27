@@ -192,6 +192,7 @@
     "listAria": "Available courses",
     "empty": "No courses published yet. Check back soon.",
     "byInstructor": "By {name}",
+    "viewCourse": "View course",
     "detail": {
       "backLink": "← Back to catalog",
       "byInstructor": "By {name}",
@@ -220,6 +221,10 @@
     "subheading": "Courses you are enrolled in.",
     "listAria": "Your enrolled courses",
     "byInstructor": "By {name}",
+    "statusCompleted": "Completed",
+    "statusInProgress": "In progress",
+    "continueCta": "Continue learning",
+    "reviewCta": "Review course",
     "empty": {
       "message": "You have not enrolled in any course yet.",
       "cta": "Browse the catalog"
