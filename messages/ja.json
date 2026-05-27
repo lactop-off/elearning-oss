@@ -9,8 +9,7 @@
     "myLearning": "学習中",
     "myCourses": "マイコース",
     "grading": "採点キュー",
-    "admin": "管理",
-    "signedInAria": "{name} でログイン中"
+    "admin": "管理"
   },
   "roles": {
     "LEARNER": "学習者",
@@ -416,10 +415,13 @@
       "colStatus": "状態",
       "colCourses": "コース数",
       "colJoined": "登録日",
+      "colActions": "操作",
       "statusActive": "有効",
       "statusDisabled": "無効",
       "disableCta": "無効化",
       "enableCta": "有効化",
+      "disableCtaAria": "{name} を無効化",
+      "enableCtaAria": "{name} を有効化",
       "roleSelectAria": "{name} のロールを変更",
       "roleUpdated": "ロールを変更しました",
       "disabledToast": "ユーザーを無効化しました",
@@ -432,7 +434,9 @@
       "colTitle": "コース名",
       "colInstructor": "講師",
       "colPublished": "公開申請日",
+      "colActions": "操作",
       "approveCta": "承認",
+      "approveCtaAria": "{title} を承認する",
       "approvedToast": "コースを承認しました"
     },
     "errors": {

@@ -4,13 +4,12 @@
     "appDescription": "An open-source platform for online courses, quizzes, and learner progress tracking."
   },
   "nav": {
-    "primary": "Primary",
+    "primary": "Primary navigation",
     "catalog": "Catalog",
     "myLearning": "My learning",
     "myCourses": "My courses",
     "grading": "Grading queue",
-    "admin": "Admin",
-    "signedInAria": "Signed in as {name}"
+    "admin": "Admin"
   },
   "roles": {
     "LEARNER": "learner",
@@ -416,10 +415,13 @@
       "colStatus": "Status",
       "colCourses": "Courses",
       "colJoined": "Joined",
+      "colActions": "Actions",
       "statusActive": "Active",
       "statusDisabled": "Disabled",
       "disableCta": "Disable",
       "enableCta": "Enable",
+      "disableCtaAria": "Disable {name}",
+      "enableCtaAria": "Enable {name}",
       "roleSelectAria": "Change role for {name}",
       "roleUpdated": "Role updated",
       "disabledToast": "User disabled",
@@ -432,7 +434,9 @@
       "colTitle": "Title",
       "colInstructor": "Instructor",
       "colPublished": "Published at",
+      "colActions": "Actions",
       "approveCta": "Approve",
+      "approveCtaAria": "Approve {title}",
       "approvedToast": "Course approved"
     },
     "errors": {

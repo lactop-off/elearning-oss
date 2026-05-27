@@ -56,7 +56,9 @@ export default async function AdminDashboardPage({
                   <span className="ml-2 inline-flex items-center rounded-full bg-destructive px-2 py-0.5 text-xs font-medium text-destructive-foreground">
                     {t('pendingCount', { count: pendingCount })}
                   </span>
-                ) : null}
+                ) : (
+                  <span className="ml-2 text-xs text-muted-foreground">{t('pendingNone')}</span>
+                )}
               </CardDescription>
             </CardHeader>
           </Card>

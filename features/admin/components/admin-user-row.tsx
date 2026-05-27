@@ -1,7 +1,7 @@
 'use client';
 
 import { useTransition } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
@@ -26,7 +26,11 @@ function isKnownError(code: string): code is KnownErrorCode {
   return (KNOWN_ERROR_CODES as readonly string[]).includes(code);
 }
 
-const ROLES: UserRole[] = ['LEARNER', 'INSTRUCTOR', 'ADMIN'];
+const ROLES = ['LEARNER', 'INSTRUCTOR', 'ADMIN'] as const;
+
+function isUserRole(v: string): v is UserRole {
+  return (ROLES as readonly string[]).includes(v);
+}
 
 export function AdminUserRow({
   user,
@@ -38,6 +42,7 @@ export function AdminUserRow({
   const [isPendingRole, startRoleTransition] = useTransition();
   const [isPendingDisable, startDisableTransition] = useTransition();
   const router = useRouter();
+  const locale = useLocale();
   const t = useTranslations('admin.users');
   const tRoles = useTranslations('roles');
   const tErrors = useTranslations('admin.errors');
@@ -47,7 +52,9 @@ export function AdminUserRow({
   const isPending = isPendingRole || isPendingDisable;
 
   function handleRoleChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    const newRole = e.currentTarget.value as UserRole;
+    const value = e.currentTarget.value;
+    if (!isUserRole(value)) return;
+    const newRole = value;
     startRoleTransition(async () => {
       const result = await updateUserRoleAction({ userId: user.id, role: newRole });
       if (result.ok) {
@@ -73,7 +80,7 @@ export function AdminUserRow({
     });
   }
 
-  const joinedDate = new Intl.DateTimeFormat(undefined, {
+  const joinedDate = new Intl.DateTimeFormat(locale, {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -120,6 +127,11 @@ export function AdminUserRow({
           size="sm"
           disabled={isSelf || isPending}
           onClick={handleToggleDisabled}
+          aria-label={
+            isDisabled
+              ? t('enableCtaAria', { name: user.name ?? user.email })
+              : t('disableCtaAria', { name: user.name ?? user.email })
+          }
         >
           {isDisabled ? t('enableCta') : t('disableCta')}
         </Button>

@@ -23,7 +23,13 @@ function isKnownError(code: string): code is KnownErrorCode {
   return (KNOWN_ERROR_CODES as readonly string[]).includes(code);
 }
 
-export function ApproveCourseButton({ courseId }: { courseId: string }) {
+export function ApproveCourseButton({
+  courseId,
+  courseTitle,
+}: {
+  courseId: string;
+  courseTitle: string;
+}) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const t = useTranslations('admin.courses');
@@ -43,7 +49,12 @@ export function ApproveCourseButton({ courseId }: { courseId: string }) {
   }
 
   return (
-    <Button size="sm" onClick={handleClick} disabled={isPending}>
+    <Button
+      size="sm"
+      onClick={handleClick}
+      disabled={isPending}
+      aria-label={t('approveCtaAria', { title: courseTitle })}
+    >
       {t('approveCta')}
     </Button>
   );

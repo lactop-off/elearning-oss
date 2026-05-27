@@ -84,14 +84,15 @@ export async function listCoursesForApproval(): Promise<PendingCourseRow[]> {
     },
     orderBy: { publishedAt: 'asc' },
   });
-  return rows.map((row) => ({
-    id: row.id,
-    slug: row.slug,
-    title: row.title,
-    instructorName: row.instructor.name,
-    // publishedAt is non-null here because the where clause filters for it
-    publishedAt: row.publishedAt as Date,
-  }));
+  return rows
+    .filter((row): row is typeof row & { publishedAt: Date } => row.publishedAt !== null)
+    .map((row) => ({
+      id: row.id,
+      slug: row.slug,
+      title: row.title,
+      instructorName: row.instructor.name,
+      publishedAt: row.publishedAt,
+    }));
 }
 
 export async function approveCourse(courseId: string, adminId: string): Promise<boolean> {

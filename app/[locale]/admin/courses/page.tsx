@@ -30,7 +30,9 @@ export default async function AdminCoursesPage({
   return (
     <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
       <header className="mb-6 grid gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight">{t('title')}</h1>
+        <h1 id="courses-heading" className="text-2xl font-semibold tracking-tight">
+          {t('title')}
+        </h1>
         <p className="text-muted-foreground">{t('description')}</p>
       </header>
 
@@ -38,13 +40,21 @@ export default async function AdminCoursesPage({
         <p className="text-muted-foreground">{t('empty')}</p>
       ) : (
         <div className="overflow-x-auto rounded-lg border">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm" aria-labelledby="courses-heading">
             <thead>
               <tr className="border-b bg-muted/50 text-left">
-                <th className="px-4 py-3 font-medium">{t('colTitle')}</th>
-                <th className="px-4 py-3 font-medium">{t('colInstructor')}</th>
-                <th className="px-4 py-3 font-medium">{t('colPublished')}</th>
-                <th className="px-4 py-3 font-medium sr-only">Actions</th>
+                <th scope="col" className="px-4 py-3 font-medium">
+                  {t('colTitle')}
+                </th>
+                <th scope="col" className="px-4 py-3 font-medium">
+                  {t('colInstructor')}
+                </th>
+                <th scope="col" className="px-4 py-3 font-medium">
+                  {t('colPublished')}
+                </th>
+                <th scope="col" className="px-4 py-3 font-medium sr-only">
+                  {t('colActions')}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -62,7 +72,7 @@ export default async function AdminCoursesPage({
                     }).format(new Date(course.publishedAt))}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <ApproveCourseButton courseId={course.id} />
+                    <ApproveCourseButton courseId={course.id} courseTitle={course.title} />
                   </td>
                 </tr>
               ))}

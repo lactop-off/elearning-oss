@@ -55,12 +55,7 @@ export async function SiteHeader() {
                   </Button>
                 </li>
               )}
-              <li
-                className="hidden text-sm text-muted-foreground sm:inline"
-                aria-label={t('nav.signedInAria', { name: user.name ?? '' })}
-              >
-                {user.name}
-              </li>
+              <li className="hidden text-sm text-muted-foreground sm:inline">{user.name}</li>
               <li>
                 <SignOutButton />
               </li>
