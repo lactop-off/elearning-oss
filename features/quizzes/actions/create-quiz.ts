@@ -2,26 +2,15 @@
 
 import { revalidatePath } from 'next/cache';
 
-import {
-  createQuiz,
-  findLessonOwnedByInstructorForQuiz,
-} from '@/features/quizzes/data/quizzes';
-import {
-  CreateQuizSchema,
-  type CreateQuizInput,
-} from '@/features/quizzes/schemas/quiz';
+import { createQuiz, findLessonOwnedByInstructorForQuiz } from '@/features/quizzes/data/quizzes';
+import { CreateQuizSchema, type CreateQuizInput } from '@/features/quizzes/schemas/quiz';
 import { AuthError, requireRole } from '@/lib/auth';
 
 type CreateQuizResult =
   | { ok: true; data: { quizId: string } }
   | {
       ok: false;
-      error:
-        | 'INVALID_INPUT'
-        | 'UNAUTHORIZED'
-        | 'FORBIDDEN'
-        | 'LESSON_NOT_FOUND'
-        | 'INTERNAL_ERROR';
+      error: 'INVALID_INPUT' | 'UNAUTHORIZED' | 'FORBIDDEN' | 'LESSON_NOT_FOUND' | 'INTERNAL_ERROR';
       issues?: unknown;
     };
 

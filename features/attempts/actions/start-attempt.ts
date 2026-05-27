@@ -3,10 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
-import {
-  findInProgressAttempt,
-  startAttempt,
-} from '@/features/attempts/data/attempts';
+import { findInProgressAttempt, startAttempt } from '@/features/attempts/data/attempts';
 import { findQuizForLearner } from '@/features/quizzes/data/quizzes';
 import { AuthError, requireUser } from '@/lib/auth';
 

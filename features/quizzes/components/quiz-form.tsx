@@ -66,10 +66,7 @@ export function QuizForm({
 
   function onSubmit(values: QuizFormValues) {
     startTransition(async () => {
-      const result = await createQuizAction(
-        { courseSlug, lessonOrder },
-        values,
-      );
+      const result = await createQuizAction({ courseSlug, lessonOrder }, values);
       if (result.ok) {
         toast.success(tToast('created'));
         router.push(`/instructor/courses/${courseSlug}/quizzes/${result.data.quizId}`);

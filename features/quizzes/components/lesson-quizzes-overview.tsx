@@ -27,10 +27,7 @@ export async function LessonQuizzesOverview({
   return (
     <ol aria-label={t('listAria')} className="grid gap-4">
       {items.map((item) => (
-        <li
-          key={item.lessonId}
-          className="grid gap-2 rounded-lg border p-4"
-        >
+        <li key={item.lessonId} className="grid gap-2 rounded-lg border p-4">
           <div className="flex items-start justify-between gap-3">
             <p className="text-sm font-medium">
               <span className="mr-2 text-muted-foreground">{item.lessonOrder}.</span>

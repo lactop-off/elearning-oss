@@ -74,7 +74,13 @@ export async function findQuizOwnedByInstructor(
       description: true,
       passingScore: true,
       isRequired: true,
-      lesson: { select: { order: true, title: true, course: { select: { id: true, slug: true, title: true } } } },
+      lesson: {
+        select: {
+          order: true,
+          title: true,
+          course: { select: { id: true, slug: true, title: true } },
+        },
+      },
     },
   });
   if (!row || !row.lesson) return null;
