@@ -69,3 +69,19 @@ export const AddQuestionSchema = z.discriminatedUnion('type', [
 export type AddQuestionInput = z.infer<typeof AddQuestionSchema>;
 export type AddSingleChoiceQuestionInput = Extract<AddQuestionInput, { type: 'SINGLE_CHOICE' }>;
 export type AddMultiChoiceQuestionInput = Extract<AddQuestionInput, { type: 'MULTI_CHOICE' }>;
+
+export const ReorderQuestionsSchema = z
+  .object({
+    quizId: z.string().min(1),
+    orderedQuestionIds: z
+      .array(z.string().min(1))
+      .min(1, 'Cannot reorder an empty list')
+      .max(500, 'Too many questions'),
+  })
+  .refine(
+    (data) =>
+      new Set(data.orderedQuestionIds).size === data.orderedQuestionIds.length,
+    { message: 'Duplicate questionId in reorder request', path: ['orderedQuestionIds'] },
+  );
+
+export type ReorderQuestionsInput = z.infer<typeof ReorderQuestionsSchema>;

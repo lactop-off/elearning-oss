@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { AddQuestionSchema } from './question';
+import { AddQuestionSchema, ReorderQuestionsSchema } from './question';
 
 describe('AddQuestionSchema (SINGLE_CHOICE)', () => {
   function basePayload() {
@@ -103,6 +103,38 @@ describe('AddQuestionSchema (MULTI_CHOICE)', () => {
         choices: [{ body: 'a' }, { body: 'b' }],
         correctChoiceIndices: [0, 1],
       }).success,
+    ).toBe(false);
+  });
+});
+
+describe('ReorderQuestionsSchema', () => {
+  it('accepts a non-empty ordered list', () => {
+    expect(
+      ReorderQuestionsSchema.safeParse({
+        quizId: 'q1',
+        orderedQuestionIds: ['qq1', 'qq2'],
+      }).success,
+    ).toBe(true);
+  });
+
+  it('rejects an empty list', () => {
+    expect(
+      ReorderQuestionsSchema.safeParse({ quizId: 'q1', orderedQuestionIds: [] }).success,
+    ).toBe(false);
+  });
+
+  it('rejects duplicate questionIds', () => {
+    expect(
+      ReorderQuestionsSchema.safeParse({
+        quizId: 'q1',
+        orderedQuestionIds: ['qq1', 'qq2', 'qq1'],
+      }).success,
+    ).toBe(false);
+  });
+
+  it('rejects empty quizId', () => {
+    expect(
+      ReorderQuestionsSchema.safeParse({ quizId: '', orderedQuestionIds: ['qq1'] }).success,
     ).toBe(false);
   });
 });

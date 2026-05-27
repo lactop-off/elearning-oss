@@ -327,7 +327,16 @@
       "typeSingle": "単一選択",
       "typeMulti": "複数選択",
       "choicesAria": "選択肢",
-      "correctMarker": "✓ 正解"
+      "correctMarker": "✓ 正解",
+      "dragHandleAria": "質問 {order}「{body}」をドラッグして並び替え"
+    },
+    "questionDelete": {
+      "trigger": "削除",
+      "title": "質問を削除しますか?",
+      "description": "「{body}」と、その選択肢・既存の解答を削除します。この操作は元に戻せません。",
+      "cancel": "キャンセル",
+      "confirm": "削除する",
+      "confirming": "削除中..."
     },
     "overview": {
       "listAria": "レッスン別クイズ",
@@ -344,7 +353,9 @@
       "created": "クイズを作成しました",
       "updated": "クイズを更新しました",
       "deleted": "クイズを削除しました",
-      "questionAdded": "質問を追加しました"
+      "questionAdded": "質問を追加しました",
+      "questionDeleted": "質問を削除しました",
+      "questionsReordered": "質問の並び順を更新しました"
     },
     "errors": {
       "INVALID_INPUT": "入力内容を確認してください。",
@@ -352,6 +363,8 @@
       "FORBIDDEN": "コース所有者のみがクイズを管理できます。",
       "LESSON_NOT_FOUND": "レッスンが見つかりません。",
       "QUIZ_NOT_FOUND": "クイズが見つかりません。",
+      "QUESTION_NOT_FOUND": "質問が見つかりません。",
+      "SET_MISMATCH": "並び順の更新に失敗しました。ページを再読み込みしてください。",
       "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
     }
   },

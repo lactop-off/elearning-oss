@@ -4,7 +4,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { QuestionForm } from '@/features/quizzes/components/question-form';
-import { QuestionList } from '@/features/quizzes/components/question-list';
+import { SortableQuestionList } from '@/features/quizzes/components/sortable-question-list';
 import { QuizDeleteButton } from '@/features/quizzes/components/quiz-delete-button';
 import { listQuestionsByQuiz } from '@/features/quizzes/data/questions';
 import { findQuizOwnedByInstructor } from '@/features/quizzes/data/quizzes';
@@ -85,7 +85,7 @@ export default async function InstructorQuizPage({
         <h2 id="questions-heading" className="text-lg font-semibold">
           {t('questionsHeading', { count: questions.length })}
         </h2>
-        <QuestionList questions={questions} />
+        <SortableQuestionList quizId={quiz.id} questions={questions} />
       </section>
 
       <section aria-labelledby="add-question-heading" className="grid gap-3">

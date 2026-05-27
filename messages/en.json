@@ -327,7 +327,16 @@
       "typeSingle": "single choice",
       "typeMulti": "multiple choice",
       "choicesAria": "Choices",
-      "correctMarker": "✓ correct"
+      "correctMarker": "✓ correct",
+      "dragHandleAria": "Drag to reorder question {order}: {body}"
+    },
+    "questionDelete": {
+      "trigger": "Delete",
+      "title": "Delete this question?",
+      "description": "\"{body}\" will be deleted along with its choices and any existing learner answers. This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Delete question",
+      "confirming": "Deleting..."
     },
     "overview": {
       "listAria": "Quizzes by lesson",
@@ -344,7 +353,9 @@
       "created": "Quiz created",
       "updated": "Quiz updated",
       "deleted": "Quiz deleted",
-      "questionAdded": "Question added"
+      "questionAdded": "Question added",
+      "questionDeleted": "Question deleted",
+      "questionsReordered": "Question order updated"
     },
     "errors": {
       "INVALID_INPUT": "Please review the highlighted fields.",
@@ -352,6 +363,8 @@
       "FORBIDDEN": "Only the course owner can manage quizzes.",
       "LESSON_NOT_FOUND": "Lesson not found, or you do not own it.",
       "QUIZ_NOT_FOUND": "Quiz not found, or you do not own it.",
+      "QUESTION_NOT_FOUND": "Question not found, or you do not own it.",
+      "SET_MISMATCH": "The question set changed. Please refresh and try again.",
       "INTERNAL_ERROR": "Something went wrong. Please try again."
     }
   },
