@@ -1,6 +1,8 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { Suspense } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { CourseCardSkeletonGrid } from '@/features/courses/components/course-card-skeleton';
 import { CourseListEmpty } from '@/features/courses/components/course-list-empty';
 import { CourseListItem } from '@/features/courses/components/course-list-item';
 import { listCoursesByInstructor } from '@/features/courses/data/courses';
@@ -25,7 +27,6 @@ export default async function InstructorCoursesPage({
     throw e;
   }
 
-  const courses = await listCoursesByInstructor(user.id);
   const t = await getTranslations('courses.list');
 
   return (
@@ -37,17 +38,30 @@ export default async function InstructorCoursesPage({
         </Button>
       </div>
 
-      {courses.length === 0 ? (
-        <CourseListEmpty />
-      ) : (
-        <ul aria-label={t('listAria')} className="grid gap-4">
-          {courses.map((course) => (
-            <li key={course.id}>
-              <CourseListItem course={course} />
-            </li>
-          ))}
-        </ul>
-      )}
+      <Suspense fallback={<CourseCardSkeletonGrid count={3} columns={false} />}>
+        <InstructorCourseList instructorId={user.id} />
+      </Suspense>
     </main>
+  );
+}
+
+async function InstructorCourseList({ instructorId }: { instructorId: string }) {
+  const [courses, t] = await Promise.all([
+    listCoursesByInstructor(instructorId),
+    getTranslations('courses.list'),
+  ]);
+
+  if (courses.length === 0) {
+    return <CourseListEmpty />;
+  }
+
+  return (
+    <ul aria-label={t('listAria')} className="grid gap-4">
+      {courses.map((course) => (
+        <li key={course.id}>
+          <CourseListItem course={course} />
+        </li>
+      ))}
+    </ul>
   );
 }

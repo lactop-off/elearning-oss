@@ -1,7 +1,14 @@
 {
   "common": {
     "appName": "E-learning OSS",
-    "appDescription": "An open-source platform for online courses, quizzes, and learner progress tracking."
+    "appDescription": "An open-source platform for online courses, quizzes, and learner progress tracking.",
+    "loading": "Loading…"
+  },
+  "errorPage": {
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred. You can try again, or head back home.",
+    "retry": "Try again",
+    "home": "Back to home"
   },
   "nav": {
     "primary": "Primary",
