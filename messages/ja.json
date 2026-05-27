@@ -9,6 +9,7 @@
     "myLearning": "学習中",
     "myCourses": "マイコース",
     "grading": "採点キュー",
+    "admin": "管理",
     "signedInAria": "{name} でログイン中"
   },
   "roles": {
@@ -120,7 +121,10 @@
       "slugDisplay": "/{slug}",
       "lessonsHeading": "レッスン",
       "addLesson": "レッスンを追加",
-      "quizzesHeading": "クイズ"
+      "quizzesHeading": "クイズ",
+      "statusPendingApproval": "承認待ち",
+      "statusPendingApprovalNote": "管理者の承認後に公開されます",
+      "statusApprovedPublished": "公開中（承認済み）"
     }
   },
   "lessons": {
@@ -391,6 +395,53 @@
         "UNAUTHORIZED": "サインインしてください。",
         "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
       }
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "管理ダッシュボード",
+      "description": "ユーザーとコースを管理します。",
+      "usersCard": "ユーザー管理",
+      "usersCardDescription": "ユーザーのロール変更・無効化を行います。",
+      "coursesCard": "コース承認",
+      "coursesCardDescription": "公開リクエストを確認し、承認します。",
+      "pendingCount": "承認待ち {count} 件",
+      "pendingNone": "承認待ちなし"
+    },
+    "users": {
+      "title": "ユーザー管理",
+      "colEmail": "メールアドレス",
+      "colName": "お名前",
+      "colRole": "ロール",
+      "colStatus": "状態",
+      "colCourses": "コース数",
+      "colJoined": "登録日",
+      "statusActive": "有効",
+      "statusDisabled": "無効",
+      "disableCta": "無効化",
+      "enableCta": "有効化",
+      "roleSelectAria": "{name} のロールを変更",
+      "roleUpdated": "ロールを変更しました",
+      "disabledToast": "ユーザーを無効化しました",
+      "enabledToast": "ユーザーを有効化しました"
+    },
+    "courses": {
+      "title": "コース承認",
+      "description": "公開申請中のコースを確認し、承認すると一般カタログに掲載されます。",
+      "empty": "現在、承認待ちのコースはありません。",
+      "colTitle": "コース名",
+      "colInstructor": "講師",
+      "colPublished": "公開申請日",
+      "approveCta": "承認",
+      "approvedToast": "コースを承認しました"
+    },
+    "errors": {
+      "INVALID_INPUT": "入力内容をご確認ください。",
+      "UNAUTHORIZED": "サインインしてください。",
+      "FORBIDDEN": "この操作を行う権限がありません。",
+      "NOT_FOUND": "対象が見つかりません。",
+      "SELF_FORBIDDEN": "自分自身へのこの操作はできません。",
+      "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
     }
   },
   "completions": {

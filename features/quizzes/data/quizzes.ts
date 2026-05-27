@@ -113,6 +113,7 @@ export async function listQuizzesForEnrolledLearner(
       course: {
         slug: courseSlug,
         publishedAt: { not: null },
+        approvedAt: { not: null },
         enrollments: { some: { userId } },
       },
     },
@@ -187,6 +188,7 @@ export async function findQuizForLearner(
         course: {
           slug: courseSlug,
           publishedAt: { not: null },
+          approvedAt: { not: null },
           enrollments: { some: { userId } },
         },
       },

@@ -59,7 +59,7 @@ export async function findEnrolledCourseBySlug(
   slug: string,
 ): Promise<EnrolledCourseDetail | null> {
   const row = await prisma.enrollment.findFirst({
-    where: { userId, course: { slug, publishedAt: { not: null } } },
+    where: { userId, course: { slug, publishedAt: { not: null }, approvedAt: { not: null } } },
     select: {
       id: true,
       enrolledAt: true,

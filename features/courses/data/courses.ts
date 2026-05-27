@@ -54,10 +54,7 @@ export async function listCoursesByInstructor(instructorId: string): Promise<Cou
   });
 }
 
-export async function findCourseOwnedBy(
-  id: string,
-  instructorId: string,
-): Promise<Course | null> {
+export async function findCourseOwnedBy(id: string, instructorId: string): Promise<Course | null> {
   return prisma.course.findFirst({ where: { id, instructorId } });
 }
 
@@ -81,7 +78,7 @@ export type PublishedCourseSummary = Pick<
 
 export async function listPublishedCourses(): Promise<PublishedCourseSummary[]> {
   return prisma.course.findMany({
-    where: { publishedAt: { not: null } },
+    where: { publishedAt: { not: null }, approvedAt: { not: null } },
     select: {
       id: true,
       slug: true,
@@ -98,7 +95,7 @@ export async function findPublishedCourseBySlug(
   slug: string,
 ): Promise<PublishedCourseSummary | null> {
   return prisma.course.findFirst({
-    where: { slug, publishedAt: { not: null } },
+    where: { slug, publishedAt: { not: null }, approvedAt: { not: null } },
     select: {
       id: true,
       slug: true,
@@ -114,7 +111,7 @@ export async function findPublishedCourseById(
   id: string,
 ): Promise<{ id: string; slug: string } | null> {
   return prisma.course.findFirst({
-    where: { id, publishedAt: { not: null } },
+    where: { id, publishedAt: { not: null }, approvedAt: { not: null } },
     select: { id: true, slug: true },
   });
 }

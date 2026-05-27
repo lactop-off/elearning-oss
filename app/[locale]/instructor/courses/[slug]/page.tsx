@@ -38,17 +38,30 @@ export default async function CourseDetailPage({
   ]);
 
   const isPublished = course.publishedAt !== null;
+  const isApproved = course.approvedAt !== null;
+  const isPendingApproval = isPublished && !isApproved;
+
+  function getStatusKey() {
+    if (!isPublished) return 'statusDraft';
+    if (isPendingApproval) return 'statusPendingApproval';
+    return 'statusApprovedPublished';
+  }
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8">
       <header className="mb-6 grid gap-2">
-        <p className="text-xs uppercase tracking-wide text-muted-foreground">
-          {isPublished ? t('statusPublished') : t('statusDraft')}
-        </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+            {t(getStatusKey())}
+          </p>
+          {isPendingApproval && (
+            <span className="inline-flex items-center rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400">
+              {t('statusPendingApprovalNote')}
+            </span>
+          )}
+        </div>
         <h1 className="text-2xl font-semibold tracking-tight">{course.title}</h1>
-        {course.description ? (
-          <p className="text-muted-foreground">{course.description}</p>
-        ) : null}
+        {course.description ? <p className="text-muted-foreground">{course.description}</p> : null}
         <p className="text-xs text-muted-foreground">{t('slugDisplay', { slug: course.slug })}</p>
       </header>
 
@@ -58,9 +71,7 @@ export default async function CourseDetailPage({
             {t('lessonsHeading')}
           </h2>
           <Button asChild size="sm">
-            <Link href={`/instructor/courses/${course.slug}/lessons/new`}>
-              {t('addLesson')}
-            </Link>
+            <Link href={`/instructor/courses/${course.slug}/lessons/new`}>{t('addLesson')}</Link>
           </Button>
         </div>
         <LessonList lessons={lessons} />

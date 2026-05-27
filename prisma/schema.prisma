@@ -49,13 +49,15 @@ model User {
   role          UserRole  @default(LEARNER)
   emailVerified DateTime?
   image         String?
+  disabledAt    DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  coursesAuthored Course[]      @relation("CourseInstructor")
-  enrollments     Enrollment[]
-  attempts        Attempt[]
-  certificates    Certificate[]
+  coursesAuthored  Course[]      @relation("CourseInstructor")
+  coursesApproved  Course[]      @relation("CourseApprover")
+  enrollments      Enrollment[]
+  attempts         Attempt[]
+  certificates     Certificate[]
 
   @@index([role])
 }
@@ -69,10 +71,13 @@ model Course {
   description  String?
   instructorId String
   publishedAt  DateTime?
+  approvedAt   DateTime?
+  approvedById String?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
   instructor   User          @relation("CourseInstructor", fields: [instructorId], references: [id], onDelete: Restrict)
+  approvedBy   User?         @relation("CourseApprover", fields: [approvedById], references: [id], onDelete: SetNull)
   lessons      Lesson[]
   enrollments  Enrollment[]
   quizzes      Quiz[]        @relation("CourseQuiz")
@@ -80,6 +85,7 @@ model Course {
 
   @@index([instructorId])
   @@index([publishedAt])
+  @@index([approvedAt])
 }
 
 model Lesson {

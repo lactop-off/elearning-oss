@@ -48,6 +48,13 @@ export async function SiteHeader() {
                   </li>
                 </>
               )}
+              {user?.role === 'ADMIN' && (
+                <li>
+                  <Button asChild variant="ghost" size="sm">
+                    <Link href="/admin">{t('nav.admin')}</Link>
+                  </Button>
+                </li>
+              )}
               <li
                 className="hidden text-sm text-muted-foreground sm:inline"
                 aria-label={t('nav.signedInAria', { name: user.name ?? '' })}

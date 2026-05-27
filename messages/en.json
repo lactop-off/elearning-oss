@@ -9,6 +9,7 @@
     "myLearning": "My learning",
     "myCourses": "My courses",
     "grading": "Grading queue",
+    "admin": "Admin",
     "signedInAria": "Signed in as {name}"
   },
   "roles": {
@@ -120,7 +121,10 @@
       "slugDisplay": "/{slug}",
       "lessonsHeading": "Lessons",
       "addLesson": "Add lesson",
-      "quizzesHeading": "Quizzes"
+      "quizzesHeading": "Quizzes",
+      "statusPendingApproval": "Pending approval",
+      "statusPendingApprovalNote": "This course will be listed in the catalog once an admin approves it.",
+      "statusApprovedPublished": "Published (approved)"
     }
   },
   "lessons": {
@@ -391,6 +395,53 @@
         "UNAUTHORIZED": "Please sign in to continue.",
         "INTERNAL_ERROR": "Something went wrong. Please try again."
       }
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Admin dashboard",
+      "description": "Manage users and courses from one place.",
+      "usersCard": "User management",
+      "usersCardDescription": "Change roles and enable or disable accounts.",
+      "coursesCard": "Course approvals",
+      "coursesCardDescription": "Review published courses and approve them for the catalog.",
+      "pendingCount": "{count} pending",
+      "pendingNone": "None pending"
+    },
+    "users": {
+      "title": "User management",
+      "colEmail": "Email",
+      "colName": "Name",
+      "colRole": "Role",
+      "colStatus": "Status",
+      "colCourses": "Courses",
+      "colJoined": "Joined",
+      "statusActive": "Active",
+      "statusDisabled": "Disabled",
+      "disableCta": "Disable",
+      "enableCta": "Enable",
+      "roleSelectAria": "Change role for {name}",
+      "roleUpdated": "Role updated",
+      "disabledToast": "User disabled",
+      "enabledToast": "User enabled"
+    },
+    "courses": {
+      "title": "Course approvals",
+      "description": "Approving a course makes it visible in the public catalog.",
+      "empty": "No courses are awaiting approval right now.",
+      "colTitle": "Title",
+      "colInstructor": "Instructor",
+      "colPublished": "Published at",
+      "approveCta": "Approve",
+      "approvedToast": "Course approved"
+    },
+    "errors": {
+      "INVALID_INPUT": "Please check your input.",
+      "UNAUTHORIZED": "Please sign in to continue.",
+      "FORBIDDEN": "You do not have permission to do that.",
+      "NOT_FOUND": "The target was not found.",
+      "SELF_FORBIDDEN": "You cannot perform this action on yourself.",
+      "INTERNAL_ERROR": "Something went wrong. Please try again."
     }
   },
   "completions": {

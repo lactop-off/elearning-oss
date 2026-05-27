@@ -52,7 +52,7 @@ async function main() {
     },
   });
 
-  // A published demo course so the catalog is non-empty out of the box.
+  // A published and admin-approved demo course so the catalog is non-empty out of the box.
   const course = await prisma.course.upsert({
     where: { slug: 'intro-to-typescript' },
     update: {},
@@ -62,6 +62,8 @@ async function main() {
       description: 'A short, friendly introduction to TypeScript basics.',
       instructorId: instructor.id,
       publishedAt: new Date(),
+      approvedAt: new Date(),
+      approvedById: admin.id,
     },
   });
 
