@@ -355,7 +355,12 @@
       "removeChoiceAria": "選択肢 {index} を削除",
       "addChoice": "選択肢を追加",
       "submit": "質問を追加",
-      "submitting": "保存中..."
+      "submitting": "保存中...",
+      "typeText": "自由記述",
+      "typeTextHelper": "学習者が自由に記述した回答を、提出後に講師が手動採点します。",
+      "modelAnswerLabel": "模範解答 (任意)",
+      "modelAnswerPlaceholder": "採点時に参照する模範解答",
+      "modelAnswerHelper": "最大 2000 文字。講師にのみ表示され、学習者には公開されません。"
     },
     "questionList": {
       "listAria": "クイズの質問一覧",

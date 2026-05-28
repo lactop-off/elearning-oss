@@ -355,7 +355,12 @@
       "removeChoiceAria": "Remove choice {index}",
       "addChoice": "Add choice",
       "submit": "Add question",
-      "submitting": "Saving..."
+      "submitting": "Saving...",
+      "typeText": "Free text",
+      "typeTextHelper": "Learners write a free-form answer; you grade it manually after submission.",
+      "modelAnswerLabel": "Model answer (optional)",
+      "modelAnswerPlaceholder": "A reference answer to help you grade consistently",
+      "modelAnswerHelper": "Up to 2000 characters. Only the instructor sees this — never shown to learners."
     },
     "questionList": {
       "listAria": "Quiz questions",

@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { addQuestionAction } from '@/features/quizzes/actions/add-question';
 import { AddQuestionSchema } from '@/features/quizzes/schemas/question';
 import { useRouter } from '@/i18n/navigation';
@@ -67,18 +68,12 @@ export function QuestionForm({ quizId }: { quizId: string }) {
   const choices = useFieldArray({ control: form.control, name: 'choices' });
   const type = form.watch('type');
 
-  // When the type toggles, reset the correctness fields so the discriminated
-  // schema doesn't see stale data from the other variant.
+  // When the type toggles, reset to that branch's defaults so the discriminated
+  // schema doesn't see stale fields from the other variant. Body and points
+  // are preserved across the switch so the instructor doesn't lose typing.
   useEffect(() => {
-    const current = form.getValues();
-    if (type === 'SINGLE_CHOICE') {
-      form.setValue('correctChoiceIndex' as never, 0 as never, { shouldValidate: false });
-      form.unregister('correctChoiceIndices' as never);
-    } else {
-      form.setValue('correctChoiceIndices' as never, [] as never, { shouldValidate: false });
-      form.unregister('correctChoiceIndex' as never);
-    }
-    void current;
+    const { body, points } = form.getValues();
+    form.reset({ ...defaultsForType(type, quizId), body, points });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 
@@ -141,9 +136,23 @@ export function QuestionForm({ quizId }: { quizId: string }) {
               />
               {t('typeMulti')}
             </label>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="radio"
+                name="question-type"
+                value="TEXT"
+                checked={type === 'TEXT'}
+                onChange={() => form.setValue('type', 'TEXT', { shouldValidate: false })}
+              />
+              {t('typeText')}
+            </label>
           </div>
           <p className="text-xs text-muted-foreground">
-            {type === 'SINGLE_CHOICE' ? t('typeSingleHelper') : t('typeMultiHelper')}
+            {type === 'SINGLE_CHOICE'
+              ? t('typeSingleHelper')
+              : type === 'MULTI_CHOICE'
+                ? t('typeMultiHelper')
+                : t('typeTextHelper')}
           </p>
         </fieldset>
 
@@ -182,6 +191,7 @@ export function QuestionForm({ quizId }: { quizId: string }) {
           )}
         />
 
+        {type !== 'TEXT' && (
         <fieldset className="grid gap-3">
           <legend className="text-sm font-medium">{t('choicesLabel')}</legend>
           <p className="text-xs text-muted-foreground">
@@ -268,6 +278,28 @@ export function QuestionForm({ quizId }: { quizId: string }) {
             </p>
           ) : null}
         </fieldset>
+        )}
+
+        {type === 'TEXT' && (
+          <FormField
+            control={form.control}
+            name={'modelAnswer' as never}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t('modelAnswerLabel')}</FormLabel>
+                <FormControl>
+                  <Textarea
+                    rows={4}
+                    placeholder={t('modelAnswerPlaceholder')}
+                    {...(field as React.ComponentProps<typeof Textarea>)}
+                  />
+                </FormControl>
+                <FormDescription>{t('modelAnswerHelper')}</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
         <Button type="submit" disabled={isPending}>
           {isPending ? t('submitting') : t('submit')}
