@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { QuestionForm } from '@/features/quizzes/components/question-form';
 import { SortableQuestionList } from '@/features/quizzes/components/sortable-question-list';
 import { QuizDeleteButton } from '@/features/quizzes/components/quiz-delete-button';
+import { listPendingAttemptsForQuizOwnedBy } from '@/features/attempts/data/attempts';
 import { listQuestionsByQuiz } from '@/features/quizzes/data/questions';
 import { findQuizOwnedByInstructor } from '@/features/quizzes/data/quizzes';
 import { Link, redirect } from '@/i18n/navigation';
@@ -32,10 +33,12 @@ export default async function InstructorQuizPage({
   const quiz = await findQuizOwnedByInstructor(quizId, user.id);
   if (!quiz || quiz.course.slug !== slug) notFound();
 
-  const [questions, t, tList] = await Promise.all([
+  const [questions, pendingAttempts, t, tList, tGrading] = await Promise.all([
     listQuestionsByQuiz(quiz.id),
+    listPendingAttemptsForQuizOwnedBy(quiz.id, user.id),
     getTranslations('quizzes.manage'),
     getTranslations('quizzes.list'),
+    getTranslations('quizzes.grading'),
   ]);
 
   return (
@@ -57,7 +60,15 @@ export default async function InstructorQuizPage({
         </p>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <h1 className="text-2xl font-semibold tracking-tight">{quiz.title}</h1>
-          <div className="flex shrink-0 gap-2">
+          <div className="flex shrink-0 flex-wrap gap-2">
+            <Button asChild variant="outline" size="sm">
+              <Link href={`/instructor/courses/${slug}/quizzes/${quiz.id}/grading`}>
+                {tGrading('listHeading')}
+                {pendingAttempts.length > 0
+                  ? ` (${tGrading('pendingCountLabel', { count: pendingAttempts.length })})`
+                  : ''}
+              </Link>
+            </Button>
             <Button asChild variant="outline" size="sm">
               <Link href={`/instructor/courses/${slug}/quizzes/${quiz.id}/edit`}>
                 {tList('edit')}

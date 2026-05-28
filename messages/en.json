@@ -408,6 +408,44 @@
       "QUESTION_NOT_FOUND": "Question not found, or you do not own it.",
       "SET_MISMATCH": "The question set changed. Please refresh and try again.",
       "INTERNAL_ERROR": "Something went wrong. Please try again."
+    },
+    "grading": {
+      "listHeading": "Grading queue",
+      "listDescription": "Submitted attempts waiting for your review.",
+      "listBackLink": "← Back to quiz",
+      "listEmpty": "No attempts are waiting for grading.",
+      "queueAria": "Pending attempts",
+      "learnerLabel": "Learner",
+      "submittedAtLabel": "Submitted",
+      "pendingCountLabel": "{count} pending",
+      "gradeCta": "Grade",
+      "detailHeading": "Grade attempt by {name}",
+      "detailDescription": "Review each free-text answer and mark it correct or incorrect.",
+      "detailBackLink": "← Back to grading queue",
+      "questionLabel": "Question",
+      "modelAnswerLabel": "Model answer (your reference)",
+      "modelAnswerEmpty": "No model answer was provided.",
+      "learnerAnswerLabel": "Learner answer",
+      "pointsAwardedLabel": "Points awarded",
+      "pointsAwardedHelper": "Up to {max} points for this question.",
+      "markCorrect": "Mark correct (full points)",
+      "markIncorrect": "Mark incorrect (0 points)",
+      "submit": "Finalize grading",
+      "submitting": "Saving...",
+      "toast": {
+        "graded": "Attempt graded — score {score}%",
+        "gradedPassed": "Attempt passed — score {score}%"
+      },
+      "errors": {
+        "INVALID_INPUT": "Some inputs were invalid.",
+        "UNAUTHORIZED": "Please sign in.",
+        "FORBIDDEN": "You do not have permission to grade this attempt.",
+        "NOT_FOUND": "Attempt not found or already finalized.",
+        "NOT_PENDING": "Attempt is not pending grading.",
+        "INVALID_GRADINGS": "Each answer needs exactly one grading.",
+        "POINTS_EXCEED": "Points awarded cannot exceed the question's max.",
+        "INTERNAL_ERROR": "Something went wrong. Please try again."
+      }
     }
   },
   "attempts": {

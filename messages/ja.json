@@ -408,6 +408,44 @@
       "QUESTION_NOT_FOUND": "質問が見つかりません。",
       "SET_MISMATCH": "並び順の更新に失敗しました。ページを再読み込みしてください。",
       "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
+    },
+    "grading": {
+      "listHeading": "採点待ち一覧",
+      "listDescription": "このクイズで採点をお待ちの提出一覧です。",
+      "listBackLink": "← クイズに戻る",
+      "listEmpty": "採点を待っている提出はありません。",
+      "queueAria": "採点待ちの提出一覧",
+      "learnerLabel": "学習者",
+      "submittedAtLabel": "提出日時",
+      "pendingCountLabel": "{count} 件",
+      "gradeCta": "採点する",
+      "detailHeading": "{name} さんの提出を採点",
+      "detailDescription": "自由記述の回答を 1 件ずつ確認し、正解/不正解を判定してください。",
+      "detailBackLink": "← 採点待ち一覧に戻る",
+      "questionLabel": "設問",
+      "modelAnswerLabel": "模範解答 (講師用)",
+      "modelAnswerEmpty": "模範解答は設定されていません。",
+      "learnerAnswerLabel": "学習者の回答",
+      "pointsAwardedLabel": "付与する得点",
+      "pointsAwardedHelper": "この設問の上限は {max} 点です。",
+      "markCorrect": "正解にする (満点)",
+      "markIncorrect": "不正解にする (0 点)",
+      "submit": "採点を確定",
+      "submitting": "保存中...",
+      "toast": {
+        "graded": "採点を確定しました — スコア {score}%",
+        "gradedPassed": "採点を確定 — 合格 (スコア {score}%)"
+      },
+      "errors": {
+        "INVALID_INPUT": "入力に誤りがあります。",
+        "UNAUTHORIZED": "サインインしてください。",
+        "FORBIDDEN": "この提出を採点する権限がありません。",
+        "NOT_FOUND": "提出が見つからないか、すでに採点済みです。",
+        "NOT_PENDING": "この提出は採点待ちではありません。",
+        "INVALID_GRADINGS": "各回答に 1 件ずつ採点が必要です。",
+        "POINTS_EXCEED": "付与する得点が設問の上限を超えています。",
+        "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
+      }
     }
   },
   "attempts": {

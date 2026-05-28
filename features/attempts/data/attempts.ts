@@ -333,3 +333,273 @@ export async function listAnswersByAttempt(attemptId: string): Promise<AnswerFor
     selectedChoiceIds: row.selectedChoices.map((c) => c.id),
   }));
 }
+
+// ─── Manual grading (instructor) ─────────────────────────────────────
+
+export type PendingAttemptSummary = {
+  attemptId: string;
+  learnerName: string;
+  submittedAt: Date | null;
+  textAnswerCount: number;
+};
+
+/**
+ * List attempts that are awaiting instructor grading for a quiz the
+ * instructor owns. An attempt is "pending" when it was submitted but the
+ * final pass/fail is still null (at least one TEXT answer hasn't been
+ * graded yet).
+ */
+export async function listPendingAttemptsForQuizOwnedBy(
+  quizId: string,
+  instructorId: string,
+): Promise<PendingAttemptSummary[]> {
+  const rows = await prisma.attempt.findMany({
+    where: {
+      quizId,
+      passed: null,
+      status: 'SUBMITTED',
+      quiz: { lesson: { course: { instructorId } } },
+    },
+    select: {
+      id: true,
+      submittedAt: true,
+      user: { select: { name: true } },
+      answers: { where: { isCorrect: null }, select: { id: true } },
+    },
+    orderBy: { submittedAt: 'asc' },
+  });
+  return rows.map((row) => ({
+    attemptId: row.id,
+    learnerName: row.user.name ?? '',
+    submittedAt: row.submittedAt,
+    textAnswerCount: row.answers.length,
+  }));
+}
+
+export type GradingAnswer = {
+  answerId: string;
+  questionId: string;
+  questionBody: string;
+  questionPoints: number;
+  modelAnswer: string | null;
+  textAnswer: string;
+  currentIsCorrect: boolean | null;
+  currentPointsAwarded: number | null;
+};
+
+export type AttemptForGrading = {
+  attemptId: string;
+  userId: string;
+  learnerName: string;
+  submittedAt: Date | null;
+  quizId: string;
+  quizTitle: string;
+  passingScore: number;
+  courseId: string;
+  courseSlug: string;
+  textAnswers: GradingAnswer[];
+};
+
+/**
+ * Load a pending attempt for grading, scoped to a quiz owned by this
+ * instructor. Returns only the TEXT answers (the choice answers are already
+ * scored). Returns null if not found or already finalised.
+ */
+export async function findAttemptForGradingOwnedBy(
+  attemptId: string,
+  instructorId: string,
+): Promise<AttemptForGrading | null> {
+  const row = await prisma.attempt.findFirst({
+    where: {
+      id: attemptId,
+      passed: null,
+      status: 'SUBMITTED',
+      quiz: { lesson: { course: { instructorId } } },
+    },
+    select: {
+      id: true,
+      userId: true,
+      submittedAt: true,
+      quizId: true,
+      user: { select: { name: true } },
+      quiz: {
+        select: {
+          title: true,
+          passingScore: true,
+          lesson: {
+            select: { course: { select: { id: true, slug: true } } },
+          },
+        },
+      },
+      answers: {
+        where: { question: { type: 'TEXT' } },
+        select: {
+          id: true,
+          textAnswer: true,
+          isCorrect: true,
+          pointsAwarded: true,
+          question: {
+            select: {
+              id: true,
+              body: true,
+              points: true,
+              modelAnswer: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  if (!row || !row.quiz.lesson) return null;
+
+  return {
+    attemptId: row.id,
+    userId: row.userId,
+    learnerName: row.user.name ?? '',
+    submittedAt: row.submittedAt,
+    quizId: row.quizId,
+    quizTitle: row.quiz.title,
+    passingScore: row.quiz.passingScore,
+    courseId: row.quiz.lesson.course.id,
+    courseSlug: row.quiz.lesson.course.slug,
+    textAnswers: row.answers.map((a) => ({
+      answerId: a.id,
+      questionId: a.question.id,
+      questionBody: a.question.body,
+      questionPoints: a.question.points,
+      modelAnswer: a.question.modelAnswer,
+      textAnswer: a.textAnswer ?? '',
+      currentIsCorrect: a.isCorrect,
+      currentPointsAwarded: a.pointsAwarded,
+    })),
+  };
+}
+
+export type GradeAttemptOutcome = {
+  attemptId: string;
+  score: number;
+  passed: boolean;
+  courseSlug: string;
+  userId: string;
+  courseId: string;
+};
+
+/**
+ * Apply instructor's manual gradings to all TEXT answers in an attempt and
+ * finalise score/passed in a single transaction. The caller must verify
+ * ownership; we re-check inside the transaction for TOCTOU safety. The
+ * caller is responsible for triggering the completion check after this
+ * returns successfully (out-of-band so completion failures don't roll back
+ * the grade).
+ */
+export async function gradeAttemptAnswers(input: {
+  attemptId: string;
+  instructorId: string;
+  gradings: { answerId: string; isCorrect: boolean; pointsAwarded: number }[];
+}): Promise<
+  | GradeAttemptOutcome
+  | { error: 'NOT_FOUND' | 'NOT_PENDING' | 'INVALID_GRADINGS' | 'POINTS_EXCEED' }
+> {
+  return prisma.$transaction(async (tx) => {
+    const attempt = await tx.attempt.findFirst({
+      where: {
+        id: input.attemptId,
+        passed: null,
+        status: 'SUBMITTED',
+        quiz: { lesson: { course: { instructorId: input.instructorId } } },
+      },
+      select: {
+        id: true,
+        userId: true,
+        quizId: true,
+        quiz: {
+          select: {
+            passingScore: true,
+            lesson: { select: { course: { select: { id: true, slug: true } } } },
+            questions: { select: { id: true, points: true } },
+          },
+        },
+        answers: {
+          select: {
+            id: true,
+            isCorrect: true,
+            pointsAwarded: true,
+            question: { select: { id: true, type: true, points: true } },
+          },
+        },
+      },
+    });
+    if (!attempt || !attempt.quiz.lesson) {
+      // either doesn't exist or already finalised, or wrong instructor.
+      return { error: 'NOT_FOUND' as const };
+    }
+
+    // The unfinalised TEXT answers we need to grade.
+    const pendingTextAnswers = attempt.answers.filter(
+      (a) => a.question.type === 'TEXT' && a.isCorrect === null,
+    );
+
+    // Every pending TEXT answer must be present in the gradings input
+    // exactly once, and every grading must target a pending TEXT answer.
+    if (input.gradings.length !== pendingTextAnswers.length) {
+      return { error: 'INVALID_GRADINGS' as const };
+    }
+    const pendingIds = new Set(pendingTextAnswers.map((a) => a.id));
+    const seen = new Set<string>();
+    for (const g of input.gradings) {
+      if (!pendingIds.has(g.answerId)) return { error: 'INVALID_GRADINGS' as const };
+      if (seen.has(g.answerId)) return { error: 'INVALID_GRADINGS' as const };
+      seen.add(g.answerId);
+    }
+
+    // pointsAwarded must not exceed the question's points.
+    const answerById = new Map(attempt.answers.map((a) => [a.id, a]));
+    for (const g of input.gradings) {
+      const a = answerById.get(g.answerId)!;
+      if (g.pointsAwarded > a.question.points) {
+        return { error: 'POINTS_EXCEED' as const };
+      }
+      // Correct iff full points, incorrect iff < full points.
+      if (g.isCorrect && g.pointsAwarded !== a.question.points) {
+        return { error: 'INVALID_GRADINGS' as const };
+      }
+      if (!g.isCorrect && g.pointsAwarded === a.question.points) {
+        return { error: 'INVALID_GRADINGS' as const };
+      }
+    }
+
+    // Apply gradings.
+    for (const g of input.gradings) {
+      await tx.answer.update({
+        where: { id: g.answerId },
+        data: { isCorrect: g.isCorrect, pointsAwarded: g.pointsAwarded },
+      });
+    }
+
+    // Recompute attempt score from the now-complete answer set.
+    const possible = attempt.quiz.questions.reduce((sum, q) => sum + q.points, 0);
+    // Build a map of the latest awarded points per answer (combining the
+    // pre-existing choice grades with our just-applied text grades).
+    const gradedById = new Map<string, number>();
+    for (const a of attempt.answers) gradedById.set(a.id, a.pointsAwarded ?? 0);
+    for (const g of input.gradings) gradedById.set(g.answerId, g.pointsAwarded);
+    let earned = 0;
+    for (const value of gradedById.values()) earned += value;
+    const score = possible === 0 ? 0 : Math.round((earned / possible) * 100);
+    const passed = possible > 0 && score >= attempt.quiz.passingScore;
+
+    await tx.attempt.update({
+      where: { id: attempt.id },
+      data: { score, passed },
+    });
+
+    return {
+      attemptId: attempt.id,
+      score,
+      passed,
+      courseSlug: attempt.quiz.lesson.course.slug,
+      userId: attempt.userId,
+      courseId: attempt.quiz.lesson.course.id,
+    } satisfies GradeAttemptOutcome;
+  });
+}
