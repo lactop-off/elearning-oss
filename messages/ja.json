@@ -431,7 +431,11 @@
       "typeMulti": "あてはまるものを全て選ぶ",
       "submit": "回答を送信",
       "working": "採点中...",
-      "selectAtLeastOne": "1 問以上に回答してから送信してください。"
+      "selectAtLeastOne": "1 問以上に回答してから送信してください。",
+      "typeText": "自由記述",
+      "textAnswerPlaceholder": "ここに回答を入力してください…",
+      "textAnswerAria": "問題 {order} への回答",
+      "answerRequired": "少なくとも 1 問は回答してから提出してください。"
     },
     "result": {
       "passTitle": "合格しました！",
@@ -442,7 +446,12 @@
       "correct": "正解 · +{points} 点",
       "incorrect": "{awarded} / {possible} 点",
       "correctMarker": "✓ 正解",
-      "yourPickMarker": "あなたの回答"
+      "yourPickMarker": "あなたの回答",
+      "pendingTitle": "講師の採点をお待ちください",
+      "pendingSummary": "自由記述問題が含まれています。講師の採点が完了するとスコアが確定します。",
+      "pendingMarker": "採点待ち",
+      "yourTextAnswerLabel": "あなたの回答",
+      "emptyTextAnswer": "（未回答）"
     },
     "toast": {
       "passed": "{score}% で合格",

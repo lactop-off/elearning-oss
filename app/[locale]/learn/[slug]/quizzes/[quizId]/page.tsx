@@ -109,8 +109,8 @@ export default async function LearnerQuizPage({
           ) : resultPayload ? (
             <div className="grid gap-6">
               <QuizResult
-                score={latestAttempt.score ?? 0}
-                passed={latestAttempt.passed ?? false}
+                score={latestAttempt.score}
+                passed={latestAttempt.passed}
                 passingScore={quiz.passingScore}
                 questions={quiz.questions}
                 answers={resultPayload.answers}

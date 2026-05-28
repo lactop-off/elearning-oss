@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
 import { submitAttemptAction } from '@/features/attempts/actions/submit-attempt';
 import { useRouter } from '@/i18n/navigation';
 
@@ -18,6 +19,12 @@ type QuestionInput = {
   points: number;
   type: 'SINGLE_CHOICE' | 'MULTI_CHOICE' | 'TEXT';
   choices: { id: string; body: string; order: number }[];
+};
+
+type SubmissionAnswer = {
+  questionId: string;
+  choiceIds?: string[];
+  textAnswer?: string;
 };
 
 const KNOWN = [
@@ -52,9 +59,18 @@ export function QuizTaker({
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const answers: { questionId: string; choiceIds: string[] }[] = [];
+    const answers: SubmissionAnswer[] = [];
     for (const question of questions) {
-      const raw = formData.getAll(`q-${question.id}`);
+      const fieldName = `q-${question.id}`;
+      if (question.type === 'TEXT') {
+        const value = formData.get(fieldName);
+        const text = typeof value === 'string' ? value.trim() : '';
+        if (text.length > 0) {
+          answers.push({ questionId: question.id, textAnswer: text });
+        }
+        continue;
+      }
+      const raw = formData.getAll(fieldName);
       const choiceIds = raw.filter(
         (value): value is string => typeof value === 'string' && value.length > 0,
       );
@@ -90,6 +106,15 @@ export function QuizTaker({
       <ol aria-label={t('questionsAria')} className="grid gap-4">
         {questions.map((question) => {
           const isMulti = question.type === 'MULTI_CHOICE';
+          const isText = question.type === 'TEXT';
+          const typeLabel = isText
+            ? t('typeText')
+            : isMulti
+              ? t('typeMulti')
+              : t('typeSingle');
+          const typeVariant: 'primarySoft' | 'outline' = isMulti || isText
+            ? 'primarySoft'
+            : 'outline';
           return (
             <li key={question.id}>
               <Card>
@@ -98,9 +123,7 @@ export function QuizTaker({
                     <Badge variant="muted">
                       {t('pointsLabel', { points: question.points })}
                     </Badge>
-                    <Badge variant={isMulti ? 'primarySoft' : 'outline'}>
-                      {isMulti ? t('typeMulti') : t('typeSingle')}
-                    </Badge>
+                    <Badge variant={typeVariant}>{typeLabel}</Badge>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -111,22 +134,31 @@ export function QuizTaker({
                       </span>
                       {question.body}
                     </legend>
-                    <div className="grid gap-2">
-                      {question.choices.map((choice) => (
-                        <label
-                          key={choice.id}
-                          className="flex cursor-pointer items-center gap-3 rounded-md border border-border px-3 py-2.5 text-sm transition-colors hover:bg-accent focus-within:ring-2 focus-within:ring-ring has-[input:checked]:border-primary has-[input:checked]:bg-primary/5"
-                        >
-                          <input
-                            type={isMulti ? 'checkbox' : 'radio'}
-                            name={`q-${question.id}`}
-                            value={choice.id}
-                            className="size-4 accent-primary"
-                          />
-                          <span>{choice.body}</span>
-                        </label>
-                      ))}
-                    </div>
+                    {isText ? (
+                      <Textarea
+                        name={`q-${question.id}`}
+                        rows={5}
+                        placeholder={t('textAnswerPlaceholder')}
+                        aria-label={t('textAnswerAria', { order: question.order })}
+                      />
+                    ) : (
+                      <div className="grid gap-2">
+                        {question.choices.map((choice) => (
+                          <label
+                            key={choice.id}
+                            className="flex cursor-pointer items-center gap-3 rounded-md border border-border px-3 py-2.5 text-sm transition-colors hover:bg-accent focus-within:ring-2 focus-within:ring-ring has-[input:checked]:border-primary has-[input:checked]:bg-primary/5"
+                          >
+                            <input
+                              type={isMulti ? 'checkbox' : 'radio'}
+                              name={`q-${question.id}`}
+                              value={choice.id}
+                              className="size-4 accent-primary"
+                            />
+                            <span>{choice.body}</span>
+                          </label>
+                        ))}
+                      </div>
+                    )}
                   </fieldset>
                 </CardContent>
               </Card>

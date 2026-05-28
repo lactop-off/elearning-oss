@@ -431,7 +431,11 @@
       "typeMulti": "Pick all that apply",
       "submit": "Submit answers",
       "working": "Grading...",
-      "selectAtLeastOne": "Pick at least one answer to submit."
+      "selectAtLeastOne": "Pick at least one answer to submit.",
+      "typeText": "Free text",
+      "textAnswerPlaceholder": "Write your answer here…",
+      "textAnswerAria": "Your answer for question {order}",
+      "answerRequired": "Answer at least one question before submitting."
     },
     "result": {
       "passTitle": "You passed!",
@@ -442,7 +446,12 @@
       "correct": "Correct · +{points} points",
       "incorrect": "{awarded} / {possible} points",
       "correctMarker": "✓ correct",
-      "yourPickMarker": "your answer"
+      "yourPickMarker": "your answer",
+      "pendingTitle": "Awaiting instructor review",
+      "pendingSummary": "You have answered free-text questions. Your final score will appear once the instructor grades them.",
+      "pendingMarker": "Awaiting review",
+      "yourTextAnswerLabel": "Your answer",
+      "emptyTextAnswer": "(no answer)"
     },
     "toast": {
       "passed": "Passed with {score}%",
