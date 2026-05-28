@@ -101,6 +101,7 @@
   },
   "courses": {
     "new": {
+      "backLink": "← Back to your courses",
       "title": "Create a new course",
       "description": "Set up the basics. You can add lessons and quizzes after saving.",
       "titleLabel": "Course title",
