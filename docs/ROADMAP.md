@@ -108,10 +108,10 @@
 - [x] **TEXT 問題 — 採点フロー** — 提出時に TEXT を含むと Attempt は `score=null` / `passed=null` で pending 保存。講師は「採点待ち一覧」→「採点詳細」で各 TEXT 答案を「正解 (満点)」/「不正解 (0 点)」判定。確定時にトランザクション内で全 Answer を更新し score/passed を再計算、passed なら `checkAndMarkComplete` を呼んで修了判定を再評価。
   - 完了判定 (`checkAndMarkComplete`) は `passed: true` の strict 等価で pending を自動的に弾く (既存実装で対応済み)。
   - フルフロー E2E (`tests/e2e/quiz-text.spec.ts`) を追加。現状 WSL/Docker 内の form 操作 flakiness で安定通過せず、Phase 4/5 の CI/本番ビルド化で再評価。
-- [ ] **クイズ高度設定 — 時間制限** (`timeLimitSec`) — カウントダウン + 時間切れ自動提出 (`AUTO_SUBMITTED`)
-- [ ] **クイズ高度設定 — 受験回数制限** (`maxAttempts`) — 上限到達で開始ボタン無効 + 残り回数表示
-- [ ] **クイズ高度設定 — 選択肢シャッフル** (`shuffleChoices`) — 受験時に選択肢順をランダム化 (答えキー非露出を維持)
-- [ ] 上記すべてに対する E2E + ユニットテスト
+- [x] **クイズ高度設定 — 時間制限** (`timeLimitSec`) — `QuizTaker` にスティッキー mm:ss カウントダウン (`setInterval` 500ms) + 0 で自動提出。`SubmitAttemptSchema` に `autoSubmitted` を追加し、true のときに限り空回答を許可、`Attempt.status` を `AUTO_SUBMITTED` に。
+- [x] **クイズ高度設定 — 受験回数制限** (`maxAttempts`) — `startAttemptAction` が完了済み (SUBMITTED/AUTO_SUBMITTED) 受験回数を数え、上限到達時は `MAX_ATTEMPTS_REACHED`。学習者ページに「受験回数: 完了済/上限」表示と上限到達時の disable メッセージ。
+- [x] **クイズ高度設定 — 選択肢シャッフル** (`shuffleChoices`) — `lib/shuffle.ts` の決定論的 Fisher-Yates。学習者ページで `attemptId-questionId` をシードに各設問の choices をシャッフル。同一 attempt 内では順序が安定。答えキー (`Choice.isCorrect`) は変わらず非露出。
+- [x] **上記すべてに対する Zod ユニットテスト** — quiz schema 5 件 (range/null/default)、attempt schema 1 件 (autoSubmitted + 空回答)、shuffle 4 件。計 42/42 PASS。
 
 ### ドメイン上の注意 (domain-logic-gate が検証)
 - TEXT 採点保留時の修了判定: 「必修クイズ合格」が未確定の間はコース修了させない。

@@ -74,7 +74,7 @@ export function QuizTaker({
       ? new Date(startedAt).getTime() + timeLimitSec * 1000
       : null;
 
-  const [remainingMs, setRemainingMs] = useState<number | null>(
+  const [remainingMs, setRemainingMs] = useState<number | null>(() =>
     deadlineMs !== null ? deadlineMs - Date.now() : null,
   );
   const submittedRef = useRef(false);
