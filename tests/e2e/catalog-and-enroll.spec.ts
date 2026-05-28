@@ -70,11 +70,15 @@ test('already-enrolled learner sees the enrolled CTA, not the Enroll button', as
 test('header shows Catalog and My learning links appropriately', async ({ page }) => {
   await page.goto('/en');
   await expect(
-    page.getByRole('navigation').getByRole('link', { name: 'Catalog' }),
+    page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('link', { name: 'Catalog' }),
   ).toBeVisible();
 
   await signInAs(page, 'learner@example.com');
   await expect(
-    page.getByRole('navigation').getByRole('link', { name: 'My learning' }),
+    page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('link', { name: 'My learning' }),
   ).toBeVisible();
 });

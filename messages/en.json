@@ -1,7 +1,14 @@
 {
   "common": {
     "appName": "E-learning OSS",
-    "appDescription": "An open-source platform for online courses, quizzes, and learner progress tracking."
+    "appDescription": "An open-source platform for online courses, quizzes, and learner progress tracking.",
+    "loading": "Loading…"
+  },
+  "errorPage": {
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred. You can try again, or head back home.",
+    "retry": "Try again",
+    "home": "Back to home"
   },
   "nav": {
     "primary": "Primary",
@@ -10,6 +17,11 @@
     "myCourses": "My courses",
     "signedInAria": "Signed in as {name}"
   },
+  "footer": {
+    "tagline": "Open-source learning platform",
+    "aria": "Footer",
+    "copyright": "© {year} E-learning OSS"
+  },
   "roles": {
     "LEARNER": "learner",
     "INSTRUCTOR": "instructor",
@@ -17,7 +29,26 @@
   },
   "home": {
     "signedInAs": "Signed in as {name}",
-    "roleLabel": "({role})"
+    "roleLabel": "({role})",
+    "eyebrow": "Open-source learning platform",
+    "browseCatalog": "Browse courses",
+    "continueLearning": "Continue learning",
+    "manageCourses": "Manage courses",
+    "features": {
+      "heading": "Everything you need to teach and learn",
+      "courses": {
+        "title": "Structured courses",
+        "description": "Lessons organized into courses you can work through at your own pace."
+      },
+      "quizzes": {
+        "title": "Auto-graded quizzes",
+        "description": "Single and multiple choice questions scored instantly against a clear pass mark."
+      },
+      "certificate": {
+        "title": "Completion certificates",
+        "description": "Finish every required lesson and quiz to earn a verifiable certificate."
+      }
+    }
   },
   "auth": {
     "signIn": {
@@ -70,6 +101,7 @@
   },
   "courses": {
     "new": {
+      "backLink": "← Back to your courses",
       "title": "Create a new course",
       "description": "Set up the basics. You can add lessons and quizzes after saving.",
       "titleLabel": "Course title",
@@ -127,7 +159,9 @@
       "empty": "No lessons yet. Add the first one to get started.",
       "required": "Required",
       "optional": "Optional",
-      "contentTypeLabel": "Content: {type}"
+      "contentTypeLabel": "Content: {type}",
+      "edit": "Edit",
+      "dragHandleAria": "Drag to reorder lesson {order}: {title}"
     },
     "new": {
       "title": "Add a lesson",
@@ -142,14 +176,40 @@
       "submit": "Save lesson",
       "submitting": "Saving..."
     },
+    "edit": {
+      "title": "Edit lesson {order}",
+      "description": "Update the lesson's content.",
+      "backLink": "← Back to course",
+      "titleLabel": "Lesson title",
+      "titlePlaceholder": "Variables and constants",
+      "contentLabel": "Content",
+      "contentPlaceholder": "Write the lesson body here.",
+      "contentHelper": "Plain text for now. Up to 20,000 characters.",
+      "requiredLabel": "Required for course completion",
+      "submit": "Save changes",
+      "submitting": "Saving..."
+    },
+    "delete": {
+      "trigger": "Delete",
+      "title": "Delete this lesson?",
+      "description": "\"{title}\" will be deleted. Learner progress, attached quizzes, and any quiz attempts on this lesson will also be removed. This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Delete lesson",
+      "confirming": "Deleting..."
+    },
     "toast": {
-      "created": "Lesson added"
+      "created": "Lesson added",
+      "updated": "Lesson updated",
+      "deleted": "Lesson deleted",
+      "reordered": "Order updated"
     },
     "errors": {
       "INVALID_INPUT": "Please check the highlighted fields.",
       "UNAUTHORIZED": "Please sign in to continue.",
-      "FORBIDDEN": "Only the course owner can add lessons.",
+      "FORBIDDEN": "Only the course owner can manage lessons.",
       "COURSE_NOT_FOUND": "Course not found, or you do not own it.",
+      "LESSON_NOT_FOUND": "Lesson not found, or you do not own it.",
+      "SET_MISMATCH": "The lesson set changed. Please refresh and try again.",
       "INTERNAL_ERROR": "Something went wrong. Please try again."
     }
   },
@@ -159,6 +219,7 @@
     "listAria": "Available courses",
     "empty": "No courses published yet. Check back soon.",
     "byInstructor": "By {name}",
+    "viewCourse": "View course",
     "detail": {
       "backLink": "← Back to catalog",
       "byInstructor": "By {name}",
@@ -187,6 +248,10 @@
     "subheading": "Courses you are enrolled in.",
     "listAria": "Your enrolled courses",
     "byInstructor": "By {name}",
+    "statusCompleted": "Completed",
+    "statusInProgress": "In progress",
+    "continueCta": "Continue learning",
+    "reviewCta": "Review course",
     "empty": {
       "message": "You have not enrolled in any course yet.",
       "cta": "Browse the catalog"
@@ -232,7 +297,48 @@
       "passingScoreHelper": "Learners need at least this percentage of points to pass.",
       "requiredLabel": "Required for course completion",
       "submit": "Create quiz",
-      "submitting": "Creating..."
+      "submitting": "Creating...",
+      "timeLimitSecLabel": "Time limit (seconds)",
+      "timeLimitSecHelper": "Leave blank for no limit. Range: 30–14400 (4 hours).",
+      "timeLimitSecPlaceholder": "No limit",
+      "maxAttemptsLabel": "Max attempts",
+      "maxAttemptsHelper": "Leave blank for unlimited attempts. Range: 1–50.",
+      "maxAttemptsPlaceholder": "Unlimited",
+      "shuffleChoicesLabel": "Shuffle choices",
+      "shuffleChoicesHelper": "Each learner sees choices in a different order (does not affect TEXT questions)."
+    },
+    "edit": {
+      "title": "Edit quiz",
+      "description": "Update this quiz's metadata. Questions are managed separately.",
+      "backLink": "← Back to {quizTitle}",
+      "titleLabel": "Quiz title",
+      "titlePlaceholder": "Mid-lesson check",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Optional context for learners.",
+      "passingScoreLabel": "Passing score (%)",
+      "passingScoreHelper": "Learners need at least this percentage of points to pass.",
+      "requiredLabel": "Required for course completion",
+      "submit": "Save changes",
+      "submitting": "Saving...",
+      "timeLimitSecLabel": "Time limit (seconds)",
+      "timeLimitSecHelper": "Leave blank for no limit. Range: 30–14400 (4 hours).",
+      "timeLimitSecPlaceholder": "No limit",
+      "maxAttemptsLabel": "Max attempts",
+      "maxAttemptsHelper": "Leave blank for unlimited attempts. Range: 1–50.",
+      "maxAttemptsPlaceholder": "Unlimited",
+      "shuffleChoicesLabel": "Shuffle choices",
+      "shuffleChoicesHelper": "Each learner sees choices in a different order (does not affect TEXT questions)."
+    },
+    "delete": {
+      "trigger": "Delete",
+      "title": "Delete this quiz?",
+      "description": "\"{title}\" will be deleted along with all its questions and any learner attempts. This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Delete quiz",
+      "confirming": "Deleting..."
+    },
+    "list": {
+      "edit": "Edit"
     },
     "manage": {
       "backLink": "← Back to {courseTitle}",
@@ -244,7 +350,12 @@
       "questionsHeading": "Questions ({count})",
       "addQuestionHeading": "Add a question",
       "addQuestionTitle": "New question",
-      "addQuestionDescription": "Single-choice question. Pick one correct answer."
+      "addQuestionDescription": "Single-choice question. Pick one correct answer.",
+      "metaWithLimits": "Passing: {passing}% · {required} · Time: {timeLimit} · Attempts: {maxAttempts} · Shuffle: {shuffle}",
+      "noTimeLimit": "no limit",
+      "unlimitedAttempts": "unlimited",
+      "shuffleOn": "on",
+      "shuffleOff": "off"
     },
     "questionForm": {
       "typeLabel": "Question type",
@@ -265,7 +376,12 @@
       "removeChoiceAria": "Remove choice {index}",
       "addChoice": "Add choice",
       "submit": "Add question",
-      "submitting": "Saving..."
+      "submitting": "Saving...",
+      "typeText": "Free text",
+      "typeTextHelper": "Learners write a free-form answer; you grade it manually after submission.",
+      "modelAnswerLabel": "Model answer (optional)",
+      "modelAnswerPlaceholder": "A reference answer to help you grade consistently",
+      "modelAnswerHelper": "Up to 2000 characters. Only the instructor sees this — never shown to learners."
     },
     "questionList": {
       "listAria": "Quiz questions",
@@ -274,7 +390,16 @@
       "typeSingle": "single choice",
       "typeMulti": "multiple choice",
       "choicesAria": "Choices",
-      "correctMarker": "✓ correct"
+      "correctMarker": "✓ correct",
+      "dragHandleAria": "Drag to reorder question {order}: {body}"
+    },
+    "questionDelete": {
+      "trigger": "Delete",
+      "title": "Delete this question?",
+      "description": "\"{body}\" will be deleted along with its choices and any existing learner answers. This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Delete question",
+      "confirming": "Deleting..."
     },
     "overview": {
       "listAria": "Quizzes by lesson",
@@ -289,7 +414,11 @@
     },
     "toast": {
       "created": "Quiz created",
-      "questionAdded": "Question added"
+      "updated": "Quiz updated",
+      "deleted": "Quiz deleted",
+      "questionAdded": "Question added",
+      "questionDeleted": "Question deleted",
+      "questionsReordered": "Question order updated"
     },
     "errors": {
       "INVALID_INPUT": "Please review the highlighted fields.",
@@ -297,7 +426,48 @@
       "FORBIDDEN": "Only the course owner can manage quizzes.",
       "LESSON_NOT_FOUND": "Lesson not found, or you do not own it.",
       "QUIZ_NOT_FOUND": "Quiz not found, or you do not own it.",
-      "INTERNAL_ERROR": "Something went wrong. Please try again."
+      "QUESTION_NOT_FOUND": "Question not found, or you do not own it.",
+      "SET_MISMATCH": "The question set changed. Please refresh and try again.",
+      "INTERNAL_ERROR": "Something went wrong. Please try again.",
+      "MAX_ATTEMPTS_REACHED": "You have used all attempts for this quiz."
+    },
+    "grading": {
+      "listHeading": "Grading queue",
+      "listDescription": "Submitted attempts waiting for your review.",
+      "listBackLink": "← Back to quiz",
+      "listEmpty": "No attempts are waiting for grading.",
+      "queueAria": "Pending attempts",
+      "learnerLabel": "Learner",
+      "submittedAtLabel": "Submitted",
+      "pendingCountLabel": "{count} pending",
+      "gradeCta": "Grade",
+      "detailHeading": "Grade attempt by {name}",
+      "detailDescription": "Review each free-text answer and mark it correct or incorrect.",
+      "detailBackLink": "← Back to grading queue",
+      "questionLabel": "Question",
+      "modelAnswerLabel": "Model answer (your reference)",
+      "modelAnswerEmpty": "No model answer was provided.",
+      "learnerAnswerLabel": "Learner answer",
+      "pointsAwardedLabel": "Points awarded",
+      "pointsAwardedHelper": "Up to {max} points for this question.",
+      "markCorrect": "Mark correct (full points)",
+      "markIncorrect": "Mark incorrect (0 points)",
+      "submit": "Finalize grading",
+      "submitting": "Saving...",
+      "toast": {
+        "graded": "Attempt graded — score {score}%",
+        "gradedPassed": "Attempt passed — score {score}%"
+      },
+      "errors": {
+        "INVALID_INPUT": "Some inputs were invalid.",
+        "UNAUTHORIZED": "Please sign in.",
+        "FORBIDDEN": "You do not have permission to grade this attempt.",
+        "NOT_FOUND": "Attempt not found or already finalized.",
+        "NOT_PENDING": "Attempt is not pending grading.",
+        "INVALID_GRADINGS": "Each answer needs exactly one grading.",
+        "POINTS_EXCEED": "Points awarded cannot exceed the question's max.",
+        "INTERNAL_ERROR": "Something went wrong. Please try again."
+      }
     }
   },
   "attempts": {
@@ -312,7 +482,10 @@
       "retakeCta": "Retake quiz"
     },
     "start": {
-      "working": "Starting..."
+      "working": "Starting...",
+      "attemptsUsed": "Attempts used: {used} / {max}",
+      "attemptsRemaining": "{remaining} attempts remaining",
+      "maxReached": "All attempts used"
     },
     "take": {
       "questionsAria": "Quiz questions",
@@ -321,7 +494,13 @@
       "typeMulti": "Pick all that apply",
       "submit": "Submit answers",
       "working": "Grading...",
-      "selectAtLeastOne": "Pick at least one answer to submit."
+      "selectAtLeastOne": "Pick at least one answer to submit.",
+      "typeText": "Free text",
+      "textAnswerPlaceholder": "Write your answer here…",
+      "textAnswerAria": "Your answer for question {order}",
+      "answerRequired": "Answer at least one question before submitting.",
+      "timeRemainingLabel": "Time remaining",
+      "autoSubmittedNotice": "Time is up — your answers were submitted automatically."
     },
     "result": {
       "passTitle": "You passed!",
@@ -332,11 +511,17 @@
       "correct": "Correct · +{points} points",
       "incorrect": "{awarded} / {possible} points",
       "correctMarker": "✓ correct",
-      "yourPickMarker": "your answer"
+      "yourPickMarker": "your answer",
+      "pendingTitle": "Awaiting instructor review",
+      "pendingSummary": "You have answered free-text questions. Your final score will appear once the instructor grades them.",
+      "pendingMarker": "Awaiting review",
+      "yourTextAnswerLabel": "Your answer",
+      "emptyTextAnswer": "(no answer)"
     },
     "toast": {
       "passed": "Passed with {score}%",
-      "submitted": "Submitted — score {score}%"
+      "submitted": "Submitted — score {score}%",
+      "pending": "Submitted — awaiting instructor review"
     },
     "errors": {
       "INVALID_INPUT": "Please review your answers and try again.",
@@ -344,7 +529,8 @@
       "NOT_FOUND": "Quiz or attempt not found.",
       "NOT_IN_PROGRESS": "This attempt has already been submitted.",
       "INVALID_ANSWERS": "Some answers didn't match the quiz.",
-      "INTERNAL_ERROR": "Something went wrong. Please try again."
+      "INTERNAL_ERROR": "Something went wrong. Please try again.",
+      "MAX_ATTEMPTS_REACHED": "You have used all attempts for this quiz."
     }
   },
   "completions": {

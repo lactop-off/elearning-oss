@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CreateLessonSchema } from './lesson';
+import { CreateLessonSchema, ReorderLessonsSchema, UpdateLessonSchema } from './lesson';
 
 describe('CreateLessonSchema', () => {
   it('accepts a complete payload', () => {
@@ -40,6 +40,62 @@ describe('CreateLessonSchema', () => {
         title: 'Intro',
         content: 'x'.repeat(20001),
       }).success,
+    ).toBe(false);
+  });
+});
+
+describe('UpdateLessonSchema', () => {
+  it('accepts a complete update payload', () => {
+    const result = UpdateLessonSchema.safeParse({
+      lessonId: 'l1',
+      title: 'New title',
+      content: 'New body',
+      isRequired: false,
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects an empty lessonId', () => {
+    expect(
+      UpdateLessonSchema.safeParse({ lessonId: '', title: 'x' }).success,
+    ).toBe(false);
+  });
+
+  it('rejects an empty title', () => {
+    expect(
+      UpdateLessonSchema.safeParse({ lessonId: 'l1', title: '' }).success,
+    ).toBe(false);
+  });
+});
+
+describe('ReorderLessonsSchema', () => {
+  it('accepts a non-empty ordered list', () => {
+    expect(
+      ReorderLessonsSchema.safeParse({
+        courseId: 'c1',
+        orderedLessonIds: ['l1', 'l2', 'l3'],
+      }).success,
+    ).toBe(true);
+  });
+
+  it('rejects an empty list', () => {
+    expect(
+      ReorderLessonsSchema.safeParse({ courseId: 'c1', orderedLessonIds: [] }).success,
+    ).toBe(false);
+  });
+
+  it('rejects duplicate lessonIds', () => {
+    expect(
+      ReorderLessonsSchema.safeParse({
+        courseId: 'c1',
+        orderedLessonIds: ['l1', 'l2', 'l1'],
+      }).success,
+    ).toBe(false);
+  });
+
+  it('rejects empty courseId', () => {
+    expect(
+      ReorderLessonsSchema.safeParse({ courseId: '', orderedLessonIds: ['l1'] }).success,
     ).toBe(false);
   });
 });

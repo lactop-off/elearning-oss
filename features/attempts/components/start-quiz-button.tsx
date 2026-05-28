@@ -8,7 +8,13 @@ import { Button } from '@/components/ui/button';
 import { startAttemptAction } from '@/features/attempts/actions/start-attempt';
 import { useRouter } from '@/i18n/navigation';
 
-const KNOWN = ['INVALID_INPUT', 'UNAUTHORIZED', 'NOT_FOUND', 'INTERNAL_ERROR'] as const;
+const KNOWN = [
+  'INVALID_INPUT',
+  'UNAUTHORIZED',
+  'NOT_FOUND',
+  'MAX_ATTEMPTS_REACHED',
+  'INTERNAL_ERROR',
+] as const;
 type KnownErrorCode = (typeof KNOWN)[number];
 
 function isKnown(code: string): code is KnownErrorCode {

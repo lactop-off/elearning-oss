@@ -1,0 +1,13 @@
+node_modules
+.next
+.git
+.env
+.env*.local
+.env.development
+.env.production
+lib/generated
+coverage
+playwright-report
+test-results
+npm-debug.log*
+*.log

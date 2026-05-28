@@ -72,7 +72,7 @@ export default async function LessonReadPage({
           <p className="text-xs text-muted-foreground">
             {t('lessonNumber', { order: lesson.order })}
           </p>
-          <h1 className="text-3xl font-semibold tracking-tight">{lesson.title}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">{lesson.title}</h1>
           <p className="text-xs text-muted-foreground">
             {lesson.isRequired ? t('required') : t('optional')}
           </p>

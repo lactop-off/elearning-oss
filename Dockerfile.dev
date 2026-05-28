@@ -1,0 +1,26 @@
+# 開発用イメージ (next dev + ホットリロード)。本番ビルドには使わない。
+FROM node:22-bookworm-slim
+
+# Prisma の generate / クエリに必要 (openssl) と HTTPS 取得用の証明書
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends openssl ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# 依存を先にインストールしてレイヤーキャッシュを効かせる。
+# postinstall の `prisma generate` はこの時点ではホスト側へ反映されないため、
+# 実際の generate はコンテナ起動コマンド (docker-compose の command) で行う。
+COPY package.json package-lock.json ./
+# postinstall の `prisma generate` はスキーマ未コピーのこの段階では失敗するため除外。
+# generate はコンテナ起動コマンド (docker-compose の command) で実行する。
+RUN npm ci --ignore-scripts
+
+# ソースはランタイムでバインドマウントされる (docker-compose.yml の volumes 参照)。
+# ビルド時の COPY は CI 等でマウントせず使う場合のフォールバック。
+COPY . .
+
+EXPOSE 3000
+
+# 0.0.0.0 で listen しないとホストからアクセスできない
+CMD ["npm", "run", "dev", "--", "-H", "0.0.0.0"]

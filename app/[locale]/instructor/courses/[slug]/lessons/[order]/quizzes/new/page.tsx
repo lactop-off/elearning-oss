@@ -51,7 +51,7 @@ export default async function NewQuizPage({
       </p>
       <Card>
         <CardHeader>
-          <CardTitle asChild>
+          <CardTitle asChild className="text-2xl font-semibold tracking-tight">
             <h1>{t('title')}</h1>
           </CardTitle>
           <CardDescription>{t('description')}</CardDescription>

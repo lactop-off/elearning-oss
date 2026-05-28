@@ -16,6 +16,7 @@ argument-hint: (なし — git diff の内容を検証)
    - test-coverage-gate
    - unit-test-runner-gate
    - accessibility-gate
+   - design-gate
    - security-gate
    - performance-gate
    - i18n-gate

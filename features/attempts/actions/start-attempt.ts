@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
 import {
+  countCompletedAttempts,
   findInProgressAttempt,
   startAttempt,
 } from '@/features/attempts/data/attempts';
@@ -19,7 +20,12 @@ type StartAttemptResult =
   | { ok: true; data: { attemptId: string; resumed: boolean } }
   | {
       ok: false;
-      error: 'INVALID_INPUT' | 'UNAUTHORIZED' | 'NOT_FOUND' | 'INTERNAL_ERROR';
+      error:
+        | 'INVALID_INPUT'
+        | 'UNAUTHORIZED'
+        | 'NOT_FOUND'
+        | 'MAX_ATTEMPTS_REACHED'
+        | 'INTERNAL_ERROR';
     };
 
 export async function startAttemptAction(input: unknown): Promise<StartAttemptResult> {
@@ -44,6 +50,14 @@ export async function startAttemptAction(input: unknown): Promise<StartAttemptRe
     const existing = await findInProgressAttempt(user.id, quiz.id);
     if (existing) {
       return { ok: true, data: { attemptId: existing.id, resumed: true } };
+    }
+    // Enforce Quiz.maxAttempts: only completed attempts count, so a stuck
+    // IN_PROGRESS attempt (returned above) doesn't lock the user out.
+    if (quiz.maxAttempts !== null) {
+      const completed = await countCompletedAttempts(user.id, quiz.id);
+      if (completed >= quiz.maxAttempts) {
+        return { ok: false, error: 'MAX_ATTEMPTS_REACHED' };
+      }
     }
     const attempt = await startAttempt(user.id, quiz.id);
     revalidatePath(`/learn/${parsed.data.courseSlug}/quizzes/${quiz.id}`);

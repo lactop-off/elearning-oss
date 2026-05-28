@@ -12,7 +12,12 @@ import { findEnrolledCourseBySlug } from '@/features/enrollments/data/enrollment
 import { AuthError, requireUser } from '@/lib/auth';
 
 type SubmitAttemptResult =
-  | { ok: true; data: { score: number; passed: boolean } }
+  | {
+      ok: true;
+      // When `pending` is true the attempt has at least one TEXT answer
+      // waiting for the instructor — score/passed are null until then.
+      data: { score: number | null; passed: boolean | null; pending: boolean };
+    }
   | {
       ok: false;
       error:
@@ -56,6 +61,7 @@ export async function submitAttemptAction(
     result = await gradeAndSubmitAttempt({
       attemptId: attempt.id,
       userId: user.id,
+      autoSubmitted: parsed.data.autoSubmitted,
       answers: parsed.data.answers,
     });
   } catch (e) {
@@ -66,11 +72,11 @@ export async function submitAttemptAction(
     return { ok: false, error: result.error };
   }
 
-  // If this submission was a passing one, re-run the completion check so a
-  // newly-met requirement flips the course to "complete" and issues a cert.
-  // Failures here mustn't surface to the learner — the score was recorded
-  // successfully.
-  if (result.passed) {
+  // Only re-run the completion check if this submission was an unambiguous
+  // pass (passed === true). Pending attempts (TEXT answers waiting for the
+  // instructor) leave passed=null and must NOT trigger completion until the
+  // instructor finishes grading.
+  if (result.passed === true) {
     try {
       const enrollment = await findEnrolledCourseBySlug(user.id, context.courseSlug);
       if (enrollment) {
@@ -86,5 +92,12 @@ export async function submitAttemptAction(
 
   revalidatePath(`/learn/${context.courseSlug}/quizzes/${attempt.quizId}`);
   revalidatePath(`/learn/${context.courseSlug}`);
-  return { ok: true, data: { score: result.score, passed: result.passed } };
+  return {
+    ok: true,
+    data: {
+      score: result.score,
+      passed: result.passed,
+      pending: result.pending,
+    },
+  };
 }

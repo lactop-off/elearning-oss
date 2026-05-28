@@ -29,11 +29,85 @@ describe('SubmitAttemptSchema', () => {
     );
   });
 
+  it('accepts an empty answers array when autoSubmitted is true', () => {
+    expect(
+      SubmitAttemptSchema.safeParse({
+        attemptId: 'a1',
+        autoSubmitted: true,
+        answers: [],
+      }).success,
+    ).toBe(true);
+  });
+
   it('rejects an answer with no choiceIds', () => {
     expect(
       SubmitAttemptSchema.safeParse({
         attemptId: 'a1',
         answers: [{ questionId: 'q1', choiceIds: [] }],
+      }).success,
+    ).toBe(false);
+  });
+
+  it('accepts a text answer', () => {
+    expect(
+      SubmitAttemptSchema.safeParse({
+        attemptId: 'a1',
+        answers: [
+          {
+            questionId: 'q1',
+            textAnswer: 'Because 2 has no other divisors except 1 and itself.',
+          },
+        ],
+      }).success,
+    ).toBe(true);
+  });
+
+  it('accepts a mix of choice and text answers in one submission', () => {
+    expect(
+      SubmitAttemptSchema.safeParse({
+        attemptId: 'a1',
+        answers: [
+          { questionId: 'q1', choiceIds: ['c1'] },
+          { questionId: 'q2', textAnswer: 'long answer' },
+        ],
+      }).success,
+    ).toBe(true);
+  });
+
+  it('rejects an answer that supplies both choiceIds and textAnswer', () => {
+    expect(
+      SubmitAttemptSchema.safeParse({
+        attemptId: 'a1',
+        answers: [
+          { questionId: 'q1', choiceIds: ['c1'], textAnswer: 'oops both' },
+        ],
+      }).success,
+    ).toBe(false);
+  });
+
+  it('rejects an answer that supplies neither choiceIds nor textAnswer', () => {
+    expect(
+      SubmitAttemptSchema.safeParse({
+        attemptId: 'a1',
+        answers: [{ questionId: 'q1' }],
+      }).success,
+    ).toBe(false);
+  });
+
+  it('rejects an empty text answer', () => {
+    expect(
+      SubmitAttemptSchema.safeParse({
+        attemptId: 'a1',
+        answers: [{ questionId: 'q1', textAnswer: '' }],
+      }).success,
+    ).toBe(false);
+  });
+
+  it('rejects a text answer over 5000 characters', () => {
+    expect(
+      SubmitAttemptSchema.safeParse({
+        attemptId: 'a1',
+        answers: [{ questionId: 'q1', textAnswer: 'x'.repeat(5001) }],
       }).success,
     ).toBe(false);
   });

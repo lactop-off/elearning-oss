@@ -1,9 +1,12 @@
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { QuestionForm } from '@/features/quizzes/components/question-form';
-import { QuestionList } from '@/features/quizzes/components/question-list';
+import { SortableQuestionList } from '@/features/quizzes/components/sortable-question-list';
+import { QuizDeleteButton } from '@/features/quizzes/components/quiz-delete-button';
+import { listPendingAttemptsForQuizOwnedBy } from '@/features/attempts/data/attempts';
 import { listQuestionsByQuiz } from '@/features/quizzes/data/questions';
 import { findQuizOwnedByInstructor } from '@/features/quizzes/data/quizzes';
 import { Link, redirect } from '@/i18n/navigation';
@@ -30,9 +33,12 @@ export default async function InstructorQuizPage({
   const quiz = await findQuizOwnedByInstructor(quizId, user.id);
   if (!quiz || quiz.course.slug !== slug) notFound();
 
-  const [questions, t] = await Promise.all([
+  const [questions, pendingAttempts, t, tList, tGrading] = await Promise.all([
     listQuestionsByQuiz(quiz.id),
+    listPendingAttemptsForQuizOwnedBy(quiz.id, user.id),
     getTranslations('quizzes.manage'),
+    getTranslations('quizzes.list'),
+    getTranslations('quizzes.grading'),
   ]);
 
   return (
@@ -52,14 +58,45 @@ export default async function InstructorQuizPage({
             ? t('attachedToLesson', { order: quiz.lesson.order, title: quiz.lesson.title })
             : t('attachedToCourse')}
         </p>
-        <h1 className="text-2xl font-semibold tracking-tight">{quiz.title}</h1>
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <h1 className="text-2xl font-semibold tracking-tight">{quiz.title}</h1>
+          <div className="flex shrink-0 flex-wrap gap-2">
+            <Button asChild variant="outline" size="sm">
+              <Link href={`/instructor/courses/${slug}/quizzes/${quiz.id}/grading`}>
+                {tGrading('listHeading')}
+                {pendingAttempts.length > 0
+                  ? ` (${tGrading('pendingCountLabel', { count: pendingAttempts.length })})`
+                  : ''}
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link href={`/instructor/courses/${slug}/quizzes/${quiz.id}/edit`}>
+                {tList('edit')}
+              </Link>
+            </Button>
+            <QuizDeleteButton
+              quizId={quiz.id}
+              quizTitle={quiz.title}
+              courseSlug={slug}
+            />
+          </div>
+        </div>
         {quiz.description ? (
           <p className="text-muted-foreground">{quiz.description}</p>
         ) : null}
         <p className="text-sm text-muted-foreground">
-          {t('meta', {
+          {t('metaWithLimits', {
             passing: quiz.passingScore,
             required: quiz.isRequired ? t('isRequired') : t('isOptional'),
+            timeLimit:
+              quiz.timeLimitSec === null
+                ? t('noTimeLimit')
+                : `${quiz.timeLimitSec}s`,
+            maxAttempts:
+              quiz.maxAttempts === null
+                ? t('unlimitedAttempts')
+                : String(quiz.maxAttempts),
+            shuffle: quiz.shuffleChoices ? t('shuffleOn') : t('shuffleOff'),
           })}
         </p>
       </header>
@@ -68,7 +105,7 @@ export default async function InstructorQuizPage({
         <h2 id="questions-heading" className="text-lg font-semibold">
           {t('questionsHeading', { count: questions.length })}
         </h2>
-        <QuestionList questions={questions} />
+        <SortableQuestionList quizId={quiz.id} questions={questions} />
       </section>
 
       <section aria-labelledby="add-question-heading" className="grid gap-3">

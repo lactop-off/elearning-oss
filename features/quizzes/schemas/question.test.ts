@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { AddQuestionSchema } from './question';
+import { AddQuestionSchema, ReorderQuestionsSchema } from './question';
 
 describe('AddQuestionSchema (SINGLE_CHOICE)', () => {
   function basePayload() {
@@ -103,6 +103,88 @@ describe('AddQuestionSchema (MULTI_CHOICE)', () => {
         choices: [{ body: 'a' }, { body: 'b' }],
         correctChoiceIndices: [0, 1],
       }).success,
+    ).toBe(false);
+  });
+});
+
+describe('AddQuestionSchema (TEXT)', () => {
+  function basePayload() {
+    return {
+      type: 'TEXT' as const,
+      quizId: 'q1',
+      body: 'Explain why 2 is the only even prime.',
+      points: 5,
+    };
+  }
+
+  it('accepts a TEXT question without a model answer', () => {
+    expect(AddQuestionSchema.safeParse(basePayload()).success).toBe(true);
+  });
+
+  it('accepts a TEXT question with an optional model answer', () => {
+    expect(
+      AddQuestionSchema.safeParse({
+        ...basePayload(),
+        modelAnswer: 'Any other even number is divisible by 2.',
+      }).success,
+    ).toBe(true);
+  });
+
+  it('rejects an empty question body', () => {
+    expect(
+      AddQuestionSchema.safeParse({ ...basePayload(), body: '' }).success,
+    ).toBe(false);
+  });
+
+  it('rejects a model answer over 2000 characters', () => {
+    expect(
+      AddQuestionSchema.safeParse({
+        ...basePayload(),
+        modelAnswer: 'x'.repeat(2001),
+      }).success,
+    ).toBe(false);
+  });
+
+  it('ignores choice fields supplied for a TEXT type (discriminated union)', () => {
+    // The TEXT branch does not declare `choices`; extra fields are stripped or
+    // ignored. Either way, the result must validate.
+    expect(
+      AddQuestionSchema.safeParse({
+        ...basePayload(),
+        choices: [{ body: 'spurious' }, { body: 'extras' }],
+      }).success,
+    ).toBe(true);
+  });
+});
+
+describe('ReorderQuestionsSchema', () => {
+  it('accepts a non-empty ordered list', () => {
+    expect(
+      ReorderQuestionsSchema.safeParse({
+        quizId: 'q1',
+        orderedQuestionIds: ['qq1', 'qq2'],
+      }).success,
+    ).toBe(true);
+  });
+
+  it('rejects an empty list', () => {
+    expect(
+      ReorderQuestionsSchema.safeParse({ quizId: 'q1', orderedQuestionIds: [] }).success,
+    ).toBe(false);
+  });
+
+  it('rejects duplicate questionIds', () => {
+    expect(
+      ReorderQuestionsSchema.safeParse({
+        quizId: 'q1',
+        orderedQuestionIds: ['qq1', 'qq2', 'qq1'],
+      }).success,
+    ).toBe(false);
+  });
+
+  it('rejects empty quizId', () => {
+    expect(
+      ReorderQuestionsSchema.safeParse({ quizId: '', orderedQuestionIds: ['qq1'] }).success,
     ).toBe(false);
   });
 });

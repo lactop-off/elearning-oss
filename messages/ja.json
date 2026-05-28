@@ -1,7 +1,14 @@
 {
   "common": {
     "appName": "E-learning OSS",
-    "appDescription": "コース、クイズ、学習進捗トラッキングのためのオープンソースプラットフォームです。"
+    "appDescription": "コース、クイズ、学習進捗トラッキングのためのオープンソースプラットフォームです。",
+    "loading": "読み込み中…"
+  },
+  "errorPage": {
+    "title": "問題が発生しました",
+    "description": "予期しないエラーが発生しました。もう一度お試しいただくか、ホームに戻ってください。",
+    "retry": "再試行",
+    "home": "ホームに戻る"
   },
   "nav": {
     "primary": "メインナビゲーション",
@@ -10,6 +17,11 @@
     "myCourses": "マイコース",
     "signedInAria": "{name} でログイン中"
   },
+  "footer": {
+    "tagline": "オープンソースの学習プラットフォーム",
+    "aria": "フッター",
+    "copyright": "© {year} E-learning OSS"
+  },
   "roles": {
     "LEARNER": "学習者",
     "INSTRUCTOR": "講師",
@@ -17,7 +29,26 @@
   },
   "home": {
     "signedInAs": "{name} さんでログイン中",
-    "roleLabel": "({role})"
+    "roleLabel": "({role})",
+    "eyebrow": "オープンソースの学習プラットフォーム",
+    "browseCatalog": "コース一覧を見る",
+    "continueLearning": "学習を続ける",
+    "manageCourses": "コースを管理",
+    "features": {
+      "heading": "教える・学ぶに必要なものを一通り",
+      "courses": {
+        "title": "体系的なコース",
+        "description": "レッスンをコース単位で整理し、自分のペースで学習を進められます。"
+      },
+      "quizzes": {
+        "title": "自動採点クイズ",
+        "description": "単一・複数選択を即時採点。合格基準も明確です。"
+      },
+      "certificate": {
+        "title": "修了証の発行",
+        "description": "必修レッスンとクイズをすべて修了すると、検証可能な修了証を取得できます。"
+      }
+    }
   },
   "auth": {
     "signIn": {
@@ -70,6 +101,7 @@
   },
   "courses": {
     "new": {
+      "backLink": "← マイコース一覧に戻る",
       "title": "新しいコースを作成",
       "description": "基本情報を入力します。保存後にレッスンやクイズを追加できます。",
       "titleLabel": "コース名",
@@ -127,7 +159,9 @@
       "empty": "まだレッスンがありません。最初の 1 つを追加してください。",
       "required": "必修",
       "optional": "任意",
-      "contentTypeLabel": "形式: {type}"
+      "contentTypeLabel": "形式: {type}",
+      "edit": "編集",
+      "dragHandleAria": "レッスン {order}「{title}」をドラッグして並び替え"
     },
     "new": {
       "title": "レッスンを追加",
@@ -142,14 +176,40 @@
       "submit": "保存",
       "submitting": "保存中..."
     },
+    "edit": {
+      "title": "レッスン {order} を編集",
+      "description": "レッスンの内容を更新します。",
+      "backLink": "← コース詳細に戻る",
+      "titleLabel": "レッスン名",
+      "titlePlaceholder": "例: 変数と定数",
+      "contentLabel": "本文",
+      "contentPlaceholder": "レッスンの本文を入力してください。",
+      "contentHelper": "今のところプレーンテキストのみ。最大 20,000 文字。",
+      "requiredLabel": "コース修了に必須",
+      "submit": "保存",
+      "submitting": "保存中..."
+    },
+    "delete": {
+      "trigger": "削除",
+      "title": "レッスンを削除しますか?",
+      "description": "「{title}」を削除します。学習者の進捗・このレッスンに紐づくクイズと回答も削除されます。この操作は元に戻せません。",
+      "cancel": "キャンセル",
+      "confirm": "削除する",
+      "confirming": "削除中..."
+    },
     "toast": {
-      "created": "レッスンを追加しました"
+      "created": "レッスンを追加しました",
+      "updated": "レッスンを更新しました",
+      "deleted": "レッスンを削除しました",
+      "reordered": "並び順を更新しました"
     },
     "errors": {
       "INVALID_INPUT": "入力内容を確認してください。",
       "UNAUTHORIZED": "サインインしてください。",
-      "FORBIDDEN": "コースの所有者のみがレッスンを追加できます。",
+      "FORBIDDEN": "コースの所有者のみがレッスンを操作できます。",
       "COURSE_NOT_FOUND": "コースが見つかりません。または所有していません。",
+      "LESSON_NOT_FOUND": "レッスンが見つかりません。または所有していません。",
+      "SET_MISMATCH": "並び順の更新に失敗しました。ページを再読み込みしてください。",
       "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
     }
   },
@@ -159,6 +219,7 @@
     "listAria": "受講可能なコース",
     "empty": "まだ公開されているコースはありません。少し時間をおいてご確認ください。",
     "byInstructor": "講師: {name}",
+    "viewCourse": "コースを見る",
     "detail": {
       "backLink": "← コース一覧に戻る",
       "byInstructor": "講師: {name}",
@@ -187,6 +248,10 @@
     "subheading": "受講登録しているコースの一覧です。",
     "listAria": "受講中のコース一覧",
     "byInstructor": "講師: {name}",
+    "statusCompleted": "修了",
+    "statusInProgress": "受講中",
+    "continueCta": "学習を続ける",
+    "reviewCta": "コースを復習する",
     "empty": {
       "message": "まだコースを受講していません。",
       "cta": "コース一覧を見る"
@@ -232,7 +297,48 @@
       "passingScoreHelper": "学習者は最低この割合の得点が必要です。",
       "requiredLabel": "コース修了に必須",
       "submit": "クイズを作成",
-      "submitting": "作成中..."
+      "submitting": "作成中...",
+      "timeLimitSecLabel": "制限時間 (秒)",
+      "timeLimitSecHelper": "空欄で無制限。範囲: 30〜14400 (4 時間)。",
+      "timeLimitSecPlaceholder": "無制限",
+      "maxAttemptsLabel": "受験回数の上限",
+      "maxAttemptsHelper": "空欄で無制限。範囲: 1〜50。",
+      "maxAttemptsPlaceholder": "無制限",
+      "shuffleChoicesLabel": "選択肢をシャッフル",
+      "shuffleChoicesHelper": "各学習者に選択肢の順序を変えて表示します (TEXT 問題には影響しません)。"
+    },
+    "edit": {
+      "title": "クイズを編集",
+      "description": "クイズのメタ情報を更新します。質問は別途管理します。",
+      "backLink": "← {quizTitle} に戻る",
+      "titleLabel": "クイズ名",
+      "titlePlaceholder": "例: 章末確認",
+      "descriptionLabel": "説明",
+      "descriptionPlaceholder": "学習者向けの任意の補足。",
+      "passingScoreLabel": "合格スコア (%)",
+      "passingScoreHelper": "学習者は最低この割合の得点が必要です。",
+      "requiredLabel": "コース修了に必須",
+      "submit": "保存",
+      "submitting": "保存中...",
+      "timeLimitSecLabel": "制限時間 (秒)",
+      "timeLimitSecHelper": "空欄で無制限。範囲: 30〜14400 (4 時間)。",
+      "timeLimitSecPlaceholder": "無制限",
+      "maxAttemptsLabel": "受験回数の上限",
+      "maxAttemptsHelper": "空欄で無制限。範囲: 1〜50。",
+      "maxAttemptsPlaceholder": "無制限",
+      "shuffleChoicesLabel": "選択肢をシャッフル",
+      "shuffleChoicesHelper": "各学習者に選択肢の順序を変えて表示します (TEXT 問題には影響しません)。"
+    },
+    "delete": {
+      "trigger": "削除",
+      "title": "クイズを削除しますか?",
+      "description": "「{title}」をすべての質問・学習者の解答とともに削除します。この操作は元に戻せません。",
+      "cancel": "キャンセル",
+      "confirm": "削除する",
+      "confirming": "削除中..."
+    },
+    "list": {
+      "edit": "編集"
     },
     "manage": {
       "backLink": "← {courseTitle} に戻る",
@@ -244,7 +350,12 @@
       "questionsHeading": "質問 ({count})",
       "addQuestionHeading": "質問を追加",
       "addQuestionTitle": "新しい質問",
-      "addQuestionDescription": "単一選択式。正解を 1 つ選択してください。"
+      "addQuestionDescription": "単一選択式。正解を 1 つ選択してください。",
+      "metaWithLimits": "合格: {passing}% · {required} · 制限時間: {timeLimit} · 受験回数: {maxAttempts} · シャッフル: {shuffle}",
+      "noTimeLimit": "無制限",
+      "unlimitedAttempts": "無制限",
+      "shuffleOn": "あり",
+      "shuffleOff": "なし"
     },
     "questionForm": {
       "typeLabel": "質問タイプ",
@@ -265,7 +376,12 @@
       "removeChoiceAria": "選択肢 {index} を削除",
       "addChoice": "選択肢を追加",
       "submit": "質問を追加",
-      "submitting": "保存中..."
+      "submitting": "保存中...",
+      "typeText": "自由記述",
+      "typeTextHelper": "学習者が自由に記述した回答を、提出後に講師が手動採点します。",
+      "modelAnswerLabel": "模範解答 (任意)",
+      "modelAnswerPlaceholder": "採点時に参照する模範解答",
+      "modelAnswerHelper": "最大 2000 文字。講師にのみ表示され、学習者には公開されません。"
     },
     "questionList": {
       "listAria": "クイズの質問一覧",
@@ -274,7 +390,16 @@
       "typeSingle": "単一選択",
       "typeMulti": "複数選択",
       "choicesAria": "選択肢",
-      "correctMarker": "✓ 正解"
+      "correctMarker": "✓ 正解",
+      "dragHandleAria": "質問 {order}「{body}」をドラッグして並び替え"
+    },
+    "questionDelete": {
+      "trigger": "削除",
+      "title": "質問を削除しますか?",
+      "description": "「{body}」と、その選択肢・既存の解答を削除します。この操作は元に戻せません。",
+      "cancel": "キャンセル",
+      "confirm": "削除する",
+      "confirming": "削除中..."
     },
     "overview": {
       "listAria": "レッスン別クイズ",
@@ -289,7 +414,11 @@
     },
     "toast": {
       "created": "クイズを作成しました",
-      "questionAdded": "質問を追加しました"
+      "updated": "クイズを更新しました",
+      "deleted": "クイズを削除しました",
+      "questionAdded": "質問を追加しました",
+      "questionDeleted": "質問を削除しました",
+      "questionsReordered": "質問の並び順を更新しました"
     },
     "errors": {
       "INVALID_INPUT": "入力内容を確認してください。",
@@ -297,7 +426,48 @@
       "FORBIDDEN": "コース所有者のみがクイズを管理できます。",
       "LESSON_NOT_FOUND": "レッスンが見つかりません。",
       "QUIZ_NOT_FOUND": "クイズが見つかりません。",
-      "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
+      "QUESTION_NOT_FOUND": "質問が見つかりません。",
+      "SET_MISMATCH": "並び順の更新に失敗しました。ページを再読み込みしてください。",
+      "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。",
+      "MAX_ATTEMPTS_REACHED": "このクイズの受験回数の上限に達しました。"
+    },
+    "grading": {
+      "listHeading": "採点待ち一覧",
+      "listDescription": "このクイズで採点をお待ちの提出一覧です。",
+      "listBackLink": "← クイズに戻る",
+      "listEmpty": "採点を待っている提出はありません。",
+      "queueAria": "採点待ちの提出一覧",
+      "learnerLabel": "学習者",
+      "submittedAtLabel": "提出日時",
+      "pendingCountLabel": "{count} 件",
+      "gradeCta": "採点する",
+      "detailHeading": "{name} さんの提出を採点",
+      "detailDescription": "自由記述の回答を 1 件ずつ確認し、正解/不正解を判定してください。",
+      "detailBackLink": "← 採点待ち一覧に戻る",
+      "questionLabel": "設問",
+      "modelAnswerLabel": "模範解答 (講師用)",
+      "modelAnswerEmpty": "模範解答は設定されていません。",
+      "learnerAnswerLabel": "学習者の回答",
+      "pointsAwardedLabel": "付与する得点",
+      "pointsAwardedHelper": "この設問の上限は {max} 点です。",
+      "markCorrect": "正解にする (満点)",
+      "markIncorrect": "不正解にする (0 点)",
+      "submit": "採点を確定",
+      "submitting": "保存中...",
+      "toast": {
+        "graded": "採点を確定しました — スコア {score}%",
+        "gradedPassed": "採点を確定 — 合格 (スコア {score}%)"
+      },
+      "errors": {
+        "INVALID_INPUT": "入力に誤りがあります。",
+        "UNAUTHORIZED": "サインインしてください。",
+        "FORBIDDEN": "この提出を採点する権限がありません。",
+        "NOT_FOUND": "提出が見つからないか、すでに採点済みです。",
+        "NOT_PENDING": "この提出は採点待ちではありません。",
+        "INVALID_GRADINGS": "各回答に 1 件ずつ採点が必要です。",
+        "POINTS_EXCEED": "付与する得点が設問の上限を超えています。",
+        "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
+      }
     }
   },
   "attempts": {
@@ -312,7 +482,10 @@
       "retakeCta": "もう一度受験"
     },
     "start": {
-      "working": "開始中..."
+      "working": "開始中...",
+      "attemptsUsed": "受験回数: {used} / {max}",
+      "attemptsRemaining": "残り {remaining} 回",
+      "maxReached": "受験回数の上限に達しました"
     },
     "take": {
       "questionsAria": "クイズの質問",
@@ -321,7 +494,13 @@
       "typeMulti": "あてはまるものを全て選ぶ",
       "submit": "回答を送信",
       "working": "採点中...",
-      "selectAtLeastOne": "1 問以上に回答してから送信してください。"
+      "selectAtLeastOne": "1 問以上に回答してから送信してください。",
+      "typeText": "自由記述",
+      "textAnswerPlaceholder": "ここに回答を入力してください…",
+      "textAnswerAria": "問題 {order} への回答",
+      "answerRequired": "少なくとも 1 問は回答してから提出してください。",
+      "timeRemainingLabel": "残り時間",
+      "autoSubmittedNotice": "時間切れのため自動で提出しました。"
     },
     "result": {
       "passTitle": "合格しました！",
@@ -332,11 +511,17 @@
       "correct": "正解 · +{points} 点",
       "incorrect": "{awarded} / {possible} 点",
       "correctMarker": "✓ 正解",
-      "yourPickMarker": "あなたの回答"
+      "yourPickMarker": "あなたの回答",
+      "pendingTitle": "講師の採点をお待ちください",
+      "pendingSummary": "自由記述問題が含まれています。講師の採点が完了するとスコアが確定します。",
+      "pendingMarker": "採点待ち",
+      "yourTextAnswerLabel": "あなたの回答",
+      "emptyTextAnswer": "（未回答）"
     },
     "toast": {
       "passed": "{score}% で合格",
-      "submitted": "送信しました — 得点 {score}%"
+      "submitted": "送信しました — 得点 {score}%",
+      "pending": "提出しました — 講師の採点をお待ちください"
     },
     "errors": {
       "INVALID_INPUT": "回答内容を見直して再送信してください。",
@@ -344,7 +529,8 @@
       "NOT_FOUND": "クイズまたは受験記録が見つかりません。",
       "NOT_IN_PROGRESS": "この受験は既に送信済みです。",
       "INVALID_ANSWERS": "クイズに含まれない回答が混ざっています。",
-      "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
+      "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。",
+      "MAX_ATTEMPTS_REACHED": "このクイズの受験回数の上限に達しました。"
     }
   },
   "completions": {

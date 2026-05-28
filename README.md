@@ -38,7 +38,7 @@
 ├── settings.local.json           # 個人ローカル設定 (gitignore)
 ├── agents/
 │   ├── builders/                 # 実装エージェント (5 種)
-│   └── gates/                    # 品質ゲート (11 種)
+│   └── gates/                    # 品質ゲート (12 種)
 └── commands/
     ├── build-with-gates.md       # メインの自動ループコマンド
     ├── verify-only.md            # 検証のみ
@@ -66,6 +66,7 @@
 | `unit-test-runner-gate` | `npm test` 実行結果 |
 | `e2e-test-gate` | Playwright + axe |
 | `accessibility-gate` | WCAG 2.1 AA |
+| `design-gate` | 視覚デザイン (トークン遵守、余白/タイポ階層、一貫性) |
 | `security-gate` | OWASP Top 10、認可漏れ |
 | `performance-gate` | N+1、bundle size |
 | `i18n-gate` | ハードコード、翻訳整合性 |
@@ -98,38 +99,51 @@
 ## セットアップ
 
 ### 必要なもの
-- Node.js 20+
-- Docker (PostgreSQL 用、ローカル開発のみ)
+- Docker / Docker Compose (アプリ + PostgreSQL を両方コンテナで起動)
+- Node.js 20+ (任意 — ホストで直接動かしたい / CLI を使いたい場合のみ)
 
-### 手順
+開発環境は Docker で完結します (Node 22 LTS のアプリコンテナ + PostgreSQL 16)。
+ホストに Node を入れず、コンテナだけで開発できます。
+
+### 手順 (Docker, 推奨)
 
 ```bash
-# 1. 依存パッケージのインストール
-npm install
-
-# 2. 環境変数の準備
+# 1. 環境変数の準備
 cp .env.example .env
 # .env を編集 — 最低限 AUTH_SECRET を設定する:
 #   openssl rand -base64 32
+# ※ DATABASE_URL はコンテナ内では compose 側で postgres サービスを指すよう自動上書きされる
 
-# 3. PostgreSQL の起動 (docker)
-docker compose up -d
+# 2. アプリ + PostgreSQL を起動 (初回はイメージビルドが走る)
+docker compose up -d --build
+# アプリは起動時に prisma generate → next dev を実行する
 
-# 4. マイグレーション
-npm run db:migrate
+# 3. マイグレーション (アプリコンテナ内で実行)
+docker compose exec app npm run db:migrate
 
-# 5. デモデータ投入
-npm run db:seed
+# 4. デモデータ投入
+docker compose exec app npm run db:seed
 # → admin@example.com / instructor@example.com / learner@example.com
 #    すべて共通パスワード: demo1234
 
-# 6. 開発サーバー起動
-npm run dev
-# http://localhost:3000
+# http://localhost:3000 でアクセス
 
-# テスト実行
-npm test           # Vitest
-npm run test:e2e   # Playwright (実 DB に対して)
+# ログ確認 / テスト実行
+docker compose logs -f app
+docker compose exec app npm test         # Vitest
+docker compose exec app npm run test:e2e # Playwright (実 DB に対して)
+```
+
+### 手順 (ホストで Node を動かす場合)
+
+```bash
+# PostgreSQL のみコンテナで起動し、アプリはホストで動かす
+docker compose up -d postgres
+npm install
+cp .env.example .env   # AUTH_SECRET を設定
+npm run db:migrate
+npm run db:seed
+npm run dev            # http://localhost:3000
 ```
 
 ### 終了するとき

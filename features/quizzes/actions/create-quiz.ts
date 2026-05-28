@@ -61,6 +61,9 @@ export async function createQuizAction(
       description: data.description,
       passingScore: data.passingScore,
       isRequired: data.isRequired,
+      timeLimitSec: data.timeLimitSec,
+      maxAttempts: data.maxAttempts,
+      shuffleChoices: data.shuffleChoices,
     });
     revalidatePath(`/instructor/courses/${context.courseSlug}`);
     return { ok: true, data: { quizId: quiz.id } };

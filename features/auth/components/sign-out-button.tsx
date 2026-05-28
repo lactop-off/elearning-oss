@@ -1,5 +1,6 @@
 'use client';
 
+import { LogOut } from 'lucide-react';
 import { useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
@@ -25,6 +26,7 @@ export function SignOutButton() {
 
   return (
     <Button variant="outline" size="sm" onClick={handleClick} disabled={isPending}>
+      <LogOut aria-hidden="true" />
       {isPending ? t('submitting') : t('submit')}
     </Button>
   );

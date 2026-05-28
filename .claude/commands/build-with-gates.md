@@ -30,7 +30,7 @@ argument-hint: <実装したいタスクの説明>
 2. 必要な Gate を選定 (基本は全 Gate、ただしタスクに応じて取捨):
    - **常に必要**: type-safety, lint-format, architecture
    - **コード変更時**: test-coverage, unit-test-runner
-   - **UI 変更時**: accessibility, i18n, performance
+   - **UI 変更時**: accessibility, design, i18n, performance
    - **バックエンド変更時**: security, performance, domain-logic
    - **DB 変更時**: domain-logic
    - **大きな変更時**: e2e-test
