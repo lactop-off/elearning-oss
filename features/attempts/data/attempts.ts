@@ -76,6 +76,24 @@ export async function startAttempt(userId: string, quizId: string): Promise<Atte
   });
 }
 
+/**
+ * Count the user's already-finalised attempts (any submission, manual or
+ * auto). Used to enforce Quiz.maxAttempts. IN_PROGRESS doesn't count — that
+ * would let a stuck attempt eat into the budget.
+ */
+export async function countCompletedAttempts(
+  userId: string,
+  quizId: string,
+): Promise<number> {
+  return prisma.attempt.count({
+    where: {
+      userId,
+      quizId,
+      status: { in: ['SUBMITTED', 'AUTO_SUBMITTED'] },
+    },
+  });
+}
+
 export type SubmitOutcome = {
   attemptId: string;
   // When `pending` is true (one or more TEXT answers are waiting for

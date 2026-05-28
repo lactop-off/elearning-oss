@@ -529,7 +529,8 @@
       "NOT_FOUND": "Quiz or attempt not found.",
       "NOT_IN_PROGRESS": "This attempt has already been submitted.",
       "INVALID_ANSWERS": "Some answers didn't match the quiz.",
-      "INTERNAL_ERROR": "Something went wrong. Please try again."
+      "INTERNAL_ERROR": "Something went wrong. Please try again.",
+      "MAX_ATTEMPTS_REACHED": "You have used all attempts for this quiz."
     }
   },
   "completions": {
