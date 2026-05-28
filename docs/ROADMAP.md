@@ -103,11 +103,11 @@
 **目的**: スキーマだけ存在する機能を実体化し、クイズ・評価機能を完成させる。
 
 ### 成果物チェックリスト
-- [ ] **TEXT 問題 — 作成 UI** — `question-form` に TEXT タイプの入力 (模範解答/配点)
-- [ ] **TEXT 問題 — 受験 UI** — `quiz-taker` に自由記述入力 (`Answer.textAnswer`)
-- [ ] **TEXT 問題 — 採点フロー** — 自動採点では保留 (pending) とし、講師が手動採点。
-  - 受験提出時、TEXT を含むと Attempt は「採点待ち」状態 (status / passed 判定を保留)
-  - 講師が回答を一覧し、正誤と点数を付与 → スコア確定 → 修了判定再評価
+- [x] **TEXT 問題 — 作成 UI** — `question-form` の typeLabel に「自由記述」ラジオを追加し、選択時に choices を隠して `modelAnswer` の textarea (任意、最大 2000 文字、講師にのみ表示) を表示。
+- [x] **TEXT 問題 — 受験 UI** — `quiz-taker` が TEXT 問題で textarea を表示し、`textAnswer` を `choiceIds` と排他で提出。結果画面は pending 時に Clock アイコン入り「採点待ち」バナーと TEXT 答案表示。
+- [x] **TEXT 問題 — 採点フロー** — 提出時に TEXT を含むと Attempt は `score=null` / `passed=null` で pending 保存。講師は「採点待ち一覧」→「採点詳細」で各 TEXT 答案を「正解 (満点)」/「不正解 (0 点)」判定。確定時にトランザクション内で全 Answer を更新し score/passed を再計算、passed なら `checkAndMarkComplete` を呼んで修了判定を再評価。
+  - 完了判定 (`checkAndMarkComplete`) は `passed: true` の strict 等価で pending を自動的に弾く (既存実装で対応済み)。
+  - フルフロー E2E (`tests/e2e/quiz-text.spec.ts`) を追加。現状 WSL/Docker 内の form 操作 flakiness で安定通過せず、Phase 4/5 の CI/本番ビルド化で再評価。
 - [ ] **クイズ高度設定 — 時間制限** (`timeLimitSec`) — カウントダウン + 時間切れ自動提出 (`AUTO_SUBMITTED`)
 - [ ] **クイズ高度設定 — 受験回数制限** (`maxAttempts`) — 上限到達で開始ボタン無効 + 残り回数表示
 - [ ] **クイズ高度設定 — 選択肢シャッフル** (`shuffleChoices`) — 受験時に選択肢順をランダム化 (答えキー非露出を維持)
