@@ -61,14 +61,35 @@ const MultiChoiceQuestion = BaseQuestion.extend({
     },
   );
 
+/**
+ * TEXT questions are free-form. They cannot be auto-graded — the instructor
+ * manually reviews each answer and assigns points. `modelAnswer` is an
+ * optional reference the instructor sets at creation time to help with
+ * consistent grading; it is NEVER exposed to learners.
+ */
+const TextQuestion = z.object({
+  quizId: z.string().min(1),
+  body: z.string().min(1, 'Question is required').max(1000, 'Question is too long'),
+  points: z
+    .number()
+    .int()
+    .min(1, 'Points must be ≥ 1')
+    .max(100, 'Points must be ≤ 100')
+    .default(1),
+  type: z.literal('TEXT'),
+  modelAnswer: z.string().max(2000, 'Model answer is too long').optional(),
+});
+
 export const AddQuestionSchema = z.discriminatedUnion('type', [
   SingleChoiceQuestion,
   MultiChoiceQuestion,
+  TextQuestion,
 ]);
 
 export type AddQuestionInput = z.infer<typeof AddQuestionSchema>;
 export type AddSingleChoiceQuestionInput = Extract<AddQuestionInput, { type: 'SINGLE_CHOICE' }>;
 export type AddMultiChoiceQuestionInput = Extract<AddQuestionInput, { type: 'MULTI_CHOICE' }>;
+export type AddTextQuestionInput = Extract<AddQuestionInput, { type: 'TEXT' }>;
 
 export const ReorderQuestionsSchema = z
   .object({

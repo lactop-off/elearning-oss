@@ -37,17 +37,19 @@ function isKnown(code: string): code is KnownErrorCode {
   return (KNOWN as readonly string[]).includes(code);
 }
 
-function defaultsForType(type: 'SINGLE_CHOICE' | 'MULTI_CHOICE', quizId: string): QuestionFormValues {
-  const base = {
-    quizId,
-    body: '',
-    points: 1,
-    choices: [{ body: '' }, { body: '' }],
-  };
-  if (type === 'SINGLE_CHOICE') {
-    return { ...base, type: 'SINGLE_CHOICE', correctChoiceIndex: 0 };
+function defaultsForType(
+  type: 'SINGLE_CHOICE' | 'MULTI_CHOICE' | 'TEXT',
+  quizId: string,
+): QuestionFormValues {
+  const base = { quizId, body: '', points: 1 };
+  if (type === 'TEXT') {
+    return { ...base, type: 'TEXT', modelAnswer: '' };
   }
-  return { ...base, type: 'MULTI_CHOICE', correctChoiceIndices: [] };
+  const withChoices = { ...base, choices: [{ body: '' }, { body: '' }] };
+  if (type === 'SINGLE_CHOICE') {
+    return { ...withChoices, type: 'SINGLE_CHOICE', correctChoiceIndex: 0 };
+  }
+  return { ...withChoices, type: 'MULTI_CHOICE', correctChoiceIndices: [] };
 }
 
 export function QuestionForm({ quizId }: { quizId: string }) {

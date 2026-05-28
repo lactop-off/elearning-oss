@@ -70,11 +70,14 @@ export function QuizTaker({
     startTransition(async () => {
       const result = await submitAttemptAction({ courseSlug }, { attemptId, answers });
       if (result.ok) {
-        toast.success(
-          result.data.passed
-            ? tToast('passed', { score: result.data.score })
-            : tToast('submitted', { score: result.data.score }),
-        );
+        if (result.data.pending) {
+          // TEXT answers waiting on the instructor; no numeric score yet.
+          toast.success(tToast('pending'));
+        } else if (result.data.passed === true) {
+          toast.success(tToast('passed', { score: result.data.score ?? 0 }));
+        } else {
+          toast.success(tToast('submitted', { score: result.data.score ?? 0 }));
+        }
         router.refresh();
         return;
       }

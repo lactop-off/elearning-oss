@@ -160,14 +160,17 @@ model Quiz {
 }
 
 model Question {
-  id        String       @id @default(cuid())
-  quizId    String
-  type      QuestionType
-  body      String
-  order     Int
-  points    Int          @default(1)
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  id          String       @id @default(cuid())
+  quizId      String
+  type        QuestionType
+  body        String
+  order       Int
+  points      Int          @default(1)
+  // For TEXT questions: optional reference answer shown to the instructor
+  // when manually grading. NEVER exposed to learners.
+  modelAnswer String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 
   quiz    Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
   choices Choice[]

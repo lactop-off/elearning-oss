@@ -441,7 +441,8 @@
     },
     "toast": {
       "passed": "{score}% で合格",
-      "submitted": "送信しました — 得点 {score}%"
+      "submitted": "送信しました — 得点 {score}%",
+      "pending": "提出しました — 講師の採点をお待ちください"
     },
     "errors": {
       "INVALID_INPUT": "回答内容を見直して再送信してください。",

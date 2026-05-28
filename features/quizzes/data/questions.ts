@@ -27,6 +27,40 @@ export async function listQuestionsByQuiz(quizId: string): Promise<QuestionWithC
 }
 
 /**
+ * Create a TEXT question (no choices). Stores an optional `modelAnswer` that
+ * the instructor will see when manually grading. The answer is never exposed
+ * to learners.
+ */
+export async function createTextQuestion(input: {
+  quizId: string;
+  body: string;
+  points: number;
+  modelAnswer?: string;
+}): Promise<{ questionId: string }> {
+  return prisma.$transaction(async (tx) => {
+    const last = await tx.question.findFirst({
+      where: { quizId: input.quizId },
+      orderBy: { order: 'desc' },
+      select: { order: true },
+    });
+    const nextOrder = (last?.order ?? 0) + 1;
+
+    const question = await tx.question.create({
+      data: {
+        quizId: input.quizId,
+        body: input.body,
+        order: nextOrder,
+        points: input.points,
+        type: 'TEXT',
+        modelAnswer: input.modelAnswer ?? null,
+      },
+      select: { id: true },
+    });
+    return { questionId: question.id };
+  });
+}
+
+/**
  * Create a SINGLE_CHOICE or MULTI_CHOICE question with its choices in a single
  * transaction. The next `order` is computed inside the transaction to respect
  * the @@unique([quizId, order]) constraint under concurrent inserts.

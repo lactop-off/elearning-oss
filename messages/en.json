@@ -441,7 +441,8 @@
     },
     "toast": {
       "passed": "Passed with {score}%",
-      "submitted": "Submitted — score {score}%"
+      "submitted": "Submitted — score {score}%",
+      "pending": "Submitted — awaiting instructor review"
     },
     "errors": {
       "INVALID_INPUT": "Please review your answers and try again.",
