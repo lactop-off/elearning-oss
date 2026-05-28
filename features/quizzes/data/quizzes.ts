@@ -14,6 +14,9 @@ export async function createQuiz(input: {
   description: string;
   passingScore: number;
   isRequired: boolean;
+  timeLimitSec: number | null;
+  maxAttempts: number | null;
+  shuffleChoices: boolean;
 }): Promise<Quiz> {
   return prisma.quiz.create({
     data: {
@@ -22,6 +25,9 @@ export async function createQuiz(input: {
       description: input.description || null,
       passingScore: input.passingScore,
       isRequired: input.isRequired,
+      timeLimitSec: input.timeLimitSec,
+      maxAttempts: input.maxAttempts,
+      shuffleChoices: input.shuffleChoices,
     },
   });
 }
@@ -32,6 +38,9 @@ export async function updateQuiz(input: {
   description: string;
   passingScore: number;
   isRequired: boolean;
+  timeLimitSec: number | null;
+  maxAttempts: number | null;
+  shuffleChoices: boolean;
 }): Promise<Quiz> {
   return prisma.quiz.update({
     where: { id: input.quizId },
@@ -40,6 +49,9 @@ export async function updateQuiz(input: {
       description: input.description || null,
       passingScore: input.passingScore,
       isRequired: input.isRequired,
+      timeLimitSec: input.timeLimitSec,
+      maxAttempts: input.maxAttempts,
+      shuffleChoices: input.shuffleChoices,
     },
   });
 }
@@ -88,6 +100,9 @@ export async function findQuizOwnedByInstructor(
   description: string | null;
   passingScore: number;
   isRequired: boolean;
+  timeLimitSec: number | null;
+  maxAttempts: number | null;
+  shuffleChoices: boolean;
   lesson: { order: number; title: string } | null;
   course: { id: string; slug: string; title: string };
 } | null> {
@@ -102,6 +117,9 @@ export async function findQuizOwnedByInstructor(
       description: true,
       passingScore: true,
       isRequired: true,
+      timeLimitSec: true,
+      maxAttempts: true,
+      shuffleChoices: true,
       lesson: { select: { order: true, title: true, course: { select: { id: true, slug: true, title: true } } } },
     },
   });
@@ -112,6 +130,9 @@ export async function findQuizOwnedByInstructor(
     description: row.description,
     passingScore: row.passingScore,
     isRequired: row.isRequired,
+    timeLimitSec: row.timeLimitSec,
+    maxAttempts: row.maxAttempts,
+    shuffleChoices: row.shuffleChoices,
     lesson: { order: row.lesson.order, title: row.lesson.title },
     course: row.lesson.course,
   };
@@ -181,6 +202,9 @@ export type LearnerQuizView = {
   description: string | null;
   passingScore: number;
   isRequired: boolean;
+  timeLimitSec: number | null;
+  maxAttempts: number | null;
+  shuffleChoices: boolean;
   course: { id: string; slug: string; title: string };
   questions: {
     id: string;
@@ -219,6 +243,9 @@ export async function findQuizForLearner(
       description: true,
       passingScore: true,
       isRequired: true,
+      timeLimitSec: true,
+      maxAttempts: true,
+      shuffleChoices: true,
       lesson: {
         select: { course: { select: { id: true, slug: true, title: true } } },
       },
@@ -245,6 +272,9 @@ export async function findQuizForLearner(
     description: quiz.description,
     passingScore: quiz.passingScore,
     isRequired: quiz.isRequired,
+    timeLimitSec: quiz.timeLimitSec,
+    maxAttempts: quiz.maxAttempts,
+    shuffleChoices: quiz.shuffleChoices,
     course: quiz.lesson.course,
     questions: quiz.questions,
   };

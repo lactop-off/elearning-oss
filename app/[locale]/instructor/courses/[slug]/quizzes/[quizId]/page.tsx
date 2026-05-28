@@ -85,9 +85,18 @@ export default async function InstructorQuizPage({
           <p className="text-muted-foreground">{quiz.description}</p>
         ) : null}
         <p className="text-sm text-muted-foreground">
-          {t('meta', {
+          {t('metaWithLimits', {
             passing: quiz.passingScore,
             required: quiz.isRequired ? t('isRequired') : t('isOptional'),
+            timeLimit:
+              quiz.timeLimitSec === null
+                ? t('noTimeLimit')
+                : `${quiz.timeLimitSec}s`,
+            maxAttempts:
+              quiz.maxAttempts === null
+                ? t('unlimitedAttempts')
+                : String(quiz.maxAttempts),
+            shuffle: quiz.shuffleChoices ? t('shuffleOn') : t('shuffleOff'),
           })}
         </p>
       </header>

@@ -62,6 +62,9 @@ export default async function EditQuizPage({
               description: quiz.description ?? '',
               passingScore: quiz.passingScore,
               isRequired: quiz.isRequired,
+              timeLimitSec: quiz.timeLimitSec,
+              maxAttempts: quiz.maxAttempts,
+              shuffleChoices: quiz.shuffleChoices,
             }}
           />
         </CardContent>

@@ -49,6 +49,9 @@ export function QuizEditForm({
     description: string;
     passingScore: number;
     isRequired: boolean;
+    timeLimitSec: number | null;
+    maxAttempts: number | null;
+    shuffleChoices: boolean;
   };
 }) {
   const router = useRouter();
@@ -65,6 +68,9 @@ export function QuizEditForm({
       description: defaultValues.description,
       passingScore: defaultValues.passingScore,
       isRequired: defaultValues.isRequired,
+      timeLimitSec: defaultValues.timeLimitSec,
+      maxAttempts: defaultValues.maxAttempts,
+      shuffleChoices: defaultValues.shuffleChoices,
     },
   });
 
@@ -153,6 +159,80 @@ export function QuizEditForm({
               <FormLabel htmlFor="quiz-edit-isRequired" className="!mt-0">
                 {t('requiredLabel')}
               </FormLabel>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="timeLimitSec"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t('timeLimitSecLabel')}</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  inputMode="numeric"
+                  min={30}
+                  max={14400}
+                  placeholder={t('timeLimitSecPlaceholder')}
+                  value={field.value ?? ''}
+                  onChange={(event) => {
+                    const v = event.target.value;
+                    field.onChange(v === '' ? null : event.target.valueAsNumber);
+                  }}
+                />
+              </FormControl>
+              <FormDescription>{t('timeLimitSecHelper')}</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="maxAttempts"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t('maxAttemptsLabel')}</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  inputMode="numeric"
+                  min={1}
+                  max={50}
+                  placeholder={t('maxAttemptsPlaceholder')}
+                  value={field.value ?? ''}
+                  onChange={(event) => {
+                    const v = event.target.value;
+                    field.onChange(v === '' ? null : event.target.valueAsNumber);
+                  }}
+                />
+              </FormControl>
+              <FormDescription>{t('maxAttemptsHelper')}</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="shuffleChoices"
+          render={({ field }) => (
+            <FormItem className="flex items-center gap-2">
+              <FormControl>
+                <input
+                  id="quiz-edit-shuffleChoices"
+                  type="checkbox"
+                  checked={field.value}
+                  onChange={(event) => field.onChange(event.target.checked)}
+                  className="size-4 rounded border-input"
+                />
+              </FormControl>
+              <FormLabel htmlFor="quiz-edit-shuffleChoices" className="!mt-0">
+                {t('shuffleChoicesLabel')}
+              </FormLabel>
+              <FormDescription className="basis-full">
+                {t('shuffleChoicesHelper')}
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

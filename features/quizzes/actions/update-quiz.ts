@@ -44,6 +44,9 @@ export async function updateQuizAction(input: unknown): Promise<UpdateQuizResult
       description: parsed.data.description,
       passingScore: parsed.data.passingScore,
       isRequired: parsed.data.isRequired,
+      timeLimitSec: parsed.data.timeLimitSec,
+      maxAttempts: parsed.data.maxAttempts,
+      shuffleChoices: parsed.data.shuffleChoices,
     });
     revalidatePath(`/instructor/courses/${quiz.course.slug}`);
     revalidatePath(`/instructor/courses/${quiz.course.slug}/quizzes/${quiz.id}`);

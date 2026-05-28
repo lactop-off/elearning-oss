@@ -297,7 +297,15 @@
       "passingScoreHelper": "Learners need at least this percentage of points to pass.",
       "requiredLabel": "Required for course completion",
       "submit": "Create quiz",
-      "submitting": "Creating..."
+      "submitting": "Creating...",
+      "timeLimitSecLabel": "Time limit (seconds)",
+      "timeLimitSecHelper": "Leave blank for no limit. Range: 30–14400 (4 hours).",
+      "timeLimitSecPlaceholder": "No limit",
+      "maxAttemptsLabel": "Max attempts",
+      "maxAttemptsHelper": "Leave blank for unlimited attempts. Range: 1–50.",
+      "maxAttemptsPlaceholder": "Unlimited",
+      "shuffleChoicesLabel": "Shuffle choices",
+      "shuffleChoicesHelper": "Each learner sees choices in a different order (does not affect TEXT questions)."
     },
     "edit": {
       "title": "Edit quiz",
@@ -311,7 +319,15 @@
       "passingScoreHelper": "Learners need at least this percentage of points to pass.",
       "requiredLabel": "Required for course completion",
       "submit": "Save changes",
-      "submitting": "Saving..."
+      "submitting": "Saving...",
+      "timeLimitSecLabel": "Time limit (seconds)",
+      "timeLimitSecHelper": "Leave blank for no limit. Range: 30–14400 (4 hours).",
+      "timeLimitSecPlaceholder": "No limit",
+      "maxAttemptsLabel": "Max attempts",
+      "maxAttemptsHelper": "Leave blank for unlimited attempts. Range: 1–50.",
+      "maxAttemptsPlaceholder": "Unlimited",
+      "shuffleChoicesLabel": "Shuffle choices",
+      "shuffleChoicesHelper": "Each learner sees choices in a different order (does not affect TEXT questions)."
     },
     "delete": {
       "trigger": "Delete",
@@ -334,7 +350,12 @@
       "questionsHeading": "Questions ({count})",
       "addQuestionHeading": "Add a question",
       "addQuestionTitle": "New question",
-      "addQuestionDescription": "Single-choice question. Pick one correct answer."
+      "addQuestionDescription": "Single-choice question. Pick one correct answer.",
+      "metaWithLimits": "Passing: {passing}% · {required} · Time: {timeLimit} · Attempts: {maxAttempts} · Shuffle: {shuffle}",
+      "noTimeLimit": "no limit",
+      "unlimitedAttempts": "unlimited",
+      "shuffleOn": "on",
+      "shuffleOff": "off"
     },
     "questionForm": {
       "typeLabel": "Question type",
@@ -407,7 +428,8 @@
       "QUIZ_NOT_FOUND": "Quiz not found, or you do not own it.",
       "QUESTION_NOT_FOUND": "Question not found, or you do not own it.",
       "SET_MISMATCH": "The question set changed. Please refresh and try again.",
-      "INTERNAL_ERROR": "Something went wrong. Please try again."
+      "INTERNAL_ERROR": "Something went wrong. Please try again.",
+      "MAX_ATTEMPTS_REACHED": "You have used all attempts for this quiz."
     },
     "grading": {
       "listHeading": "Grading queue",
@@ -460,7 +482,10 @@
       "retakeCta": "Retake quiz"
     },
     "start": {
-      "working": "Starting..."
+      "working": "Starting...",
+      "attemptsUsed": "Attempts used: {used} / {max}",
+      "attemptsRemaining": "{remaining} attempts remaining",
+      "maxReached": "All attempts used"
     },
     "take": {
       "questionsAria": "Quiz questions",
@@ -473,7 +498,9 @@
       "typeText": "Free text",
       "textAnswerPlaceholder": "Write your answer here…",
       "textAnswerAria": "Your answer for question {order}",
-      "answerRequired": "Answer at least one question before submitting."
+      "answerRequired": "Answer at least one question before submitting.",
+      "timeRemainingLabel": "Time remaining",
+      "autoSubmittedNotice": "Time is up — your answers were submitted automatically."
     },
     "result": {
       "passTitle": "You passed!",

@@ -297,7 +297,15 @@
       "passingScoreHelper": "学習者は最低この割合の得点が必要です。",
       "requiredLabel": "コース修了に必須",
       "submit": "クイズを作成",
-      "submitting": "作成中..."
+      "submitting": "作成中...",
+      "timeLimitSecLabel": "制限時間 (秒)",
+      "timeLimitSecHelper": "空欄で無制限。範囲: 30〜14400 (4 時間)。",
+      "timeLimitSecPlaceholder": "無制限",
+      "maxAttemptsLabel": "受験回数の上限",
+      "maxAttemptsHelper": "空欄で無制限。範囲: 1〜50。",
+      "maxAttemptsPlaceholder": "無制限",
+      "shuffleChoicesLabel": "選択肢をシャッフル",
+      "shuffleChoicesHelper": "各学習者に選択肢の順序を変えて表示します (TEXT 問題には影響しません)。"
     },
     "edit": {
       "title": "クイズを編集",
@@ -311,7 +319,15 @@
       "passingScoreHelper": "学習者は最低この割合の得点が必要です。",
       "requiredLabel": "コース修了に必須",
       "submit": "保存",
-      "submitting": "保存中..."
+      "submitting": "保存中...",
+      "timeLimitSecLabel": "制限時間 (秒)",
+      "timeLimitSecHelper": "空欄で無制限。範囲: 30〜14400 (4 時間)。",
+      "timeLimitSecPlaceholder": "無制限",
+      "maxAttemptsLabel": "受験回数の上限",
+      "maxAttemptsHelper": "空欄で無制限。範囲: 1〜50。",
+      "maxAttemptsPlaceholder": "無制限",
+      "shuffleChoicesLabel": "選択肢をシャッフル",
+      "shuffleChoicesHelper": "各学習者に選択肢の順序を変えて表示します (TEXT 問題には影響しません)。"
     },
     "delete": {
       "trigger": "削除",
@@ -334,7 +350,12 @@
       "questionsHeading": "質問 ({count})",
       "addQuestionHeading": "質問を追加",
       "addQuestionTitle": "新しい質問",
-      "addQuestionDescription": "単一選択式。正解を 1 つ選択してください。"
+      "addQuestionDescription": "単一選択式。正解を 1 つ選択してください。",
+      "metaWithLimits": "合格: {passing}% · {required} · 制限時間: {timeLimit} · 受験回数: {maxAttempts} · シャッフル: {shuffle}",
+      "noTimeLimit": "無制限",
+      "unlimitedAttempts": "無制限",
+      "shuffleOn": "あり",
+      "shuffleOff": "なし"
     },
     "questionForm": {
       "typeLabel": "質問タイプ",
@@ -407,7 +428,8 @@
       "QUIZ_NOT_FOUND": "クイズが見つかりません。",
       "QUESTION_NOT_FOUND": "質問が見つかりません。",
       "SET_MISMATCH": "並び順の更新に失敗しました。ページを再読み込みしてください。",
-      "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
+      "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。",
+      "MAX_ATTEMPTS_REACHED": "このクイズの受験回数の上限に達しました。"
     },
     "grading": {
       "listHeading": "採点待ち一覧",
@@ -460,7 +482,10 @@
       "retakeCta": "もう一度受験"
     },
     "start": {
-      "working": "開始中..."
+      "working": "開始中...",
+      "attemptsUsed": "受験回数: {used} / {max}",
+      "attemptsRemaining": "残り {remaining} 回",
+      "maxReached": "受験回数の上限に達しました"
     },
     "take": {
       "questionsAria": "クイズの質問",
@@ -473,7 +498,9 @@
       "typeText": "自由記述",
       "textAnswerPlaceholder": "ここに回答を入力してください…",
       "textAnswerAria": "問題 {order} への回答",
-      "answerRequired": "少なくとも 1 問は回答してから提出してください。"
+      "answerRequired": "少なくとも 1 問は回答してから提出してください。",
+      "timeRemainingLabel": "残り時間",
+      "autoSubmittedNotice": "時間切れのため自動で提出しました。"
     },
     "result": {
       "passTitle": "合格しました！",
