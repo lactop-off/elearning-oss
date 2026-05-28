@@ -69,7 +69,7 @@ export default async function LearnerQuizPage({
 
       <Card>
         <CardHeader>
-          <CardTitle asChild>
+          <CardTitle asChild className="text-2xl font-semibold tracking-tight">
             <h1>{quiz.title}</h1>
           </CardTitle>
           <CardDescription>

@@ -35,7 +35,7 @@ export default async function NewCoursePage({
     <main className="flex flex-1 items-center justify-center px-4 py-12">
       <Card className="w-full max-w-2xl">
         <CardHeader>
-          <CardTitle asChild>
+          <CardTitle asChild className="text-2xl font-semibold tracking-tight">
             <h1>{t('title')}</h1>
           </CardTitle>
           <CardDescription>{t('description')}</CardDescription>

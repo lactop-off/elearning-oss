@@ -71,7 +71,7 @@ export default async function EnrolledCoursePage({
       </p>
 
       <header className="mb-6 grid gap-2">
-        <h1 className="text-3xl font-semibold tracking-tight">{enrollment.course.title}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{enrollment.course.title}</h1>
         <p className="text-sm text-muted-foreground">
           {t('byInstructor', { name: enrollment.course.instructor.name })}
         </p>
