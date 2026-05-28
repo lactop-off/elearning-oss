@@ -29,9 +29,18 @@ const AnswerSchema = z
     message: 'Answer must not include both choiceIds and textAnswer',
   });
 
-export const SubmitAttemptSchema = z.object({
-  attemptId: z.string().min(1),
-  answers: z.array(AnswerSchema).min(1, 'At least one answer is required'),
-});
+export const SubmitAttemptSchema = z
+  .object({
+    attemptId: z.string().min(1),
+    // True iff the client auto-submitted because the time limit expired.
+    // When false, at least one answer must be present; when true, an empty
+    // answer set is accepted (the attempt is graded as 0).
+    autoSubmitted: z.boolean().default(false),
+    answers: z.array(AnswerSchema),
+  })
+  .refine((d) => d.autoSubmitted || d.answers.length >= 1, {
+    message: 'At least one answer is required',
+    path: ['answers'],
+  });
 
 export type SubmitAttemptInput = z.infer<typeof SubmitAttemptSchema>;

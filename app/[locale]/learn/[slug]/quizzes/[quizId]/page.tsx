@@ -146,6 +146,8 @@ export default async function LearnerQuizPage({
               courseSlug={slug}
               attemptId={latestAttempt.id}
               questions={presentedQuestions}
+              timeLimitSec={quiz.timeLimitSec}
+              startedAt={latestAttempt.startedAt}
             />
           ) : resultPayload ? (
             <div className="grid gap-6">

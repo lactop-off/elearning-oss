@@ -29,6 +29,16 @@ describe('SubmitAttemptSchema', () => {
     );
   });
 
+  it('accepts an empty answers array when autoSubmitted is true', () => {
+    expect(
+      SubmitAttemptSchema.safeParse({
+        attemptId: 'a1',
+        autoSubmitted: true,
+        answers: [],
+      }).success,
+    ).toBe(true);
+  });
+
   it('rejects an answer with no choiceIds', () => {
     expect(
       SubmitAttemptSchema.safeParse({

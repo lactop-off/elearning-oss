@@ -128,6 +128,10 @@ export type SubmitOutcome = {
 export async function gradeAndSubmitAttempt(input: {
   attemptId: string;
   userId: string;
+  // True iff the client signalled this is an auto-submit (timer expired).
+  // Marks the attempt as AUTO_SUBMITTED instead of SUBMITTED; an empty
+  // answer set is allowed and produces a score of 0.
+  autoSubmitted?: boolean;
   answers: { questionId: string; choiceIds?: string[]; textAnswer?: string }[];
 }): Promise<SubmitOutcome | { error: 'NOT_IN_PROGRESS' | 'INVALID_ANSWERS' }> {
   return prisma.$transaction(async (tx) => {
@@ -308,7 +312,7 @@ export async function gradeAndSubmitAttempt(input: {
     await tx.attempt.update({
       where: { id: attempt.id },
       data: {
-        status: 'SUBMITTED',
+        status: input.autoSubmitted ? 'AUTO_SUBMITTED' : 'SUBMITTED',
         submittedAt: new Date(),
         score: finalScore,
         passed: finalPassed,

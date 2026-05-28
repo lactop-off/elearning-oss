@@ -1,7 +1,7 @@
 'use client';
 
-import { Send } from 'lucide-react';
-import { useTransition } from 'react';
+import { Send, Timer } from 'lucide-react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
@@ -41,24 +41,50 @@ function isKnown(code: string): code is KnownErrorCode {
   return (KNOWN as readonly string[]).includes(code);
 }
 
+function formatMmSs(ms: number): string {
+  const total = Math.max(0, Math.ceil(ms / 1000));
+  const m = Math.floor(total / 60);
+  const s = total % 60;
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
 export function QuizTaker({
   courseSlug,
   attemptId,
   questions,
+  timeLimitSec,
+  startedAt,
 }: {
   courseSlug: string;
   attemptId: string;
   questions: QuestionInput[];
+  // When both are provided, render a countdown timer and auto-submit at 0.
+  timeLimitSec?: number | null;
+  startedAt?: Date | string;
 }) {
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
   const [isPending, startTransition] = useTransition();
   const t = useTranslations('attempts.take');
   const tToast = useTranslations('attempts.toast');
   const tError = useTranslations('attempts.errors');
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
+  const deadlineMs =
+    timeLimitSec != null && startedAt
+      ? new Date(startedAt).getTime() + timeLimitSec * 1000
+      : null;
+
+  const [remainingMs, setRemainingMs] = useState<number | null>(
+    deadlineMs !== null ? deadlineMs - Date.now() : null,
+  );
+  const submittedRef = useRef(false);
+
+  function submit(autoSubmitted: boolean) {
+    if (submittedRef.current) return;
+    submittedRef.current = true;
+    const form = formRef.current;
+    if (!form) return;
+    const formData = new FormData(form);
     const answers: SubmissionAnswer[] = [];
     for (const question of questions) {
       const fieldName = `q-${question.id}`;
@@ -78,16 +104,23 @@ export function QuizTaker({
         answers.push({ questionId: question.id, choiceIds });
       }
     }
-    if (answers.length === 0) {
+    // Reject early submission with nothing filled, but let auto-submit through
+    // — the timer expired and we want the AUTO_SUBMITTED attempt recorded.
+    if (!autoSubmitted && answers.length === 0) {
+      submittedRef.current = false;
       toast.error(t('selectAtLeastOne'));
       return;
     }
 
     startTransition(async () => {
-      const result = await submitAttemptAction({ courseSlug }, { attemptId, answers });
+      const result = await submitAttemptAction(
+        { courseSlug },
+        { attemptId, answers, autoSubmitted },
+      );
       if (result.ok) {
-        if (result.data.pending) {
-          // TEXT answers waiting on the instructor; no numeric score yet.
+        if (autoSubmitted) {
+          toast.message(t('autoSubmittedNotice'));
+        } else if (result.data.pending) {
           toast.success(tToast('pending'));
         } else if (result.data.passed === true) {
           toast.success(tToast('passed', { score: result.data.score ?? 0 }));
@@ -97,12 +130,54 @@ export function QuizTaker({
         router.refresh();
         return;
       }
+      submittedRef.current = false;
       toast.error(isKnown(result.error) ? tError(result.error) : tError('INTERNAL_ERROR'));
     });
   }
 
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    submit(false);
+  }
+
+  // Countdown tick + auto-submit on expiry.
+  useEffect(() => {
+    if (deadlineMs === null) return;
+    const tick = () => {
+      const left = deadlineMs - Date.now();
+      setRemainingMs(left);
+      if (left <= 0) {
+        submit(true);
+      }
+    };
+    tick();
+    const id = window.setInterval(tick, 500);
+    return () => window.clearInterval(id);
+    // submit is intentionally captured via closure for the latest form state.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deadlineMs]);
+
+  const expired = remainingMs !== null && remainingMs <= 0;
+
   return (
-    <form onSubmit={handleSubmit} className="grid gap-6">
+    <form ref={formRef} onSubmit={handleSubmit} className="grid gap-6">
+      {deadlineMs !== null ? (
+        <div
+          role="timer"
+          aria-live="polite"
+          aria-atomic="true"
+          className="sticky top-14 z-10 -mx-4 flex items-center justify-between gap-2 border-b bg-background/90 px-4 py-2 backdrop-blur"
+        >
+          <span className="flex items-center gap-2 text-sm font-medium">
+            <Timer aria-hidden="true" className="size-4" />
+            {t('timeRemainingLabel')}
+          </span>
+          <span className="font-mono text-base font-semibold tabular-nums">
+            {formatMmSs(remainingMs ?? 0)}
+          </span>
+        </div>
+      ) : null}
+
       <ol aria-label={t('questionsAria')} className="grid gap-4">
         {questions.map((question) => {
           const isMulti = question.type === 'MULTI_CHOICE';
@@ -167,7 +242,7 @@ export function QuizTaker({
         })}
       </ol>
 
-      <Button type="submit" disabled={isPending} size="lg">
+      <Button type="submit" disabled={isPending || expired} size="lg">
         <Send aria-hidden="true" />
         {isPending ? t('working') : t('submit')}
       </Button>

@@ -61,6 +61,7 @@ export async function submitAttemptAction(
     result = await gradeAndSubmitAttempt({
       attemptId: attempt.id,
       userId: user.id,
+      autoSubmitted: parsed.data.autoSubmitted,
       answers: parsed.data.answers,
     });
   } catch (e) {

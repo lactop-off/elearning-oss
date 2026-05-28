@@ -61,3 +61,56 @@ describe('UpdateQuizSchema', () => {
     ).toBe(false);
   });
 });
+
+describe('advanced quiz settings (timeLimitSec, maxAttempts, shuffleChoices)', () => {
+  it('default to null/null/false', () => {
+    const result = CreateQuizSchema.safeParse({ lessonId: 'l1', title: 'q' });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.timeLimitSec).toBeNull();
+      expect(result.data.maxAttempts).toBeNull();
+      expect(result.data.shuffleChoices).toBe(false);
+    }
+  });
+
+  it('accepts in-range values', () => {
+    expect(
+      CreateQuizSchema.safeParse({
+        lessonId: 'l1',
+        title: 'q',
+        timeLimitSec: 600,
+        maxAttempts: 3,
+        shuffleChoices: true,
+      }).success,
+    ).toBe(true);
+  });
+
+  it('rejects timeLimitSec below 30 or above 14400', () => {
+    expect(
+      CreateQuizSchema.safeParse({ lessonId: 'l1', title: 'q', timeLimitSec: 5 }).success,
+    ).toBe(false);
+    expect(
+      CreateQuizSchema.safeParse({ lessonId: 'l1', title: 'q', timeLimitSec: 99999 }).success,
+    ).toBe(false);
+  });
+
+  it('rejects maxAttempts below 1 or above 50', () => {
+    expect(
+      CreateQuizSchema.safeParse({ lessonId: 'l1', title: 'q', maxAttempts: 0 }).success,
+    ).toBe(false);
+    expect(
+      CreateQuizSchema.safeParse({ lessonId: 'l1', title: 'q', maxAttempts: 51 }).success,
+    ).toBe(false);
+  });
+
+  it('accepts null for both numeric limits (means "no limit")', () => {
+    expect(
+      CreateQuizSchema.safeParse({
+        lessonId: 'l1',
+        title: 'q',
+        timeLimitSec: null,
+        maxAttempts: null,
+      }).success,
+    ).toBe(true);
+  });
+});
